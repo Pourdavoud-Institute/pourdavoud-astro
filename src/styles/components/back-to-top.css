@@ -1,0 +1,12 @@
+.back-to-top {
+    position: sticky;
+    top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--ucla-primary-blue);
+
+    &:hover {
+        text-decoration-color: transparent;
+    }
+}

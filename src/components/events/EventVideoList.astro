@@ -1,0 +1,121 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import getYouTubeID from 'get-youtube-id';
+
+interface Props {
+    videos: CollectionEntry<'videos'>[];
+}
+
+const { videos } = Astro.props;
+---
+
+<div class="section-wrapper">
+    <h2>Event {videos.length > 1 ? 'Videos' : 'Video'}</h2>
+    <div class="event-videos-list | fluid-grid">
+        {
+            videos
+                .sort((a, b) => a.data.title.localeCompare(b.data.title))
+                .map((video) => {
+                    const ytID = getYouTubeID(video.data.url);
+                    return (
+                        <article class="event-video-preview">
+                            <a
+                                class="image-wrapper"
+                                href={`/media${video.data.slug}`}
+                                title={video.data.title}
+                            >
+                                <img
+                                    alt={video.data.title}
+                                    decoding="async"
+                                    height={168}
+                                    loading="lazy"
+                                    src={`https://img.youtube.com/vi/${ytID}/mqdefault.jpg`}
+                                    width={300}
+                                />
+                            </a>
+                            <div class="text-wrapper">
+                                {/* <h3 class="title">
+                                <a
+                                    class="title-link"
+                                    href={`/media${video.data.slug}`}
+                                >
+                                    {video.data.title}
+                                </a>
+                            </h3> */}
+                                {video.data.speakersRef &&
+                                    video.data.speakersRef.length > 0 && (
+                                        <div class="speaker-list">
+                                            {video.data.speakersRef.map(
+                                                (speaker) => {
+                                                    if (speaker.institution) {
+                                                        return (
+                                                            <p class="speaker">
+                                                                {/* prettier-ignore */}
+                                                                <strong>
+                                                                    {speaker.title},
+                                                                </strong>
+                                                                <em>
+                                                                    {
+                                                                        speaker.institution
+                                                                    }
+                                                                </em>
+                                                            </p>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <p>
+                                                                {speaker.title}
+                                                            </p>
+                                                        );
+                                                    }
+                                                }
+                                            )}
+                                        </div>
+                                    )}
+                            </div>
+                        </article>
+                    );
+                })
+        }
+    </div>
+</div>
+
+<style>
+    .section-wrapper {
+        margin-block-start: var(--space-2xl);
+    }
+
+    .title {
+        font-size: var(--step-1);
+    }
+
+    .event-videos-list {
+        margin-block-start: var(--space-l);
+    }
+
+    .fluid-grid {
+        --grid-item-min-size: 18rem;
+    }
+
+    .image-wrapper {
+        & img {
+            width: 100%;
+            height: auto;
+            border: 1px solid var(--site-border);
+        }
+
+        &a {
+            transition: filter 0.2s;
+
+            &:hover {
+                filter: brightness(0.75);
+            }
+        }
+    }
+
+    .speaker-list {
+        margin-block-start: var(--space-2xs);
+        font-size: var(--step-0);
+        line-height: 1.35;
+    }
+</style>

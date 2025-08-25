@@ -1,0 +1,229 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import PersonHeader from '@components/pageHeaders/PersonHeader.astro';
+import PublicationPreview from '@components/publications/PublicationPreview.astro';
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import v from 'voca';
+
+export async function getStaticPaths() {
+    const people = await getCollection(
+        'people',
+        ({ data }) => data.affiliationType == 'internal'
+    );
+
+    return people.map((person) => ({
+        params: {
+            person: person.data.slug,
+        },
+        props: { person },
+    }));
+}
+
+const { person } = Astro.props;
+---
+
+<PageWrapper
+    footerMargin={true}
+    id={person.id}
+    template="peopleShow"
+    title={person.data.title}
+>
+    <PersonHeader person={person} />
+    <div class="content-wrapper">
+        <div class="with-sidebar">
+            <div class="sidebar-panel">
+                <div class="on-page-nav" data-type="sidebar">
+                    <div class="small-title">On This Page</div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <a class="sidebar-link" href="#biography"
+                                    >Biography</a
+                                >
+                            </li>
+                            {
+                                person.data.showCV &&
+                                    person.data.cvSections &&
+                                    person.data.cvSections.map((section) => (
+                                        <li>
+                                            <a
+                                                class="sidebar-link"
+                                                href={`#${v.slugify(section.title)}`}
+                                            >
+                                                {section.title}
+                                            </a>
+                                        </li>
+                                    ))
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="main-panel">
+                {
+                    person.data.biography &&
+                        person.data.biography.length > 0 && (
+                            <section class="biography">
+                                <h2 id="biography">Biography</h2>
+                                <div class="rich-text | flow">
+                                    <RichTextBlocks
+                                        blocks={person.data.biography}
+                                    />
+                                </div>
+                            </section>
+                        )
+                }
+                {
+                    person.data.showCV && person.data.cvSections && (
+                        <div class="cv-sections">
+                            {person.data.cvSections.map((section, i) => (
+                                <section>
+                                    <details open={i == 0}>
+                                        <summary>
+                                            <h2 id={v.slugify(section.title)}>
+                                                {section.title}
+                                            </h2>
+                                            <svg
+                                                aria-hidden="true"
+                                                class="ucla-plus closed"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                width="24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path d="M11 19V13H5V11H11V5H13V11H19V13H13V19H11Z" />
+                                            </svg>
+                                            <svg
+                                                aria-hidden="true"
+                                                class="ucla-minus open"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                width="24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path d="M19 11L19 13L5 13L5 11L19 11Z" />
+                                            </svg>
+                                        </summary>
+                                        {section._type == 'cvSection' ? (
+                                            <div class="rich-text | flow">
+                                                {section.richText?.blocks && (
+                                                    <RichTextBlocks
+                                                        blocks={
+                                                            section.richText
+                                                                ?.blocks
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
+                                        ) : (
+                                            section.publications &&
+                                            section.publications.length > 0 && (
+                                                <div class="publications-list | fluid-grid">
+                                                    {section.publications.map(
+                                                        async (entry) => {
+                                                            const linkedPublication =
+                                                                await getEntry(
+                                                                    'publications',
+                                                                    entry._id
+                                                                );
+                                                            if (
+                                                                linkedPublication
+                                                            ) {
+                                                                return (
+                                                                    <PublicationPreview
+                                                                        publication={
+                                                                            linkedPublication
+                                                                        }
+                                                                    />
+                                                                );
+                                                            }
+                                                        }
+                                                    )}
+                                                </div>
+                                            )
+                                        )}
+                                    </details>
+                                </section>
+                            ))}
+                        </div>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .with-sidebar {
+        --sidebar-min-width: 20rem;
+        --sidebar-gap: 4rem;
+        margin-block-start: calc(var(--section-spacing) * 1.5);
+    }
+
+    .biography {
+        & .rich-text {
+            margin-block-start: var(--space-l);
+        }
+    }
+
+    .cv-sections {
+        margin-block-start: var(--space-l);
+
+        & > * + * {
+            margin-block-start: var(--space-m);
+        }
+
+        & summary {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+
+            &:hover h2 {
+                color: var(--ucla-primary-blue);
+            }
+        }
+
+        & details {
+            border-block-end: 1px solid
+                var(--disclosure-border, var(--site-border));
+            padding-block-end: var(--space-m);
+
+            & :is(svg.open, svg.closed) {
+                fill: var(--ucla-primary-blue);
+            }
+
+            & svg.open {
+                display: none;
+            }
+
+            & svg.closed {
+                display: block;
+            }
+
+            &[open] {
+                & svg.open {
+                    display: block;
+                }
+
+                & svg.closed {
+                    display: none;
+                }
+
+                & h2 {
+                    color: var(--ucla-primary-blue);
+                }
+            }
+
+            & :is(.rich-text, .publications-list) {
+                margin-block-start: var(--space-l);
+                margin-block-end: var(--space-2xl);
+            }
+
+            & .publications-list {
+                --grid-item-min-size: 12rem;
+            }
+        }
+    }
+</style>

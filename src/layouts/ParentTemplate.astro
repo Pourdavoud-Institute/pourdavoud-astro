@@ -1,0 +1,11 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+    page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+---
+
+<h1>{page.data.title}</h1>

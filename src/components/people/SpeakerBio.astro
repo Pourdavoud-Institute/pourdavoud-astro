@@ -1,0 +1,123 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import SanityImage from '@components/SanityImage.astro';
+
+interface Props {
+    speakers: CollectionEntry<'speakers'>[];
+}
+
+const { speakers } = Astro.props;
+---
+
+<div class="speaker-bio">
+    <h2 class="small-title" id="about-the-speaker">
+        About the {speakers.length > 1 ? 'Speakers' : 'Speaker'}
+    </h2>
+    <div class="speaker-list">
+        {
+            speakers.map((speaker) => {
+                if (
+                    speaker.data.biography &&
+                    speaker.data.biography.length > 0
+                ) {
+                    return (
+                        <div
+                            class:list={[
+                                'speaker',
+                                speaker.data.image && 'with-sidebar',
+                            ]}
+                        >
+                            {speaker.data.image && (
+                                <div class="sidebar-panel">
+                                    <SanityImage
+                                        alt={speaker.data.image.alt}
+                                        aspectRatio={[1, 1]}
+                                        classes="headshot"
+                                        crop={false}
+                                        source={speaker.data.image}
+                                        width={200}
+                                    />
+                                </div>
+                            )}
+                            <div class="main-panel">
+                                <header>
+                                    <h3>{speaker.data.title}</h3>
+                                    {speaker.data.institution && (
+                                        <p class="institution">
+                                            {speaker.data.institution}
+                                        </p>
+                                    )}
+                                </header>
+                                <div class="rich-text | flow">
+                                    <RichTextBlocks
+                                        blocks={speaker.data.biography}
+                                    />
+                                </div>
+                                {speaker.data.facultyLink && (
+                                    <div class="cta">
+                                        <a
+                                            class="button-link"
+                                            data-style="primary"
+                                            href={speaker.data.facultyLink}
+                                        >
+                                            View Profile
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    );
+                }
+            })
+        }
+    </div>
+</div>
+
+<style>
+    .speaker-bio {
+        padding: 2.5rem 3rem 3rem;
+        background-color: var(--ucla-gray-1);
+    }
+
+    .small-title {
+        font-size: var(--step--1);
+    }
+
+    .speaker-list {
+        margin-block-start: var(--space-xs);
+    }
+
+    .institution {
+        margin-block-start: var(--space-3xs);
+        font-style: italic;
+    }
+
+    .rich-text {
+        margin-block-start: var(--space-m);
+        font-size: var(--step-0);
+    }
+
+    .cta {
+        margin-block-start: var(--space-m);
+    }
+
+    .with-sidebar {
+        --sidebar-min-width: 8rem;
+        --sidebar-gap: 1.25rem;
+        margin-block-start: var(--space-l);
+    }
+
+    .sidebar-panel {
+        & + .main-panel {
+            margin-block-start: var(--space-s);
+        }
+    }
+
+    .headshot {
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 999px;
+    }
+</style>

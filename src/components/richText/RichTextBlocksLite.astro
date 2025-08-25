@@ -1,0 +1,11 @@
+---
+import { PortableText } from 'astro-portabletext';
+
+interface Props {
+    blocks: any[];
+}
+
+const { blocks } = Astro.props;
+---
+
+<PortableText value={blocks} />

@@ -1,0 +1,55 @@
+---
+import PublicationPreview from '@components/publications/PublicationPreview.astro';
+import type { PublicationsList } from '@content/schemaFragments/pageModules';
+import { getEntry } from 'astro:content';
+import v from 'voca';
+
+interface Props {
+    module: PublicationsList;
+}
+
+const { module } = Astro.props;
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <!-- make content wrapper variable -->
+    <div class="content-wrapper">
+        {
+            module.heading && (
+                <h2 class="heading" id={v.slugify(module.heading)}>
+                    {module.heading}
+                </h2>
+            )
+        }
+        <div class="entries | fluid-grid">
+            {
+                module.entries.map(async (entry) => {
+                    const linkedPublication = await getEntry(
+                        'publications',
+                        entry._id
+                    );
+                    if (linkedPublication) {
+                        return (
+                            <PublicationPreview
+                                publication={linkedPublication}
+                            />
+                        );
+                    }
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .heading {
+        margin-block-end: var(--space-l);
+    }
+
+    .fluid-grid {
+        --grid-item-min-size: 14rem;
+    }
+</style>

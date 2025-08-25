@@ -1,0 +1,39 @@
+---
+import RichText from '@components/modules/RichText.astro';
+import type { TwoColumnText } from '@content/schemaFragments/pageModules';
+import v from 'voca';
+
+interface Props {
+    module: TwoColumnText;
+}
+
+const { module } = Astro.props;
+---
+
+<section
+    class:list={[
+        {
+            'section-margin': module.options.sectionMargin,
+            'section-padding': module.options.backgroundColor,
+        },
+    ]}
+    data-module={module._type}
+>
+    <div class="content-wrapper | grid">
+        <h2 id={v.slugify(module.heading)}>{module.heading}</h2>
+        {module.richText && <RichText module={module.richText} />}
+    </div>
+</section>
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: var(--two-column-text--columns, 2fr 3fr);
+        gap: var(--two-column-text--gap, var(--space-2xl));
+    }
+
+    .section-padding {
+        padding-block: var(--section-spacing);
+        background-color: var(--ucla-gray-1);
+    }
+</style>

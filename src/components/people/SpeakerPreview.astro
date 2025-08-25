@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+    speakers: CollectionEntry<'speakers'>[];
+}
+
+const { speakers } = Astro.props;
+---
+
+<div class="speaker-preview">
+    <h2 class="small-title">{speakers.length > 1 ? 'Speakers' : 'Speaker'}</h2>
+    <div class="speaker-list">
+        {
+            speakers.map((speaker) => (
+                <div class="speaker">
+                    <p class="name">{speaker.data.title}</p>
+                    {speaker.data.institution && (
+                        <p class="institution">{speaker.data.institution}</p>
+                    )}
+                </div>
+            ))
+        }
+    </div>
+</div>
+
+<style>
+    .speaker-preview {
+        & .small-title {
+            color: var(--ucla-primary-blue);
+        }
+
+        & .name {
+            font-family: var(--font-heading);
+            font-weight: var(--font-heading-weight);
+            font-size: var(--step-2);
+        }
+
+        & .institution {
+            font-style: italic;
+        }
+    }
+</style>

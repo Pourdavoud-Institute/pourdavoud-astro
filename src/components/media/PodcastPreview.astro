@@ -1,0 +1,95 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { format } from '@formkit/tempo';
+import { formatSeconds } from '@lib/utils/formatSeconds';
+
+interface Props {
+    item: CollectionEntry<'podcast'>;
+}
+
+const { item } = Astro.props;
+---
+
+<article
+    class="podcast-preview"
+    data-id={item.id}
+    data-season={item.data.season}
+>
+    <a
+        class="image-wrapper image-scale-in"
+        href={item.data.link}
+        target="_blank"
+    >
+        <img
+            alt="Legacies of Ancient Persia"
+            decoding="async"
+            height={200}
+            loading="lazy"
+            src="/images/legacies-of-ancient-persia-thumbnail.jpg"
+            width={200}
+        />
+    </a>
+    <div class="text-wrapper | flow" data-tempo="presto">
+        {
+            item.data.season && (
+                <div class="eyebrow | small-title">
+                    Season {item.data.season}
+                </div>
+            )
+        }
+        <h3 class="title">
+            <a class="title-link" href={item.data.link} target="_blank">
+                {item.data.title}
+            </a>
+        </h3>
+        <div class="info">
+            <time datetime={format(item.data.pubDate, 'YYYY-MM-DD')}>
+                {format(item.data.pubDate, 'ddd MMMM D, YYYY')}
+            </time>
+            <span class="duration">
+                {formatSeconds(item.data.duration)}
+            </span>
+        </div>
+        <p>{item.data.subtitle}</p>
+    </div>
+</article>
+
+<style>
+    .podcast-preview {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        align-items: center;
+        gap: var(--space-l);
+    }
+
+    .image-wrapper {
+        overflow: hidden;
+    }
+
+    .small-title {
+        font-size: var(--step--1);
+        margin-block-end: var(--space-3xs);
+    }
+
+    .title {
+        --flow-space: 0px;
+        font-size: var(--step-2);
+        font-weight: 700;
+    }
+
+    .info {
+        & time {
+            font-weight: 700;
+        }
+    }
+
+    .duration {
+        position: relative;
+
+        &::before {
+            content: '•';
+            color: var(--ucla-primary-blue);
+            padding-inline: var(--space-2xs);
+        }
+    }
+</style>

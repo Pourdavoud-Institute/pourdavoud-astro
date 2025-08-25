@@ -1,0 +1,73 @@
+---
+/* Redundant to repeat this or try to fit in Index Template? */
+import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import PostsList from '@components/posts/PostsList.astro';
+import PostsSidebar from '@components/posts/PostsSidebar.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const postCategories = await getCollection('postCategories');
+
+    return postCategories.map((category) => ({
+        params: {
+            category: `/categories${category.data.slug}`,
+        },
+        props: { category },
+    }));
+}
+
+const { category } = Astro.props;
+
+const posts = await getCollection('posts');
+// const associatedEvents
+---
+
+<PageWrapper
+    footerMargin={true}
+    id={category.id}
+    template="postsTaxonomyTerm"
+    title={`${category.data.title} Post Category`}
+>
+    <DefaultHeader breadcrumbsCollection="postCategories" title="News" />
+    <div
+        class="index-wrapper"
+        data-index="posts"
+        id={`${category.data.slug.slice(1)}-posts-index`}
+    >
+        <div class="content-wrapper">
+            <div class="with-sidebar">
+                <div class="sidebar-panel | flow" data-tempo="andante">
+                    <PostsSidebar />
+                </div>
+                <div class="main-panel">
+                    <div class="flow" data-tempo="allegro">
+                        <h2>{category.data.title} Posts</h2>
+                        <p>
+                            Showing {category.data.posts.length}
+                            {
+                                category.data.posts.length == 1
+                                    ? 'result'
+                                    : 'results'
+                            }
+                        </p>
+                    </div>
+                    {
+                        category.data.posts.length > 0 && (
+                            // @ts-expect-error
+                            <PostsList
+                                posts={category.data.posts.map(
+                                    (associatedPost) =>
+                                        posts.find(
+                                            (post) =>
+                                                post.id == associatedPost._id
+                                        )
+                                )}
+                            />
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</PageWrapper>

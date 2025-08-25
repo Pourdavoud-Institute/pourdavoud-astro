@@ -1,0 +1,26 @@
+---
+import type { Link } from '@content/schemaFragments/sanityComponents';
+import { sanityLink } from '@lib/utils/sanityLink';
+
+interface Props {
+    link: Link;
+    style?: 'primary' | 'primary-ghost' | 'white' | 'success';
+    classes?: string;
+    attrs?: any;
+}
+
+const { style = 'primary', link, classes, ...attrs } = Astro.props;
+
+const linkParts = sanityLink(link);
+---
+
+<a
+    class:list={[classes, 'button-link']}
+    data-style={style}
+    href={linkParts.url}
+    target={linkParts.target}
+    {...attrs}
+>
+    <span>{linkParts.label}</span>
+    <slot name="icon" />
+</a>

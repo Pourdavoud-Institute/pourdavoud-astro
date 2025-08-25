@@ -1,0 +1,14 @@
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--nav-link-gap, 0.25em);
+    text-decoration: none;
+    padding-block: 0.5rem;
+    padding-inline: 0.5rem;
+    font-weight: 700;
+    transition: all 0.2s;
+
+    &:hover {
+        color: var(--ucla-primary-blue);
+    }
+}

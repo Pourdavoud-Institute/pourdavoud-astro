@@ -1,0 +1,89 @@
+---
+const navItems = [
+    {
+        title: 'Events',
+        url: '/events',
+    },
+    {
+        title: 'Research',
+        url: '/research',
+    },
+    {
+        title: 'Publications',
+        url: '/publications',
+    },
+    {
+        title: 'Media',
+        url: '/media/video-library',
+    },
+    // {
+    //     title: 'Podcast',
+    //     url: '/media/podcast',
+    // },
+];
+---
+
+<div class="nav-featured">
+    <ul class="cluster">
+        {
+            navItems.map((navItem, i) => (
+                <li>
+                    <a
+                        class="nav-link-featured"
+                        data-tint={(i + 1) * 100}
+                        href={navItem.url}
+                    >
+                        {navItem.title}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</div>
+
+<style>
+    .nav-featured {
+        --cluster-justify: flex-end;
+        --cluster-space: 0px;
+    }
+
+    .nav-link-featured {
+        position: relative;
+        display: block;
+        font-size: 16px;
+        font-weight: 700;
+        text-decoration: none;
+        padding-inline: 0.5rem;
+        padding-block: 1.15rem;
+        text-align: center;
+        min-width: 160px;
+        background-color: var(--nav-link-tint, var(--ucla-gray-7));
+        color: var(--nav-link-color, white);
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: color-mix(
+                in srgb,
+                var(--nav-link-tint),
+                black 10%
+            );
+        }
+
+        &[data-tint='100'] {
+            --nav-link-tint: var(--ucla-lighter-blue);
+            --nav-link-color: var(--ucla-darkest-blue);
+        }
+
+        &[data-tint='200'] {
+            --nav-link-tint: var(--ucla-primary-blue);
+        }
+
+        &[data-tint='300'] {
+            --nav-link-tint: var(--ucla-darker-blue);
+        }
+
+        &[data-tint='400'] {
+            --nav-link-tint: var(--ucla-darkest-blue);
+        }
+    }
+</style>

@@ -1,0 +1,30 @@
+.share-links {
+    background-color: color-mix(
+        in srgb,
+        var(--ucla-lightest-blue),
+        transparent 25%
+    );
+    padding: 1rem;
+    border: 1px solid color-mix(in srgb, var(--ucla-lighter-blue), white 75%);
+
+    & .small-title {
+        font-size: var(--step--1);
+        color: var(--ucla-primary-blue);
+    }
+
+    & .button-link {
+        font-size: 14px;
+    }
+
+    & .context-alert {
+        background-color: var(--ucla-darkest-blue);
+        color: var(--ucla-white);
+        font-size: var(--step--1);
+        text-align: center;
+        border-radius: var(--rounded-xs);
+        padding: 0.25rem;
+        animation: 0.2s ease-in-out context-alert-in;
+        position: absolute;
+        inset: auto 0 calc(100% + 0.5rem);
+    }
+}

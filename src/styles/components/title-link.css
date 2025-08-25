@@ -1,0 +1,12 @@
+.title-link {
+    display: inline-block;
+    color: var(--ucla-darker-blue);
+    text-decoration-color: color-mix(in srgb, currentColor, white 65%);
+    text-decoration-thickness: 0.15ex;
+    line-height: 1.35;
+
+    &:hover {
+        color: var(--ucla-primary-blue);
+        text-decoration-color: transparent;
+    }
+}

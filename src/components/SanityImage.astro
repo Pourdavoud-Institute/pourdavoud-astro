@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import type { SanityImage } from '@lib/utils/types';
+import { urlForImage } from '@lib/sanity/urlForImage';
+
+interface Props {
+    alt?: string;
+    aspectRatio?: [number, number]; // set in `[4, 3]` format
+    attrs?: any; // additional attributes
+    classes?: string;
+    crop?: boolean;
+    width?: number;
+    loading?: 'eager' | 'lazy';
+    quality?: number;
+    source: SanityImage;
+}
+
+const {
+    source,
+    alt = '',
+    aspectRatio,
+    crop = false, //
+    classes,
+    width = 900,
+    loading = 'lazy',
+    quality = 85,
+    ...attrs
+} = Astro.props;
+
+// Set vars
+let queryString = urlForImage(source);
+let computedHeight;
+let computedAspectRatio;
+const defaultImageAspectRatio =
+    source.asset?.metadata?.dimensions?.aspectRatio ?? 1;
+
+// Determine image dimensions/aspect ratio
+if (aspectRatio) {
+    const decimal = aspectRatio[0] / aspectRatio[1];
+    computedAspectRatio = Math.round(decimal * 100) / 100;
+} else {
+    computedAspectRatio = Math.round(defaultImageAspectRatio * 100) / 100;
+}
+
+computedHeight = Math.floor(width / computedAspectRatio);
+
+// Build Sanity image query string
+queryString = queryString
+    .width(width)
+    .height(computedHeight)
+    .auto('format')
+    .quality(quality);
+
+// this overrides hotspot/user crop?
+if (crop) {
+    queryString = queryString.fit('crop').crop('focalpoint');
+}
+// console.log(queryString);
+---
+
+<Image
+    alt={alt}
+    class:list={[classes, 'with-lqip']}
+    data-aspect-ratio={computedAspectRatio}
+    decoding={loading == 'lazy' ? 'async' : 'auto'}
+    height={computedHeight}
+    loading={loading}
+    src={queryString.url()}
+    style={`background-image: url(${source.asset?.metadata?.lqip})`}
+    width={width}
+    {...attrs}
+/>

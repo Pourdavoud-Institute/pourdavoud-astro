@@ -1,0 +1,139 @@
+---
+import type { BreadcrumbsCollection, BreadcrumbsStyle } from '@lib/utils/types';
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import type { CollectionEntry } from 'astro:content';
+import ModulesTOC from '@components/navigation/ModulesTOC.astro';
+import type { PageHeader } from '@content/pages';
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import SanityImage from '@components/SanityImage.astro';
+
+interface Props {
+    title: string;
+    header?: PageHeader;
+    modules?: CollectionEntry<'pages'>['data']['modules'];
+    breadcrumbsStyle?: BreadcrumbsStyle;
+    breadcrumbsCollection?: BreadcrumbsCollection;
+}
+
+const {
+    title,
+    header,
+    modules,
+    breadcrumbsStyle = 'default',
+    breadcrumbsCollection = 'pages',
+} = Astro.props;
+---
+
+<header class="page-header" data-layout={header?.layout}>
+    <Breadcrumbs collection={breadcrumbsCollection} style={breadcrumbsStyle} />
+    <div class="grid-12">
+        <div class="text-wrapper">
+            <div class="cover">
+                <div class="text | flow" data-tempo="moderato">
+                    <h1>{title}</h1>
+                    {
+                        header?.preview && (
+                            <div class="preview">
+                                <RichTextBlocks blocks={header?.preview} />
+                            </div>
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+        <figure class="image-wrapper">
+            {
+                header?.image && (
+                    <SanityImage
+                        alt={header?.image?.alt}
+                        aspectRatio={[4, 3]}
+                        loading="eager"
+                        source={header?.image}
+                        width={1200}
+                    />
+                )
+            }
+            {
+                header?.image?.caption && (
+                    <figcaption>{header?.image.caption}</figcaption>
+                )
+            }
+        </figure>
+    </div>
+    <div class="content-wrapper">
+        {
+            modules && modules.length > 0 && (
+                <ModulesTOC modules={modules} type="header" />
+            )
+        }
+    </div>
+</header>
+
+<style>
+    .grid-12 {
+        --grid-column-gap: 0;
+        background: linear-gradient(
+            to bottom right,
+            var(--ucla-darkest-blue),
+            var(--ucla-darker-blue)
+        );
+        min-height: 75dvh;
+
+        & > * {
+            grid-column: span 6;
+        }
+    }
+
+    h1 {
+        color: var(--ucla-white);
+    }
+
+    .text-wrapper {
+        padding-inline: var(--space-2xl);
+        max-width: 50rem;
+        margin-inline: auto;
+        padding-block-start: var(--gutter-spacing);
+        padding-block-end: var(--space-l);
+    }
+
+    .preview {
+        font-size: var(--step-1);
+        color: var(--ucla-lightest-blue);
+        margin-block-end: var(--space-2xl);
+    }
+
+    .image-wrapper {
+        position: relative;
+        height: 100%;
+
+        &:has(figcaption)::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            z-index: 1;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            width: 100%;
+            height: 35%;
+        }
+    }
+
+    figcaption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        width: 100%;
+        padding: var(--gutter-spacing);
+        font-size: var(--step--1);
+        color: #fff;
+    }
+
+    :global(.page-header[data-layout='splitPane'] img) {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .on-page-nav {
+        margin-block-start: var(--space-m);
+    }
+</style>

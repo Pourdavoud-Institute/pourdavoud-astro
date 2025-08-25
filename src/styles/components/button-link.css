@@ -1,0 +1,73 @@
+.button-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--button-gap, 0.5em);
+    font-size: var(--step-0);
+    padding-block-start: 0.5rem; /* 0.35rem 0.25rem */
+    padding-block-end: 0.65rem;
+    padding-inline: 1rem; /* 0.75rem */
+    text-decoration: none;
+    /* border-radius: var(--rounded-xs); */
+    font-weight: 700;
+    color: var(--button-text, inherit);
+    background-color: var(--button-bg, var(--ucla-gray-5));
+    border: 1px solid var(--button-border, var(--ucla-gray-6));
+    transition: all 0.2s;
+
+    & svg {
+        position: relative;
+        top: -1px;
+    }
+
+    &:hover {
+        color: var(--button-text--hover, var(--button-text));
+        background-color: var(--button-bg--hover, var(--ucla-gray-6));
+        border-color: var(--button-border--hover, var(--ucla-gray-6));
+    }
+
+    /* Sizes */
+    &[data-size='small'] {
+        font-size: var(--step--1);
+    }
+
+    &[data-size='large'] {
+        font-size: var(--step-1);
+    }
+
+    /* Styles */
+    &[data-style='primary'] {
+        --button-text: var(--ucla-white);
+        --button-text--hover: var(--button-text);
+        --button-bg: var(--ucla-state-blue--default);
+        --button-bg--hover: var(--ucla-state-blue--hover);
+        --button-border: var(--ucla-state-blue--default);
+        --button-border--hover: var(--ucla-state-blue--hover);
+    }
+
+    &[data-style='primary-ghost'] {
+        --button-text: var(--ucla-state-blue--default);
+        --button-text--hover: var(--ucla-white);
+        --button-bg: transparent;
+        --button-bg--hover: var(--ucla-state-blue--hover);
+        --button-border: var(--ucla-state-blue--default);
+        --button-border--hover: var(--ucla-state-blue--hover);
+    }
+
+    &[data-style='white'] {
+        --button-text: var(--ucla-primary-blue);
+        --button-text--hover: var(--ucla-white);
+        --button-bg: var(--ucla-white);
+        --button-bg--hover: transparent;
+        --button-border: var(--ucla-white);
+        --button-border--hover: var(--button-border);
+    }
+
+    &[data-style='success'] {
+        --button-text: var(--ucla-white);
+        --buton-text--hover: var(--button-text);
+        --button-bg: var(--ucla-success);
+        --button-bg--hover: color-mix(in srgb, var(--ucla-success), black 35%);
+        --button-border: transparent;
+        --button-border--hover: var(--button-border);
+    }
+}

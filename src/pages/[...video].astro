@@ -1,0 +1,231 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import RichText from '@components/modules/RichText.astro';
+import ShareLinks from '@components/interactive/ShareLinks.tsx';
+import SpeakerBio from '@components/people/SpeakerBio.astro';
+import SpeakerPreview from '@components/people/SpeakerPreview.astro';
+import { format } from '@formkit/tempo';
+import { formatEventDetails } from '@lib/utils/formatEvent';
+import getYouTubeID from 'get-youtube-id';
+
+export async function getStaticPaths() {
+    const videos = await getCollection('videos');
+
+    return videos.map((video) => ({
+        params: {
+            video: `/media${video.data.slug}`,
+        },
+        props: { video },
+    }));
+}
+
+const { video } = Astro.props;
+
+let filterTagHref = '';
+let filterTagTitle = '';
+if (video.data.eventFiltersRef.length) {
+    const filterTag = video.data.eventFiltersRef[0];
+    filterTagTitle = filterTag.title;
+
+    if (filterTag._type == 'eventCategory') {
+        filterTagHref = `/events/categories${filterTag.slug}`;
+    } else if (filterTag._type == 'event') {
+        filterTagHref = filterTag.slug;
+    }
+}
+
+const videoSpeakers = await getCollection('speakers', ({ data }) =>
+    video.data.speakersRef.some((speaker) => speaker._id == data._id)
+);
+---
+
+<PageWrapper
+    footerMargin={true}
+    id={video.id}
+    template="videosShow"
+    title={video.data.title}
+>
+    <Breadcrumbs collection="videos" style="darkest" />
+    <div class="content-wrapper">
+        <article class="video | with-sidebar">
+            <div class="main-panel">
+                <header>
+                    <div>
+                        <!-- {
+                            filterTagHref && (
+                                <a class="tag" href={filterTagHref}>
+                                    {filterTagTitle}
+                                </a>
+                            )
+                        } -->
+                        <h1>{video.data.title}</h1>
+                    </div>
+                    <div class="details">
+                        {
+                            video.data.eventFiltersRef.length > 0 && (
+                                <span>
+                                    <strong>
+                                        {video.data.eventFiltersRef[0].title}
+                                    </strong>
+                                </span>
+                            )
+                        }
+                        <span>{format(video.data.date, 'MMM D, YYYY')}</span>
+                    </div>
+                </header>
+                <div class="video-wrapper">
+                    <lite-youtube videoid={getYouTubeID(video.data.url)}
+                        ><a class="lite-youtube-fallback" href={video.data.url}
+                            >Watch on YouTube</a
+                        ></lite-youtube
+                    >
+                </div>
+                <div class="text-wrapper">
+                    {
+                        video.data.richText && (
+                            <section>
+                                <RichText module={video.data.richText} />
+                            </section>
+                        )
+                    }
+                    {
+                        videoSpeakers.length > 0 && (
+                            <section>
+                                <SpeakerBio speakers={videoSpeakers} />
+                            </section>
+                        )
+                    }
+                </div>
+            </div>
+            <div class="sidebar-panel">
+                {
+                    videoSpeakers.length > 0 && (
+                        <SpeakerPreview speakers={videoSpeakers} />
+                    )
+                }
+                {
+                    video.data.eventReference.length > 0 && (
+                        <div class="event">
+                            <h2 class="small-title">Associated Event</h2>
+                            <div class="event-list">
+                                {video.data.eventReference.map(
+                                    async (event) => {
+                                        const associatedEvent = await getEntry(
+                                            'events',
+                                            event._id
+                                        );
+                                        if (associatedEvent) {
+                                            const eventDetails =
+                                                formatEventDetails(
+                                                    associatedEvent.data.details
+                                                );
+                                            return (
+                                                <div class="event">
+                                                    <a
+                                                        class="title-link"
+                                                        href={
+                                                            associatedEvent.data
+                                                                .slug
+                                                        }
+                                                    >
+                                                        {associatedEvent.data
+                                                            .previewTitle ??
+                                                            associatedEvent.data
+                                                                .title}
+                                                    </a>
+                                                    <p class="date">
+                                                        {eventDetails.date}
+                                                    </p>
+                                                </div>
+                                            );
+                                        }
+                                    }
+                                )}
+                            </div>
+                        </div>
+                    )
+                }
+                <div>
+                    <ShareLinks client:load title={video.data.title} />
+                </div>
+                <!-- <div class="details">
+                    <h2 class="small-title">Video Details</h2>
+                    <dl>
+                        <dt><strong>Recorded</strong></dt>
+                        <dd>{format(video.data.date, 'MMM D, YYYY')}</dd>
+                        <dt><strong>Speaker</strong></dt>
+                    </dl>
+                </div> -->
+            </div>
+        </article>
+    </div>
+</PageWrapper>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1/lite-youtube.min.js"
+></script>
+
+<style>
+    .video {
+        margin-block-start: var(--space-2xl);
+    }
+
+    .with-sidebar {
+        --sidebar-gap: 6rem;
+        --sidebar-min-width: 20rem;
+    }
+
+    h1 {
+        margin-block-start: var(--space-s);
+        /* font-size: var(--step-4); */
+    }
+
+    .details {
+        font-size: var(--step-1);
+        margin-block-start: var(--space-m);
+    }
+
+    :is(.video-wrapper, .text-wrapper) {
+        margin-block-start: var(--space-xl);
+    }
+
+    .text-wrapper {
+        & > * + * {
+            margin-block-start: var(--space-xl);
+        }
+    }
+
+    .sidebar-panel {
+        margin-block-start: var(--space-m);
+    }
+
+    :global(.video .sidebar-panel .small-title) {
+        color: var(--ucla-primary-blue);
+        margin-block-end: var(--space-2xs);
+        padding-block-end: var(--space-2xs);
+        border-block-end: 1px solid var(--site-border);
+    }
+
+    :global(.video .sidebar-panel > * + *) {
+        margin-block-start: var(--space-xl);
+    }
+
+    .event {
+        & a {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: var(--step-1);
+        }
+
+        & .date {
+            margin-block-start: 0.5rem;
+            font-weight: 700;
+        }
+    }
+
+    .event-list {
+        margin-block-start: var(--space-s);
+    }
+</style>

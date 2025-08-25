@@ -1,0 +1,70 @@
+---
+import { formatEventDate, formatEventDetails } from '@lib/utils/formatEvent';
+import type { CollectionEntry } from 'astro:content';
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import SanityImage from '@components/SanityImage.astro';
+
+interface Props {
+    event: CollectionEntry<'events'>;
+}
+
+const { event } = Astro.props;
+
+const eventDetails = formatEventDetails(event.data.details);
+const eventDatePreview = formatEventDate(event.data.details);
+---
+
+<article class="event-preview-list" data-event-id={event.id}>
+    <div class="text-wrapper | flow" data-tempo="allegro">
+        {
+            event.data.categories.length > 0 && (
+                <a
+                    class="tag"
+                    href={`/events/categories${event.data.categories[0].slug}`}
+                >
+                    {event.data.categories[0].title}
+                </a>
+            )
+        }
+        <h3 class="title">
+            <a class="title-link" href={event.data.slug}>
+                {event.data.previewTitle ?? event.data.title}
+            </a>
+        </h3>
+        <div class="details">
+            <time datetime={event.data.details.startDate}>
+                <strong>{eventDetails.date}</strong>
+            </time>
+            {eventDetails.time && <span>{eventDetails.time}</span>}
+            {eventDetails.location && <span>{eventDetails.location}</span>}
+        </div>
+        {
+            event.data.preview && event.data.preview.length > 0 && (
+                <RichTextBlocks blocks={event.data.preview} />
+            )
+        }
+    </div>
+    <a class="image-wrapper | frame | image-scale-in" href={event.data.slug}>
+        {
+            event.data.image ? (
+                <SanityImage
+                    alt={event.data.image.alt}
+                    aspectRatio={[3, 2]}
+                    source={event.data.image}
+                    width={600}
+                />
+            ) : (
+                <img
+                    alt=""
+                    height={600}
+                    src="/images/pourdavoud-placeholder-landscape.webp"
+                    width={800}
+                />
+            )
+        }
+        <div class="date-preview">
+            <span class="month">{eventDatePreview.month}</span>
+            <span class="day">{eventDatePreview.day}</span>
+        </div>
+    </a>
+</article>

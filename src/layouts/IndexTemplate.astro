@@ -1,0 +1,54 @@
+---
+import type { BreadcrumbsStyle } from '@lib/utils/types';
+import type { CollectionEntry } from 'astro:content';
+import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
+import EventsIndex from '@components/events/EventsIndex.astro';
+import PostsIndex from '@components/posts/PostsIndex.astro';
+import VideosIndex from '@components/videos/VideosIndex.astro';
+
+interface Props {
+    page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+let type: 'events' | 'upcoming-events' | 'posts' | 'videos' | null = null;
+let breadcrumbsStyle: BreadcrumbsStyle = 'default';
+
+let Index;
+switch (page.data.indexCollection) {
+    case 'videos':
+        Index = VideosIndex;
+        breadcrumbsStyle = 'darkest';
+        break;
+    case 'upcoming-events':
+        Index = EventsIndex;
+        breadcrumbsStyle = 'lighter';
+        break;
+    case 'events':
+        Index = EventsIndex;
+        breadcrumbsStyle = 'lighter';
+        break;
+    case 'posts':
+        Index = PostsIndex;
+        break;
+    // case 'posts':
+    //     type = 'posts';
+    //     break;
+    default:
+        Index = EventsIndex;
+        break;
+}
+---
+
+<DefaultHeader breadcrumbsStyle={breadcrumbsStyle} title={page.data.title} />
+{
+    page.data.indexCollection && (
+        <div
+            class="index-wrapper"
+            data-index={page.data.indexCollection}
+            id={`${page.data.indexCollection}-index`}
+        >
+            <Index />
+        </div>
+    )
+}

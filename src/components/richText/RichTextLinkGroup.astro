@@ -1,0 +1,16 @@
+---
+import CTALinks from '@components/interactive/CTALinks.astro';
+import type { Link } from '@content/schemaFragments/sanityComponents';
+
+interface Props {
+    node: {
+        _key: string;
+        _type: 'linkGroup';
+        links?: Link[];
+    };
+}
+
+const { node } = Astro.props;
+---
+
+{node.links && node.links.length > 0 && <CTALinks links={node.links} />}

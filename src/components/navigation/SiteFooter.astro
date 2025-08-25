@@ -1,0 +1,177 @@
+---
+import UCLALogo from '@components/svg/UCLALogo.astro';
+import { getEntry } from 'astro:content';
+import { sanityLink } from '@lib/utils/sanityLink';
+
+const now = new Date();
+
+const globalFooter = [
+    {
+        title: 'Emergency',
+        href: 'https://www.bso.ucla.edu',
+    },
+    {
+        title: 'Accessibility',
+        href: 'https://www.ucla.edu/accessibility',
+    },
+    {
+        title: 'Report Misconduct',
+        href: 'https://ucla-gme-advocate.symplicity.com/public_report/index.php/pid586592',
+    },
+    {
+        title: 'Privacy & Terms of Use',
+        href: 'https://www.ucla.edu/terms-of-use',
+    },
+];
+
+const navigation = await getEntry(
+    'navigation',
+    '5177cfdb-4d3f-46d2-9e5a-570d1f6efc0f'
+);
+---
+
+<footer class="site-footer">
+    <div class="department-footer">
+        <div class="content-wrapper">
+            <div class="grid-12">
+                <div class="info | flow" data-tempo="moderato">
+                    <div class="logos | cluster">
+                        <a
+                            aria-label="UCLA Logo"
+                            class="logo-link-ucla"
+                            href="https://www.ucla.edu"
+                            target="_blank"
+                        >
+                            <UCLALogo />
+                        </a>
+                    </div>
+                    <div class="tagline">
+                        The Pourdavoud Institute is part of the <a
+                            class="footer-link"
+                            href="http://humanities.ucla.edu"
+                            target="_blank">Humanities Division</a
+                        > within <a
+                            class="footer-link"
+                            href="http://www.college.ucla.edu"
+                            target="_blank">UCLA College</a
+                        >.
+                    </div>
+                    <div class="address">
+                        Royce Hall 212<br />
+                        Los Angeles, CA 90095<br />
+                        (310) 206-6042
+                    </div>
+                </div>
+                <div class="nav-wrapper">
+                    {
+                        navigation?.data.items.map((navItem) => {
+                            if (navItem.itemType == 'linkList') {
+                                return (
+                                    <div class="column">
+                                        <div class="small-title">
+                                            {navItem.label}
+                                        </div>
+                                        <ul class="flow" data-tempo="presto">
+                                            {navItem.links.map((link) => {
+                                                const linkParts =
+                                                    sanityLink(link);
+                                                return (
+                                                    <li>
+                                                        <a
+                                                            class="footer-link"
+                                                            href={linkParts.url}
+                                                            target={
+                                                                linkParts.target
+                                                            }
+                                                        >
+                                                            {linkParts.label}
+                                                        </a>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                );
+                            }
+                        })
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ucla-global-footer">
+        <div class="content-wrapper">
+            <div class="cluster">
+                <p class="copyright">
+                    © {now.getFullYear()} Regents of the <a
+                        class="footer-link"
+                        href="http://www.universityofcalifornia.edu"
+                        target="_blank">University of California</a
+                    >
+                </p>
+                <ul class="cluster">
+                    {
+                        globalFooter.map((item) => (
+                            <li>
+                                <a
+                                    class="footer-link"
+                                    href={item.href}
+                                    target="_blank"
+                                >
+                                    {item.title}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .tagline {
+        font-size: var(--step-1);
+    }
+
+    .info {
+        grid-column: span 5;
+    }
+
+    .department-footer {
+        --footer-link-bg: var(--ucla-lighter-blue);
+        --footer-link-border: color-mix(
+            in srgb,
+            var(--ucla-lightest-blue),
+            transparent 60%
+        );
+        color: var(--ucla-white);
+        background-color: var(--ucla-darker-blue);
+        padding-block: var(--section-spacing);
+    }
+
+    .nav-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-m);
+        grid-column: 7 / span 6;
+        margin-block-start: var(--space-l);
+
+        & .column {
+            & ul {
+                margin-block-start: var(--space-m);
+            }
+        }
+    }
+
+    .ucla-global-footer {
+        font-size: var(--step--1);
+        color: var(--ucla-lighter-blue);
+        background-color: var(--ucla-darkest-blue);
+        padding-block: var(--space-s);
+
+        & .cluster:first-of-type {
+            --cluster-justify: space-between;
+        }
+    }
+</style>

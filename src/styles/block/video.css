@@ -1,0 +1,48 @@
+:is(.video, .video-preview) {
+    & .details > span + span::before {
+        content: '•';
+        color: var(--ucla-primary-blue);
+        padding-inline: var(--space-2xs);
+    }
+}
+
+.video-preview {
+    display: grid;
+    grid-template-columns: 1fr min(22rem, 35%);
+    gap: var(--space-xl);
+    align-items: center;
+
+    & .title {
+        /* font-family: var(--font-primary); */
+        font-size: var(--step-2);
+        font-weight: 700;
+    }
+
+    & .text-wrapper {
+        margin-block-start: 0.5rem;
+    }
+
+    & .image-wrapper {
+        & img {
+            width: 100%;
+            height: auto;
+            border: 1px solid var(--site-border);
+        }
+
+        &a {
+            transition: filter 0.2s;
+
+            &:hover {
+                filter: brightness(0.75);
+            }
+        }
+    }
+}
+
+.videos-list {
+    & > * + * {
+        margin-block-start: var(--space-l);
+        padding-block-start: var(--space-l);
+        border-block-start: 1px solid var(--site-border);
+    }
+}

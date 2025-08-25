@@ -1,0 +1,108 @@
+---
+import type { PersonSpeaker } from '@content/schemaFragments/sanityComponents';
+import type { VideoEventFilter } from '@content/videos';
+import VideosCollection from '@components/videos/VideosCollection';
+import { getCollection } from 'astro:content';
+
+/* Prepare video collection */
+const videos = await getCollection('videos');
+
+/* Prepare filters */
+const videoEventsMap = new Map<string, any>();
+const videoSpeakersMap = new Map<string, any>();
+for (let i = 0; i < videos.length; i++) {
+    const video = videos[i];
+    let eventFilter;
+
+    if (video.data.eventFiltersRef.length) {
+        eventFilter = video.data.eventFiltersRef[0];
+    }
+
+    if (eventFilter && !videoEventsMap.has(eventFilter._id)) {
+        if (video.data.speakersRef.length) {
+            eventFilter.associatedSpeakers = video.data.speakersRef.map(
+                (speaker) => speaker._id
+            );
+            videoEventsMap.set(eventFilter?._id, eventFilter);
+        } else {
+            eventFilter.associatedSpeakers = [];
+            videoEventsMap.set(eventFilter?._id, eventFilter);
+        }
+        // const speakerIDs = [];
+        // if (video.data.speakersRef.length > 0) {
+        //     for (let i = 0; i < video.data.speakersRef.length; i++) {
+        //         const speaker = video.data.speakersRef[i];
+        //         speakerIDs.push(speaker._id);
+        //     }
+        // }
+        // eventFilter.associatedSpeakers = speakerIDs;
+        // videoEventsMap.set(eventFilter?._id, eventFilter);
+    } else if (eventFilter && videoEventsMap.has(eventFilter._id)) {
+        // update the existing map item with current speakers
+        if (video.data.speakersRef.length) {
+            const mapItem = videoEventsMap.get(eventFilter._id);
+            mapItem.associatedSpeakers = [
+                ...mapItem.associatedSpeakers,
+                ...video.data.speakersRef.map((speaker) => speaker._id),
+            ];
+        }
+    }
+
+    if (video.data.speakersRef.length) {
+        for (let j = 0; j < video.data.speakersRef.length; j++) {
+            const speaker = video.data.speakersRef[j];
+            // if no speaker, add it to the map with the current event
+            if (!videoSpeakersMap.has(speaker._id)) {
+                speaker.associatedEvents = [eventFilter?._id];
+                videoSpeakersMap.set(speaker._id, speaker);
+            } else {
+                // update the existing map item with current event
+                const mapItem = videoSpeakersMap.get(speaker._id);
+                mapItem.associatedEvents = [
+                    ...mapItem.associatedEvents,
+                    eventFilter?._id,
+                ];
+            }
+        }
+    }
+}
+
+/* Sort filters */
+const videoEvents = (
+    Array.from(videoEventsMap.values()) as VideoEventFilter[]
+).sort((a, b) => {
+    if (a.title < b.title) {
+        return -1;
+    }
+    if (a.title > b.title) {
+        return 1;
+    }
+    return 0;
+});
+
+const videoSpeakers = (
+    Array.from(videoSpeakersMap.values()) as PersonSpeaker[]
+).sort((a, b) => {
+    if (a.name.lastName < b.name.lastName) {
+        return -1;
+    }
+    if (a.name.lastName > b.name.lastName) {
+        return 1;
+    }
+    return 0;
+});
+---
+
+<div class="content-wrapper">
+    <VideosCollection
+        client:load
+        events={videoEvents}
+        speakers={videoSpeakers}
+        videos={videos}
+    />
+</div>
+
+<!-- <script
+    is:inline
+    src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"
+></script> -->

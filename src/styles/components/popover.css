@@ -1,0 +1,16 @@
+.popover {
+    position: relative;
+
+    & .popover-panel {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--ucla-white);
+        padding: var(--space-3xs);
+        box-shadow: var(--shadow-base);
+        width: 14rem; /* 12 rem */
+        transform-origin: top left;
+        z-index: 60;
+        animation: 0.2s popover-in;
+    }
+}

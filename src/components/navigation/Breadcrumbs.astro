@@ -1,0 +1,200 @@
+---
+import type { BreadcrumbsCollection, BreadcrumbsStyle } from '@lib/utils/types';
+import { getCollection } from 'astro:content';
+import v from 'voca';
+
+type Breadcrumb = {
+    title?: string;
+    href: string;
+    ariaCurrent: 'page' | 'false';
+};
+
+interface Props {
+    style?: BreadcrumbsStyle;
+    collection?: BreadcrumbsCollection;
+}
+
+const { style = 'default', collection = 'pages' } = Astro.props;
+
+const pages = await getCollection('pages');
+const events = await getCollection('events');
+const eventCategories = await getCollection('eventCategories');
+const videos = await getCollection('videos');
+const people = await getCollection('people');
+const publications = await getCollection('publications');
+const posts = await getCollection('posts');
+const postCategories = await getCollection('postCategories');
+
+const urlParts = Astro.url.pathname.split('/').filter(Boolean);
+const breadcrumbs: Breadcrumb[] = [
+    { title: 'Home', href: '/', ariaCurrent: 'false' },
+];
+
+// loop through url parts to build breadcrumb items
+for (let i = 0; i < urlParts.length; i++) {
+    // get url parts
+    const urlPart = urlParts[i];
+    const lastHref = breadcrumbs[i].href;
+    let currentHref = '';
+    if (lastHref == '/') {
+        currentHref = lastHref + urlPart;
+    } else {
+        currentHref = `${lastHref}/${urlPart}`;
+    }
+
+    // build breadcrumb
+    const breadcrumb: Breadcrumb = {
+        title: '',
+        href: '',
+        ariaCurrent: 'false',
+    };
+
+    breadcrumb.href = currentHref;
+
+    // if last item, add `aria-current=page` and search collections for title
+    if (i == urlParts.length - 1) {
+        breadcrumb.ariaCurrent = 'page';
+
+        switch (collection) {
+            case 'events':
+                breadcrumb.title = events.find(
+                    ({ data }) => data.slug == currentHref
+                )?.data.title;
+                break;
+            case 'eventCategories':
+                breadcrumb.title = eventCategories.find(
+                    ({ data }) =>
+                        `/events/categories${data.slug}` == currentHref
+                )?.data.title;
+                break;
+            case 'videos':
+                breadcrumb.title = videos.find(
+                    ({ data }) => `/media${data.slug}` == currentHref
+                )?.data.title;
+                break;
+            case 'people':
+                breadcrumb.title = people.find(
+                    ({ data }) => data.slug == currentHref
+                )?.data.title;
+                break;
+            case 'publications':
+                breadcrumb.title = publications.find(({ data }) => {
+                    const slugParts = data.slug
+                        .split('/')
+                        .filter(Boolean)
+                        .slice(1);
+                    const type = data.type + 's';
+                    return (
+                        `/publications/${type}/${slugParts.join('/')}` ==
+                        currentHref
+                    );
+                })?.data.title;
+                break;
+            case 'posts':
+                breadcrumb.title = posts.find(
+                    ({ data }) => data.slug == currentHref
+                )?.data.title;
+                break;
+            case 'postCategories':
+                breadcrumb.title = postCategories.find(
+                    ({ data }) => `/news/categories${data.slug}` == currentHref
+                )?.data.title;
+                break;
+            default:
+                breadcrumb.title = pages.find(
+                    ({ data }) => data.slug == currentHref
+                )?.data.title;
+                break;
+        }
+    } else {
+        // search pages for title
+        breadcrumb.title = pages.find(
+            ({ data }) => data.slug == currentHref
+        )?.data.title;
+    }
+
+    // fallback if no title found
+    if (!breadcrumb.title) {
+        breadcrumb.title = v.capitalize(urlPart.split('-').toString());
+    }
+
+    breadcrumbs.push(breadcrumb);
+}
+---
+
+<ul class="breadcrumbs | cluster" data-pagefind-ignore="all" data-style={style}>
+    {
+        breadcrumbs.map((breadcrumb, i) => (
+            <li>
+                <a
+                    aria-current={breadcrumb.ariaCurrent}
+                    class="breadcrumb-link"
+                    href={breadcrumb.href}
+                >
+                    {breadcrumb.title}
+                </a>
+                {!(i == breadcrumbs.length - 1) && (
+                    <span class="divider">/</span>
+                )}
+            </li>
+        ))
+    }
+</ul>
+
+<style>
+    .breadcrumbs {
+        --cluster-space: var(--space-2xs);
+        --breadcrumbs-color: var(--ucla-primary-blue);
+        font-size: 14px;
+        font-weight: 700;
+        padding-block-start: 0.65rem;
+        padding-block-end: 0.75rem;
+        padding-inline: var(--gutter-spacing);
+        background-color: var(--breadcrumbs-bg, var(--ucla-gray-1));
+
+        & li {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--cluster-space);
+        }
+
+        & svg {
+            fill: var(--ucla-primary-blue);
+            width: 20px;
+            height: 20px;
+        }
+
+        & a {
+            color: var(--breadcrumbs-color, inherit);
+
+            &:hover {
+                background-color: unset;
+                text-decoration-color: transparent;
+            }
+        }
+
+        & .divider {
+            color: var(--breadcrumbs-color, inherit);
+        }
+
+        &[data-style='lighter'] {
+            --breadcrumbs-color: var(--ucla-darkest-blue);
+            --breadcrumbs-bg: var(--ucla-lighter-blue);
+        }
+
+        &[data-style='primary'] {
+            --breadcrumbs-color: var(--ucla-white);
+            --breadcrumbs-bg: var(--ucla-primary-blue);
+        }
+
+        &[data-style='darker'] {
+            --breadcrumbs-color: var(--ucla-white);
+            --breadcrumbs-bg: var(--ucla-darker-blue);
+        }
+
+        &[data-style='darkest'] {
+            --breadcrumbs-color: var(--ucla-lightest-blue);
+            --breadcrumbs-bg: var(--ucla-darkest-blue);
+        }
+    }
+</style>

@@ -1,0 +1,95 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import SanityImage from '@components/SanityImage.astro';
+import { getPersonRole } from '@lib/utils/people';
+import { workspaces } from '@lib/sanity/workspaces';
+
+interface Props {
+    HeadingTag?: 'h2' | 'h3' | 'p';
+    person: CollectionEntry<'people'>;
+    showImage?: boolean;
+}
+
+const { HeadingTag = 'h3', person, showImage = true } = Astro.props;
+
+let link: string = "";
+let isInternal = false;
+
+// set role
+const role = getPersonRole(person);
+
+// set link
+if (person.data.affiliationType == "internal") {
+    link = person.data.slug;
+    isInternal = true;
+} else if (person.data.facultyLink) {
+    link = person.data.facultyLink;
+}
+---
+
+<article
+    class="person preview"
+    data-person-id={person.id}
+>
+    {
+        link ? (
+            <Fragment>
+                {showImage && (
+                    <a
+                        class="image-wrapper | frame image-scale-in"
+                        href={`${link}`}
+                        target={isInternal ? "_self" : "_blank"}
+                    >
+                        {person.data.image ? (
+                            <SanityImage
+                                alt={person.data.image?.alt}
+                                aspectRatio={[3, 4]}
+                                source={person.data.image}
+                                width={600}
+                            />
+                        ) : (
+                            <img alt="" class="fallback-img" src="/images/pourdavoud-placeholder-portrait.webp" width={600} />
+                        )}
+                    </a>
+                )}
+            </Fragment>
+            <div class="text-wrapper | flow" data-tempo="allegro">
+                <HeadingTag class="name">
+                    {person.data.title}
+                </HeadingTag>
+                {role && (<p class="title">{role}</p>)}
+                <a href={link} target={isInternal ? "_self" : "_blank"}>{isInternal ? "View Bio" : "View Profile"}</a>
+            </div>
+        ) : (
+        <div class="text-wrapper | flow" data-tempo="allegro">
+            <HeadingTag class="name">
+                {person.data.title}
+            </HeadingTag>
+        </div>
+        )
+    }
+</article>
+
+<style>
+    .frame {
+        --frame-aspect-ratio: 3/4;
+    }
+
+    .text-wrapper {
+        margin-block-start: var(--space-s);
+
+        & a {
+            display: inline-block;
+        }
+    }
+
+    .name {
+        font-size: var(--step-2);
+    }
+
+    .title {
+        --flow-space: var(--space-2xs);
+        line-height: 1.35;
+        color: var(--site-text--light);
+    }
+</style>

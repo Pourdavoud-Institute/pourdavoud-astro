@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import EventPreviewList from '@components/events/EventPreviewList.astro';
+
+interface Props {
+    events: CollectionEntry<'events'>[];
+}
+
+const { events } = Astro.props;
+---
+
+<div class="events-list">
+    {events.map((event) => <EventPreviewList event={event} />)}
+</div>

@@ -1,0 +1,18 @@
+.skip-link {
+    position: absolute;
+    display: block;
+    z-index: 20;
+    top: -0.5rem;
+    left: 6px;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    color: var(--ucla-primary-blue);
+    background-color: var(--ucla-gray-2);
+    border-radius: var(--rounded-xs);
+    transform: translateY(-120%);
+    transition: transform 0.2s;
+
+    &:focus {
+        transform: translateY(0%);
+    }
+}

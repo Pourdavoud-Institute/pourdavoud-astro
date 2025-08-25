@@ -1,0 +1,35 @@
+.card {
+    position: relative;
+    overflow: hidden;
+    /* border-radius: var(--rounded-xs); */
+    box-shadow: var(--shadow-base);
+    transition: box-shadow 0.2s;
+
+    &:hover {
+        box-shadow: var(--shadow-large);
+    }
+
+    & .text-wrapper {
+        position: relative;
+        padding-inline: var(--card-padding, var(--space-m));
+        padding-block: var(--card-padding, var(--space-m));
+    }
+
+    & .title {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: var(--step-2);
+    }
+
+    & .cta-links {
+        --flow-space: var(--space-m);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .card {
+        & .title {
+            font-size: var(--step-3);
+        }
+    }
+}

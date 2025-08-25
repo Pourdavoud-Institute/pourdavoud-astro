@@ -1,0 +1,10 @@
+---
+import type { CollectionEntry } from 'astro:content';
+// render a person's role/title based on their affiliation type
+
+interface Props {
+    person: CollectionEntry<'people'>;
+}
+
+const { person } = Astro.props;
+---

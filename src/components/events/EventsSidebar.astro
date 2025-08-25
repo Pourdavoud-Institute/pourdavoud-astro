@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+
+const eventCategories = await getCollection('eventCategories');
+
+const dateFilters = [
+    {
+        title: 'Upcoming Events',
+        href: '/events',
+    },
+    {
+        title: 'Recent Events',
+        href: '/events/archive/1',
+    },
+];
+
+const url = Astro.url;
+let pathname = url.pathname;
+
+// slice trailing '/' if exists
+if (pathname.endsWith('/')) {
+    pathname = pathname.slice(0, -1);
+}
+
+// check if archive
+let archive = false;
+if (pathname.includes('archive')) {
+    archive = true;
+}
+---
+
+<div class="event-date-filters" data-pagefind-ignore="all">
+    <div class="filter-title small-title">Filter by Date</div>
+    <ul class="filter-links">
+        <li>
+            <a
+                aria-current={dateFilters[0].href == pathname
+                    ? 'page'
+                    : 'false'}
+                class="filter-link"
+                href={dateFilters[0].href}>{dateFilters[0].title}</a
+            >
+        </li>
+        <li>
+            <a
+                aria-current={archive ? 'page' : 'false'}
+                class="filter-link"
+                href={dateFilters[1].href}>{dateFilters[1].title}</a
+            >
+        </li>
+    </ul>
+</div>
+<div class="event-category-filters" data-pagefind-ignore="all">
+    <div class="filter-title small-title">Filter by Category</div>
+    <ul class="filter-links">
+        <li>
+            <a
+                aria-current={`/events` == pathname
+                    ? 'page'
+                    : archive
+                      ? 'page'
+                      : 'false'}
+                class="filter-link"
+                href="/events">All Events</a
+            >
+        </li>
+        {
+            eventCategories.map((category) => (
+                <li>
+                    <a
+                        aria-current={
+                            `/events/categories${category.data.slug}` ==
+                            pathname
+                                ? 'page'
+                                : 'false'
+                        }
+                        class="filter-link"
+                        href={`/events/categories${category.data.slug}`}
+                    >
+                        {category.data.title}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</div>

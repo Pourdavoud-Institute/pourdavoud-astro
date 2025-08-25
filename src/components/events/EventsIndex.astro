@@ -1,0 +1,56 @@
+---
+import { isAfter, sameDay, tzDate } from '@formkit/tempo';
+import EventsCollection from '@components/events/EventsCollection';
+import EventsList from './EventsList.astro';
+import EventsSidebar from './EventsSidebar.astro';
+import { getCollection } from 'astro:content';
+
+// filter to show upcoming
+const now = new Date();
+const events = await getCollection('events', ({ data }) => {
+    return (
+        sameDay(tzDate(data.details.startDate, 'America/Los_Angeles'), now) ||
+        isAfter(data.details.startDate, now)
+    );
+});
+---
+
+<div class="content-wrapper">
+    <div class="with-sidebar">
+        <div class="sidebar-panel | flow" data-tempo="andante">
+            <EventsSidebar />
+        </div>
+        <div class="main-panel">
+            <div class="flow" data-tempo="allegro">
+                <h2>Upcoming Events</h2>
+                <p>
+                    Showing {events.length}
+                    {events.length == 1 ? 'result' : 'results'}
+                </p>
+            </div>
+            <EventsList events={events} />
+            <div class="space-xl-top">
+                <a
+                    class="button-link"
+                    data-style="primary"
+                    href="/events/archive/1">View Recent Events</a
+                >
+            </div>
+        </div>
+    </div>
+    <!-- WARN: have to use client only for dynamic url params to work, will flash before loaded -->
+    <!-- <EventsCollection
+        categories={eventCategories.sort((a, b) => {
+            if (a.data.title > b.data.title) {
+                return 1;
+            }
+            if (a.data.title < b.data.title) {
+                return -1;
+            }
+            return 0;
+        })}
+        client:only
+        events={events}
+        url={url}
+    /> -->
+</div>

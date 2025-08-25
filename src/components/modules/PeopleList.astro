@@ -1,0 +1,57 @@
+---
+import type { PeopleList } from '@content/schemaFragments/pageModules';
+import PersonPreview from '@components/people/PersonPreview.astro';
+import { getEntry } from 'astro:content';
+import v from 'voca';
+
+interface Props {
+    module: PeopleList;
+    padding?: boolean;
+}
+
+const { module } = Astro.props;
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper">
+        {
+            module.heading && (
+                <h2 class="heading" id={v.slugify(module.heading)}>
+                    {module.heading}
+                </h2>
+            )
+        }
+        <div
+            class="entries | fluid-grid"
+            style={`--grid-item-min-size: ${module.options.gridDensity == 'compact' ? '14rem' : '16rem'}`}
+        >
+            {
+                module.entries?.map(async (entry) => {
+                    const linkedPerson = await getEntry('people', entry._id);
+                    if (linkedPerson) {
+                        return (
+                            <PersonPreview
+                                HeadingTag={module.heading ? 'h3' : 'h2'}
+                                person={linkedPerson}
+                                showImage={
+                                    module.options.layout == 'no-image'
+                                        ? false
+                                        : true
+                                }
+                            />
+                        );
+                    }
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .heading {
+        margin-block-end: var(--space-l);
+    }
+</style>

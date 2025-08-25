@@ -1,0 +1,38 @@
+---
+import type { PodcastFeed } from '@content/schemaFragments/pageModules';
+import PodcastPreview from '@components/media/PodcastPreview.astro';
+import { getCollection } from 'astro:content';
+import v from 'voca';
+
+interface Props {
+    module: PodcastFeed;
+}
+
+const { module } = Astro.props;
+
+const podcastFeed = await getCollection('podcast');
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper slim">
+        <h2 id={v.slugify(module.heading)}>{module.heading}</h2>
+        <div class="entries">
+            {podcastFeed.map((item) => <PodcastPreview item={item} />)}
+        </div>
+    </div>
+</section>
+
+<style>
+    .entries {
+        margin-block-start: var(--space-xl);
+    }
+
+    :global([data-module='podcastFeed'] .entries > * + *) {
+        border-block-start: 1px solid var(--site-border);
+        margin-block-start: var(--space-l);
+        padding-block-start: var(--space-l);
+    }
+</style>

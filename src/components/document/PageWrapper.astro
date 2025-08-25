@@ -1,0 +1,35 @@
+---
+import type {
+    OGBlock,
+    SEOBlock,
+} from '@content/schemaFragments/sanityComponents';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import type { Page } from '@lib/utils/types';
+
+interface Props {
+    // page: Page;
+    id: string;
+    title: string;
+    template: string;
+    footerMargin?: boolean | null;
+    seo?: SEOBlock;
+    og?: OGBlock;
+}
+
+const { id, title, template, footerMargin = false, seo, og } = Astro.props;
+---
+
+<BaseLayout og={og} seo={seo} title={title}>
+    <main
+        class:list={['page', { 'footer-margin': footerMargin }]}
+        data-id={id}
+        data-pagefind-body
+        data-pagefind-filter="type:page"
+        data-template={template}
+        id="main-content"
+        tabindex="-1"
+    >
+        <slot />
+    </main>
+</BaseLayout>

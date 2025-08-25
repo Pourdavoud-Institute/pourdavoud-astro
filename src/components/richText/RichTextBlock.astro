@@ -1,0 +1,20 @@
+---
+/** Custom Block component that overrides default rendering for select styles. */
+import type { BlockProps } from 'astro-portabletext/types';
+import RichTextH2 from './RichTextH2.astro';
+import { usePortableText } from 'astro-portabletext';
+
+type Props = BlockProps;
+
+const props = Astro.props;
+const { getDefaultComponent } = usePortableText(props.node);
+
+let Block = getDefaultComponent();
+
+// override h2 style to add slugified ID
+if (props.node.style == 'h2') {
+    Block = RichTextH2;
+}
+---
+
+<Block {...props}><slot /></Block>

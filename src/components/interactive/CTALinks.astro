@@ -1,0 +1,14 @@
+---
+import ButtonLink from '@components/interactive/ButtonLink.astro';
+import type { Link } from '@content/schemaFragments/sanityComponents';
+
+interface Props {
+    links: Link[];
+}
+
+const { links } = Astro.props;
+---
+
+<div class="cta-links | cluster">
+    {links?.map((link) => <ButtonLink link={link} />)}
+</div>

@@ -1,0 +1,74 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
+import ModulesList from '@components/document/ModulesList.astro';
+import ModulesTOC from '@components/navigation/ModulesTOC.astro';
+import SingleImageHeader from '@components/pageHeaders/SingleImageHeader.astro';
+import SplitPaneHeader from '@components/pageHeaders/SplitPaneHeader.astro';
+import { getBreadcrumbsStyleFromSlug } from '@lib/utils/getBreadcrumbsStyleFromSlug';
+
+interface Props {
+    page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+
+let Header;
+switch (page.data.header?.layout) {
+    case 'singleImage':
+        Header = SingleImageHeader;
+        break;
+    case 'splitPane':
+        Header = SplitPaneHeader;
+        break;
+    default:
+        Header = DefaultHeader;
+        break;
+}
+
+const breadcrumbsStyle = getBreadcrumbsStyleFromSlug(page.data.slug);
+---
+
+{
+    page.data.header ? (
+        <Header
+            breadcrumbsStyle={breadcrumbsStyle}
+            header={page.data.header}
+            modules={page.data.modules}
+            title={page.data.title}
+        />
+    ) : (
+        <DefaultHeader title={page.data.title} />
+    )
+}
+{
+    page.data.options.layout == 'sidebar' ? (
+        <div class="content-wrapper">
+            <div class="with-sidebar">
+                <div class="sidebar-panel | flow" data-tempo="andante">
+                    <ModulesTOC modules={page.data.modules} />
+                </div>
+                <div class="main-panel">
+                    {page.data.modules.length > 0 && (
+                        <ModulesList modules={page.data.modules} />
+                    )}
+                </div>
+            </div>
+        </div>
+    ) : (
+        page.data.modules.length > 0 && (
+            <ModulesList modules={page.data.modules} />
+        )
+    )
+}
+
+<style>
+    .with-sidebar {
+        --sidebar-min-width: 14rem;
+        --sidebar-gap: 3rem;
+    }
+
+    .sidebar-panel {
+        margin-block-start: var(--section-spacing);
+    }
+</style>

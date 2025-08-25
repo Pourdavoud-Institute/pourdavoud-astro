@@ -1,0 +1,67 @@
+---
+import FeaturedNavigation from '@components/navigation/FeaturedNavigation.astro';
+import MainNavigation from '@components/navigation/MainNavigation.astro';
+import UCLALogo from '@components/svg/UCLALogo.astro';
+import { getEntry } from 'astro:content';
+
+const navigation = await getEntry(
+    'navigation',
+    'b2b3beb7-b8b4-44bb-9e5d-45c46f45a0b9'
+);
+---
+
+<header class:list={['site-header', Astro.url.pathname == '/' && 'home']}>
+    <!-- Skip to Content Link -->
+    <a class="skip-link | small-title text-step--1" href="#main-content">
+        Skip to Content
+    </a>
+    <div class="nav-wrapper">
+        <div class="logos | cluster">
+            <a
+                aria-label="UCLA Logo"
+                class="logo-link-ucla"
+                href="https://www.ucla.edu"
+                target="_blank"
+            >
+                <UCLALogo />
+            </a>
+            <a class="logo-link pourdavoud" href="/">
+                <img
+                    alt="Pourdavoud Institute logo"
+                    decoding="auto"
+                    loading="eager"
+                    src="/images/logos/pourdavoud-logo-web.svg"
+                    width="325"
+                />
+            </a>
+        </div>
+        <MainNavigation navItems={navigation?.data.items} />
+        <FeaturedNavigation />
+    </div>
+</header>
+
+<style>
+    .site-header {
+        position: relative;
+        border-block-start: 3px solid var(--ucla-primary-blue);
+        box-shadow: var(--shadow-base);
+        z-index: 50;
+
+        &.home {
+            position: absolute;
+            width: 100%;
+            background-color: var(--ucla-white);
+        }
+    }
+
+    .nav-wrapper {
+        position: relative;
+    }
+
+    .logos {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        padding-inline-start: var(--gutter-spacing);
+    }
+</style>

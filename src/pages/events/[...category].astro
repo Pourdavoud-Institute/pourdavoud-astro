@@ -1,0 +1,77 @@
+---
+/* Redundant to repeat this or try to fit in Index Template? */
+import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
+import EventsList from '@components/events/EventsList.astro';
+import EventsSidebar from '@components/events/EventsSidebar.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const eventCategories = await getCollection('eventCategories');
+
+    return eventCategories.map((category) => ({
+        params: {
+            category: `/categories${category.data.slug}`,
+        },
+        props: { category },
+    }));
+}
+
+const { category } = Astro.props;
+
+const events = await getCollection('events');
+// const associatedEvents
+---
+
+<PageWrapper
+    footerMargin={true}
+    id={category.id}
+    template="eventsTaxonomyTerm"
+    title={`${category.data.title} Event Category`}
+>
+    <DefaultHeader
+        breadcrumbsCollection="eventCategories"
+        breadcrumbsStyle="lighter"
+        title="Events"
+    />
+    <div
+        class="index-wrapper"
+        data-index="events"
+        id={`${category.data.slug.slice(1)}-events-index`}
+    >
+        <div class="content-wrapper">
+            <div class="with-sidebar">
+                <div class="sidebar-panel | flow" data-tempo="andante">
+                    <EventsSidebar />
+                </div>
+                <div class="main-panel">
+                    <div class="flow" data-tempo="allegro">
+                        <h2>{category.data.title} Events</h2>
+                        <p>
+                            Showing {category.data.events.length}
+                            {
+                                category.data.events.length == 1
+                                    ? 'result'
+                                    : 'results'
+                            }
+                        </p>
+                    </div>
+                    {
+                        category.data.events.length > 0 && (
+                            // @ts-expect-error
+                            <EventsList
+                                events={category.data.events.map(
+                                    (associatedEvent) =>
+                                        events.find(
+                                            (event) =>
+                                                event.id == associatedEvent._id
+                                        )
+                                )}
+                            />
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</PageWrapper>

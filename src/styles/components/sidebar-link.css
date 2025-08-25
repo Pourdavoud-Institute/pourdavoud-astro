@@ -1,0 +1,14 @@
+/* replace filter-link with this */
+.sidebar-link {
+    display: block;
+    padding-block: 0.35rem;
+    padding-inline: 4px;
+    font-size: 14px;
+    border-block-end: 1px solid var(--site-border);
+    text-decoration-color: transparent;
+
+    &:hover {
+        color: var(--ucla-primary-blue);
+        text-decoration-color: var(--ucla-primary-blue);
+    }
+}

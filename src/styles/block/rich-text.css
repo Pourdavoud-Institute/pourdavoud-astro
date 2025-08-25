@@ -1,0 +1,101 @@
+.rich-text {
+    --flow-space: var(--space-m);
+    position: relative;
+    font-size: var(--step-1);
+
+    &.contained {
+        & > * {
+            max-width: var(--paragraph-measure);
+            margin-inline: auto;
+        }
+    }
+
+    & :is(h2, h3) {
+        --flow-space: var(--space-2xl);
+        position: relative;
+
+        /* &::after {
+            content: '';
+            display: block;
+            position: relative;
+            left: 0;
+            bottom: calc(var(--space-m) * -1);
+            background-color: var(--ucla-gray-4);
+            width: 4rem;
+            height: 1px;
+        } */
+
+        & + * {
+            --flow-space: var(--space-l); /* first el after heading */
+        }
+    }
+
+    & h2:first-child {
+        --flow-space: 0px;
+    }
+
+    & img {
+        --flow-space: var(--space-xl);
+        border-radius: var(--rounded-xs);
+
+        & + * {
+            --flow-space: var(--space-xl);
+        }
+
+        &.contained {
+            width: 100%;
+            max-width: 36rem;
+            /* margin-inline: auto; */
+        }
+
+        &.full {
+            width: 100%;
+            max-width: none;
+            margin-inline: unset;
+        }
+    }
+
+    & ul {
+        list-style-type: disc;
+    }
+
+    & :is(ul, ol) {
+        padding-inline-start: var(--space-s);
+
+        & > * + * {
+            margin-block-start: var(--space-2xs);
+        }
+    }
+
+    & hr {
+        color: var(--site-border);
+    }
+
+    & blockquote {
+        position: relative;
+        font-family: var(--font-heading);
+        font-size: var(--step-2);
+        color: var(--ucla-primary-blue);
+        font-style: italic;
+        font-weight: 500;
+        margin-block: var(--space-2xl);
+        border-block-start: 1px solid var(--site-border);
+        border-block-end: 1px solid var(--site-border);
+        padding-block: var(--space-l);
+
+        &::before {
+            content: '“';
+            position: absolute;
+            display: block;
+            font-family: var(--font-heading);
+            font-style: normal;
+            font-size: var(--step-6);
+            top: 0.5rem;
+            left: -2rem;
+        }
+    }
+
+    & .cta-links {
+        --flow-space: var(--space-l);
+    }
+}

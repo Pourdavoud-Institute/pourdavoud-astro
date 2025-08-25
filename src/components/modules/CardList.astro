@@ -1,0 +1,53 @@
+---
+import CTALinks from '@components/interactive/CTALinks.astro';
+import Card from '@components/Card.astro';
+import CardImage from '@components/CardImage.astro';
+import type { CardList } from '@content/schemaFragments/pageModules';
+import RichTextBlocksLite from '@components/richText/RichTextBlocksLite.astro';
+import v from 'voca';
+
+interface Props {
+    module: CardList;
+}
+
+const { module } = Astro.props;
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper with-border-top">
+        <h2 id={v.slugify(module.heading)}>{module.heading}</h2>
+        <div class="entries | fluid-grid">
+            {
+                module.cards?.map((card) => (
+                    <Card heading={card.heading}>
+                        <CardImage
+                            image={card.image}
+                            link={card.cta[0]}
+                            slot="image"
+                        />
+                        <Fragment slot="text">
+                            <div>
+                                {card.preview && (
+                                    <RichTextBlocksLite blocks={card.preview} />
+                                )}
+                            </div>
+                            {card?.cta.length > 0 && (
+                                <CTALinks links={card.cta} />
+                            )}
+                        </Fragment>
+                    </Card>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .entries {
+        --grid-item-min-size: 20rem;
+        margin-block-start: var(--space-xl);
+    }
+</style>

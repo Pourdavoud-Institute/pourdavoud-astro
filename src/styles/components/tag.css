@@ -1,0 +1,19 @@
+.tag {
+    font-size: var(--step--1);
+    background-color: var(--ucla-gray-1);
+    color: var(--ucla-primary-blue);
+    border: 1px solid var(--ucla-lighter-blue);
+    padding-block: 0.2rem;
+    padding-inline: 0.5rem;
+    font-weight: 700;
+    display: inline-block;
+
+    &a {
+        text-decoration: none;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: var(--ucla-lightest-blue);
+        }
+    }
+}

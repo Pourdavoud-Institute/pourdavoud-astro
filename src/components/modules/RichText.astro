@@ -1,0 +1,23 @@
+---
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import type { RichText as RichTextModule } from '@content/schemaFragments/pageModules';
+
+interface Props {
+    module: RichTextModule;
+    contained?: boolean;
+}
+
+const { module, contained = false } = Astro.props;
+---
+
+<div
+    class:list={[
+        'rich-text | flow',
+        {
+            'section-margin': module.options?.sectionMargin,
+            contained: contained,
+        },
+    ]}
+>
+    {module.blocks && <RichTextBlocks blocks={module.blocks} />}
+</div>

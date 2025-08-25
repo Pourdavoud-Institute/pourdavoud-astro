@@ -1,0 +1,120 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import SanityImage from '@components/SanityImage.astro';
+import { getEntry } from 'astro:content';
+
+interface Props {
+    HeadingTag?: 'h2' | 'h3' | 'p';
+    publication: CollectionEntry<'publications'>;
+}
+
+const { HeadingTag = 'h3', publication } = Astro.props;
+
+// if route exists, link
+// else if publication link is set, link
+// else no link
+let link: string = '';
+const isInternal = publication.data.options.createRoute == true;
+
+if (isInternal) {
+    const slugParts = publication.data.slug.split('/').filter(Boolean).slice(1);
+    // make type plural, i.e. "books"
+    const type = publication.data.type + 's';
+    link = `/publications/${type}/${slugParts.join('/')}`;
+} else if (publication.data.publicationLink) {
+    link = publication.data.publicationLink;
+}
+
+let title = publication.data.title;
+if (publication.data.subtitle) {
+    title += ': ' + publication.data.subtitle;
+}
+
+const authors = await Promise.all(publication.data.authors.map(async (entry) => {
+    if (entry._type == "author") {
+        return entry.name;
+    } else if (entry.reference) {
+        const linkedPerson = await getEntry("people", entry.reference?._id);
+        return linkedPerson?.data.title;
+    }
+}));
+---
+
+<article class="publication-preview">
+    {
+        link ? (
+            <a
+                class="image-wrapper"
+                href={link}
+                target={
+                    isInternal
+                        ? '_self'
+                        : '_blank'
+                }
+            >
+                {publication.data.image ? (
+                    <SanityImage
+                        alt={title}
+                        aspectRatio={[6, 9]}
+                        source={publication.data.image}
+                        width={600}
+                    />
+                ) : (
+                    <img alt="" class="fallback-img" src="/images/pourdavoud-placeholder-portrait.webp" width={600} />
+                )}
+            </a>
+            <div class="text-wrapper | flow" data-tempo="vivace">
+                <HeadingTag class="title">
+                    <a class="title-link" href={link} target={
+                    isInternal
+                        ? '_self'
+                        : '_blank'
+                }>{title}</a>
+                </HeadingTag>
+                <div class="authors">{authors.join(", ")}</div>
+            </div>
+        ) : (
+            <Fragment>
+                {publication.data.image ? (
+                    <SanityImage
+                        alt={title}
+                        aspectRatio={[6, 9]}
+                        source={publication.data.image}
+                        width={600}
+                    />
+                ) : (
+                    <img alt="" class="fallback-img" src="/images/pourdavoud-placeholder-portrait.webp" width={600} />
+                )}
+            </Fragment>
+            <div class="text-wrapper | flow" data-tempo="vivace">
+                <HeadingTag class="title">{title}</HeadingTag>
+                <div class="authors">{authors.join(", ")}</div>
+            </div>
+        )
+    }
+</article>
+
+<style>
+    .title {
+        font-size: var(--step-1);
+        font-family: var(--font-heading);
+        font-weight: var(--font-heading-weight);
+        line-height: 1.25;
+    }
+
+    .image-wrapper {
+        & img {
+            box-shadow: var(--shadow-none);
+            transition: all 0.2s;
+        }
+        
+        &:hover img {
+            box-shadow: var(--shadow-large);
+            transform: translateY(-.75rem);
+        }
+    }
+
+    .text-wrapper {
+        margin-block-start: var(--space-xs);
+    }
+</style>

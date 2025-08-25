@@ -1,0 +1,93 @@
+---
+import CTALinks from '@components/interactive/CTALinks.astro';
+import type { FeaturedElement } from '@content/schemaFragments/pageModules';
+import RichTextBlocksLite from '@components/richText/RichTextBlocksLite.astro';
+import SanityImage from '@components/SanityImage.astro';
+import v from 'voca';
+
+interface Props {
+    module: FeaturedElement;
+}
+
+const { module } = Astro.props;
+
+let aspectRatio: [number, number] | undefined = undefined;
+if (
+    module.options.imageAspectRatio &&
+    module.options.imageAspectRatio != 'default'
+) {
+    aspectRatio = module.options.imageAspectRatio
+        .split('/')
+        .map((str) => parseInt(str)) as [number, number];
+}
+---
+
+<section
+    class:list={[
+        {
+            'section-margin': module.options.sectionMargin,
+            'section-padding': module.options.backgroundColor,
+        },
+    ]}
+    data-module={module._type}
+>
+    <div class="content-wrapper">
+        <div class="panes" data-composition="diptych">
+            <div class="text-wrapper | flow" data-tempo="moderato">
+                <header>
+                    {
+                        module.eyebrow && (
+                            <div class="small-title eyebrow">
+                                {module.eyebrow}
+                            </div>
+                        )
+                    }
+                    <h2 id={v.slugify(module.heading)}>{module.heading}</h2>
+                </header>
+                {
+                    module.preview && (
+                        <div class="rich-text">
+                            <RichTextBlocksLite blocks={module.preview} />
+                        </div>
+                    )
+                }
+                {module.cta.length > 0 && <CTALinks links={module.cta} />}
+            </div>
+            <div class="image-wrapper">
+                <SanityImage
+                    alt={module.image.alt}
+                    aspectRatio={aspectRatio}
+                    source={module.image}
+                    width={900}
+                />
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .section-padding {
+        padding-block: var(--section-spacing);
+        background-color: var(--ucla-gray-1);
+    }
+
+    .eyebrow {
+        font-size: var(--step--1);
+    }
+
+    h2 {
+        margin-block-start: var(--space-3xs);
+    }
+
+    .panes {
+        --panes-gap: var(--space-3xl);
+    }
+
+    .text-wrapper {
+        --panes-width: 55%;
+    }
+
+    .image-wrapper {
+        --panes-width: 45%;
+    }
+</style>

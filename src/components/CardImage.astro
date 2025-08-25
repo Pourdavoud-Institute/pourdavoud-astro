@@ -1,0 +1,46 @@
+---
+import type {
+    FeaturedImage,
+    Link,
+} from '@content/schemaFragments/sanityComponents';
+import { type SanityLinkParts, sanityLink } from '@lib/utils/sanityLink';
+import SanityImage from '@components/SanityImage.astro';
+
+interface Props {
+    link?: Link;
+    image?: FeaturedImage;
+}
+
+const { link, image } = Astro.props;
+
+const Wrapper = link ? 'a' : 'div';
+let linkParts: undefined | SanityLinkParts;
+
+if (link) {
+    linkParts = sanityLink(link);
+}
+---
+
+<Wrapper
+    class:list={['image-wrapper', 'frame', link && 'image-scale-in']}
+    href={linkParts ? linkParts.url : null}
+    target={linkParts ? linkParts.target : null}
+>
+    {
+        image ? (
+            <SanityImage
+                alt={image.alt}
+                aspectRatio={[3, 2]}
+                source={image}
+                width={600}
+            />
+        ) : (
+            <img
+                alt=""
+                height={400}
+                src="/images/default-placeholder.webp"
+                width={600}
+            />
+        )
+    }
+</Wrapper>

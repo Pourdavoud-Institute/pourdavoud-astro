@@ -1,0 +1,62 @@
+---
+import PostPreview from '@components/posts/PostPreview.astro';
+import type { PostsList } from '@content/schemaFragments/pageModules';
+import { format } from '@formkit/tempo';
+import { getCollection } from 'astro:content';
+import v from 'voca';
+
+interface Props {
+    module: PostsList;
+    limit?: number; // default limit for events to show
+}
+
+const { module, limit = 3 } = Astro.props;
+
+const posts = await getCollection('posts');
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper with-border-top">
+        {
+            module.heading && (
+                <h2 class="heading" id={v.slugify(module.heading)}>
+                    {module.heading}
+                </h2>
+            )
+        }
+        <div
+            class="entries | collection-grid"
+            style={`--grid-columns: ${module.options.gridColumns ?? 3}`}
+        >
+            {
+                module.selection == 'auto' &&
+                    posts
+                        .slice(0, limit)
+                        .map((post) => <PostPreview post={post} />)
+            }
+        </div>
+        <div class="cta-links | cluster">
+            <a class="button-link" data-style="primary" href="/news"
+                >View More Stories</a
+            >
+        </div>
+    </div>
+</section>
+
+<style>
+    .heading {
+        margin-block-end: var(--space-l);
+    }
+
+    .collection-grid {
+        column-gap: var(--space-xl);
+    }
+
+    .cta-links {
+        --cluster-justify: center;
+        margin-block-start: var(--space-2xl);
+    }
+</style>

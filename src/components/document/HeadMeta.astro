@@ -1,0 +1,76 @@
+---
+import type {
+    OGBlock,
+    SEOBlock,
+} from '@content/schemaFragments/sanityComponents';
+import { SEO } from 'astro-seo';
+import { getEntry } from 'astro:content';
+import { urlForImage } from '@lib/sanity/urlForImage';
+
+interface Props {
+    title: string;
+    seo: SEOBlock;
+    og: OGBlock;
+}
+
+const { title, seo, og } = Astro.props;
+
+const siteSettings = await getEntry('settings', 'siteSettingsPourdavoud');
+
+const ogImage = urlForImage(og?.image ?? siteSettings?.data.openGraph?.image!);
+
+const url = Astro.url;
+// first use local seo if set, then fallback to page/object title, then fallback to sitewide defaults
+// canonical and noindex/nofollow are set automatically
+---
+
+<!-- SEO & OG -->
+<SEO
+    description={seo?.description ??
+        (siteSettings?.data.seo?.description as string)}
+    openGraph={{
+        basic: {
+            title:
+                og?.title ??
+                seo?.title ??
+                title ??
+                siteSettings?.data.openGraph?.title,
+            type: 'website',
+            image: ogImage
+                .width(1200)
+                .height(630)
+                .auto('format')
+                .quality(95)
+                .url(),
+        },
+        optional: {
+            description:
+                og?.description ??
+                siteSettings?.data.openGraph?.description ??
+                seo?.description ??
+                (siteSettings?.data.seo?.description as string),
+            siteName: siteSettings?.data.siteName,
+        },
+    }}
+    title={seo?.title ?? title}
+    titleDefault={siteSettings?.data.seo?.title as string}
+    titleTemplate={url.pathname == '/'
+        ? (seo?.title ?? title)
+        : `%s • ${siteSettings?.data.siteName}`}
+/>
+
+<!-- Favicon -->
+<link href="/pourdavoud-favicon.svg" rel="icon" type="image/svg+xml" />
+<link
+    href="/pourdavoud-favicon-32.png"
+    rel="icon"
+    sizes="32x32"
+    type="image/png"
+/>
+<link
+    href="/pourdavoud-favicon-16.png"
+    rel="icon"
+    sizes="16x16"
+    type="image/png"
+/>
+<link href="/pourdavoud-favicon.svg" rel="shortcut icon" />

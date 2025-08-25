@@ -1,0 +1,96 @@
+---
+import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
+import EventsList from '@components/events/EventsList.astro';
+import EventsSidebar from '@components/events/EventsSidebar.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import type { PaginateFunction } from 'astro';
+import { getCollection } from 'astro:content';
+import { isBefore } from '@formkit/tempo';
+
+export async function getStaticPaths({
+    paginate,
+}: {
+    paginate: PaginateFunction;
+}) {
+    const now = new Date();
+    const pastEvents = await getCollection('events', ({ data }) =>
+        isBefore(data.details.startDate, now)
+    );
+
+    return paginate(
+        pastEvents.sort((a, b) =>
+            isBefore(a.data.details.startDate, b.data.details.startDate)
+                ? 1
+                : -1
+        ),
+        { pageSize: 10 }
+    );
+}
+
+const { page } = Astro.props;
+---
+
+<PageWrapper
+    footerMargin={true}
+    id={`events-archive-${page.currentPage}`}
+    template="eventsArchive"
+    title={`Events Archive, Page ${page.currentPage}`}
+>
+    <DefaultHeader breadcrumbsStyle="lighter" title={`Events`} />
+    <div class="index-wrapper" data-index="events" id="past-events-index">
+        <div class="content-wrapper">
+            <div class="with-sidebar">
+                <div class="sidebar-panel | flow" data-tempo="andante">
+                    <EventsSidebar />
+                </div>
+                <div class="main-panel">
+                    <div class="flow" data-tempo="allegro">
+                        <h2>Recent Events</h2>
+                        <p>
+                            Showing results {page.start + 1}-{page.end + 1} of {
+                                page.total
+                            }
+                        </p>
+                    </div>
+                    <EventsList events={page.data} />
+                    <div class="pagination | cluster">
+                        {
+                            !(page.currentPage == 1) && (
+                                <a
+                                    class="button-link"
+                                    data-size="small"
+                                    data-style="primary"
+                                    href={page.url.prev}
+                                    rel="prev"
+                                >
+                                    Prev
+                                </a>
+                            )
+                        }
+                        <span>Page {page.currentPage} of {page.lastPage}</span>
+                        {
+                            !(page.currentPage == page.lastPage) && (
+                                <a
+                                    class="button-link"
+                                    data-size="small"
+                                    data-style="primary"
+                                    href={page.url.next}
+                                    rel="next"
+                                >
+                                    Next
+                                </a>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .pagination {
+        margin-block-start: var(--space-l);
+        font-size: var(--step--1);
+    }
+</style>

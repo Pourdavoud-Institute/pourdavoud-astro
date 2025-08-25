@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { format } from '@formkit/tempo';
+
+interface Props {
+    post: CollectionEntry<'posts'>;
+    HeadingTag?: 'h2' | 'h3' | 'h4';
+}
+
+const { post, HeadingTag = 'h3' } = Astro.props;
+---
+
+<article class="post-preview-list">
+    <div class="text-wrapper | flow" data-tempo="allegro">
+        {
+            post.data.categories.length > 0 && (
+                <a
+                    class="tag"
+                    href={`/news/categories${post.data.categories[0].slug}`}
+                >
+                    {post.data.categories[0].title}
+                </a>
+            )
+        }
+        <HeadingTag class="title">
+            <a class="title-link" href={post.data.slug}>
+                {post.data.title}
+            </a>
+        </HeadingTag>
+        <div class="details">
+            <time datetime={post.data.displayDate}>
+                {format(post.data.displayDate, 'MMM D, YYYY')}
+            </time>
+        </div>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet dolor,
+            reprehenderit eos aperiam tempore aspernatur in quis doloribus harum
+            voluptatibus.
+        </p>
+    </div>
+</article>
+
+<style>
+    .title {
+        font-size: var(--step-2);
+        font-weight: 700;
+    }
+
+    time {
+        display: inline-block;
+        font-weight: 700;
+    }
+</style>

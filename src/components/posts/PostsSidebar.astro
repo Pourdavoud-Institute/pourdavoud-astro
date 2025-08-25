@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+
+const postCategories = await getCollection('postCategories');
+
+const url = Astro.url;
+let pathname = url.pathname;
+
+// slice trailing '/' if exists
+if (pathname.endsWith('/')) {
+    pathname = pathname.slice(0, -1);
+}
+
+// check if archive
+let archive = false;
+if (pathname.includes('archive')) {
+    archive = true;
+}
+---
+
+<div class="post-category-filters" data-pagefind-ignore="all">
+    <div class="filter-title small-title">Filter by Category</div>
+    <ul class="filter-links">
+        <li>
+            <a
+                aria-current={`/news` == pathname ? 'page' : 'false'}
+                class="filter-link"
+                href="/news">All Posts</a>
+        </li>
+        {
+            postCategories.map((category) => (
+                <li>
+                    <a
+                        aria-current={
+                            `/news/categories${category.data.slug}` == pathname
+                                ? 'page'
+                                : 'false'
+                        }
+                        class="filter-link"
+                        href={`/news/categories${category.data.slug}`}
+                    >
+                        {category.data.title}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</div>

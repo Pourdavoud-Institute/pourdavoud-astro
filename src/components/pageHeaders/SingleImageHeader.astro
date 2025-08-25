@@ -1,0 +1,66 @@
+---
+import type { BreadcrumbsCollection, BreadcrumbsStyle } from '@lib/utils/types';
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import type { CollectionEntry } from 'astro:content';
+import ModulesTOC from '@components/navigation/ModulesTOC.astro';
+import type { PageHeader } from '@content/pages';
+import SanityImage from '@components/SanityImage.astro';
+import type { SanityImage as SanityImageType } from '@lib/utils/types';
+
+interface Props {
+    title: string;
+    header?: PageHeader;
+    modules?: CollectionEntry<'pages'>['data']['modules'];
+    breadcrumbsStyle?: BreadcrumbsStyle;
+    breadcrumbsCollection?: BreadcrumbsCollection;
+    image?: SanityImageType | null;
+}
+
+const {
+    title,
+    header,
+    modules,
+    breadcrumbsStyle = 'default',
+    breadcrumbsCollection = 'pages',
+} = Astro.props;
+---
+
+<header class="page-header" data-layout={header?.layout}>
+    <Breadcrumbs collection={breadcrumbsCollection} style={breadcrumbsStyle} />
+    <div class="content-wrapper">
+        <div class="flow" data-tempo="moderato">
+            <h1 class="mega-title">{title}</h1>
+            {
+                header?.image && (
+                    <div class="image-wrapper">
+                        <SanityImage
+                            alt={header?.image.alt}
+                            aspectRatio={[16, 9]}
+                            loading="eager"
+                            source={header?.image}
+                            width={1600}
+                        />
+                    </div>
+                )
+            }
+            {
+                modules && modules.length > 0 && (
+                    <ModulesTOC modules={modules} type="header" />
+                )
+            }
+        </div>
+    </div>
+</header>
+
+<style>
+    h1 {
+        margin-block-start: var(--section-spacing);
+        text-align: center;
+        max-width: var(--wrapper-max-width-slim);
+        margin-inline: auto;
+    }
+
+    .image-wrapper {
+        --flow-space: var(--space-xl);
+    }
+</style>

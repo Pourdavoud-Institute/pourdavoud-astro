@@ -1,0 +1,9 @@
+.page {
+    & .section-margin {
+        margin-block-start: var(--section-margin, var(--section-spacing));
+    }
+
+    &.footer-margin + .site-footer {
+        margin-block-start: var(--footer-margin, var(--section-spacing));
+    }
+}

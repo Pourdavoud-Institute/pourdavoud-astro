@@ -1,0 +1,19 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import HeroCover from '@components/modules/HeroCover.astro';
+import ModulesList from '@components/document/ModulesList.astro';
+
+interface Props {
+    page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+
+// filter out hero cover section
+const heroCover = page.data.modules.find(
+    (module) => module._type == 'heroCover'
+);
+---
+
+{heroCover && <HeroCover module={heroCover} />}
+{page.data.modules && <ModulesList modules={page.data.modules} />}

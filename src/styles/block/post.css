@@ -1,0 +1,9 @@
+.posts-list {
+    margin-block-start: var(--space-xl);
+
+    & > * + * {
+        border-block-start: 1px solid var(--site-border);
+        margin-block-start: var(--space-l);
+        padding-block-start: var(--space-l);
+    }
+}

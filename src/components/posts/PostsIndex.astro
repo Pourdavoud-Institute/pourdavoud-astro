@@ -1,0 +1,27 @@
+---
+import PostPreviewList from '@components/posts/PostPreviewList.astro';
+import PostsSidebar from '@components/posts/PostsSidebar.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts');
+---
+
+<div class="content-wrapper">
+    <div class="with-sidebar">
+        <div class="sidebar-panel | flow" data-tempo="andante">
+            <PostsSidebar />
+        </div>
+        <div class="main-panel">
+            <div class="flow" data-tempo="allegro">
+                <h2>All Posts</h2>
+                <p>
+                    Showing {posts.length}
+                    {posts.length == 1 ? 'result' : 'results'}
+                </p>
+            </div>
+            <div class="posts-list">
+                {posts.map((post) => <PostPreviewList post={post} />)}
+            </div>
+        </div>
+    </div>
+</div>

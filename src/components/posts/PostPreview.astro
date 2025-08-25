@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { format } from '@formkit/tempo';
+
+interface Props {
+    post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+---
+
+<article class="post-preview | flow" data-tempo="allegro">
+    <a class="title-link" href={post.data.slug}>
+        {post.data.title}
+    </a>
+    <time datetime={post.data.displayDate}>
+        {format(post.data.displayDate, 'MMM D, YYYY')}
+    </time>
+</article>
+
+<style>
+    a:not(.button-link) {
+        font-size: var(--step-1);
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    time {
+        display: block;
+    }
+</style>

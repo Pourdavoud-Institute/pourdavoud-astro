@@ -1,0 +1,18 @@
+.index-wrapper {
+    margin-block-start: var(--section-spacing);
+
+    &[data-index='events'] {
+        --sidebar-min-width: 12rem;
+        --sidebar-gap: 4rem;
+    }
+
+    &[data-index='posts'] {
+        --sidebar-min-width: 12rem;
+        --sidebar-gap: 4rem;
+    }
+
+    &[data-index='videos'] {
+        --sidebar-min-width: 17rem;
+        --sidebar-gap: 4rem;
+    }
+}

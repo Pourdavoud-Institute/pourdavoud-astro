@@ -1,0 +1,179 @@
+---
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import EventVideoList from '@components/events/EventVideoList.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import RichText from '@components/modules/RichText.astro';
+import SanityImage from '@components/SanityImage.astro';
+import ShareLinks from '@components/interactive/ShareLinks.tsx';
+import SpeakerBio from '@components/people/SpeakerBio.astro';
+import SpeakerPreview from '@components/people/SpeakerPreview.astro';
+import { formatEventDetails } from '@lib/utils/formatEvent';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const events = await getCollection('events');
+
+    return events.map((event) => ({
+        params: {
+            event: event.data.slug,
+        },
+        props: { event },
+    }));
+}
+
+const { event } = Astro.props;
+
+const eventDetails = formatEventDetails(event.data.details);
+const eventVideos = await getCollection(
+    'videos',
+    ({ data }) =>
+        data.eventReference.length > 0 &&
+        data.eventReference.some((video) => video._id == event.id)
+);
+const eventSpeakers = await getCollection('speakers', ({ data }) =>
+    event.data.speakersRef.some((speaker) => speaker._id == data._id)
+);
+---
+
+<PageWrapper
+    footerMargin={true}
+    id={event.id}
+    template="eventsShow"
+    title={event.data.previewTitle ?? event.data.title}
+>
+    <Breadcrumbs collection="events" style="lighter" />
+    <div class="content-wrapper">
+        <article class="event | with-sidebar">
+            <div class="main-panel">
+                <header>
+                    <div>
+                        {
+                            event.data.categories.length > 0 && (
+                                <a
+                                    class="tag"
+                                    href={`/events/categories${event.data.categories[0].slug}`}
+                                >
+                                    {event.data.categories[0].title}
+                                </a>
+                            )
+                        }
+                        <h1>{event.data.title}</h1>
+                    </div>
+                    <div class="details">
+                        <time datetime={event.data.details.startDate}>
+                            <strong>{eventDetails.date}</strong>
+                        </time>
+                        {eventDetails.time && <span>{eventDetails.time}</span>}
+                        {
+                            eventDetails.location && (
+                                <span>{eventDetails.location}</span>
+                            )
+                        }
+                    </div>
+                </header>
+                {
+                    event.data.image && (
+                        <div class="image-wrapper">
+                            <SanityImage
+                                alt={event.data.image.alt}
+                                loading="eager"
+                                source={event.data.image}
+                                width={1200}
+                            />
+                        </div>
+                    )
+                }
+                <div class="text-wrapper">
+                    {
+                        event.data.richText && (
+                            <RichText module={event.data.richText} />
+                        )
+                    }
+                    {
+                        eventVideos.length > 0 && (
+                            <EventVideoList videos={eventVideos} />
+                        )
+                    }
+                    {
+                        eventSpeakers.length > 0 && (
+                            <section class="section-wrapper">
+                                <SpeakerBio speakers={eventSpeakers} />
+                            </section>
+                        )
+                    }
+                </div>
+                {
+                    event.data.tags.length > 0 && (
+                        <div class="tags-wrapper">
+                            <div class="small-title">Tags</div>
+                            <div class="cluster">
+                                {event.data.tags.map((tag) => (
+                                    <p>{tag.title}</p>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+            <div class="sidebar-panel">
+                {
+                    eventSpeakers.length > 0 && (
+                        <SpeakerPreview speakers={eventSpeakers} />
+                    )
+                }
+                <div>
+                    <ShareLinks client:load title={event.data.title} />
+                </div>
+            </div>
+        </article>
+    </div>
+</PageWrapper>
+
+<style>
+    .event {
+        margin-block-start: var(--space-2xl);
+    }
+
+    .with-sidebar {
+        --sidebar-gap: 6rem;
+        --sidebar-min-width: 20rem;
+    }
+
+    h1 {
+        margin-block-start: var(--space-s);
+    }
+
+    .details {
+        font-size: var(--step-1);
+        margin-block-start: var(--space-m);
+    }
+
+    :is(.image-wrapper, .text-wrapper) {
+        margin-block-start: var(--space-xl);
+    }
+
+    :global(.event .sidebar-panel .small-title) {
+        color: var(--ucla-primary-blue);
+        margin-block-end: var(--space-2xs);
+        padding-block-end: var(--space-2xs);
+        border-block-end: 1px solid var(--site-border);
+    }
+
+    :global(.event .sidebar-panel > * + *) {
+        margin-block-start: var(--space-xl);
+    }
+
+    .section-wrapper {
+        margin-block-start: var(--space-2xl);
+    }
+
+    .tags-wrapper {
+        margin-block-start: var(--space-l);
+        padding-block-start: var(--space-m);
+        border-block-start: 1px solid var(--site-border);
+
+        & .small-title {
+            font-size: var(--step--1);
+        }
+    }
+</style>

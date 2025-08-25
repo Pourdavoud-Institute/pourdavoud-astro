@@ -1,0 +1,23 @@
+---
+import ButtonLink from '@components/interactive/ButtonLink.astro';
+import type { CardList } from '@content/schemaFragments/pageModules';
+
+interface Props {
+    HeadingTag?: 'h2' | 'h3' | 'h4';
+    heading: string;
+}
+
+const { HeadingTag = 'h3', heading } = Astro.props;
+---
+
+<article class="card">
+    <slot name="image" />
+    <div class="text-wrapper | flow" data-tempo="allegro">
+        <header>
+            <HeadingTag class="title">
+                {heading}
+            </HeadingTag>
+        </header>
+        <slot name="text" />
+    </div>
+</article>

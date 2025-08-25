@@ -1,0 +1,208 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import SanityImage from '@components/SanityImage.astro';
+
+export async function getStaticPaths() {
+    const publications = await getCollection(
+        'publications',
+        ({ data }) => data.options.createRoute == true
+    );
+
+    return publications.map((publication) => {
+        // include type in slug, after "publications", for specificity and to avoid any
+        // duplicate URLs under /publications
+        // split slug parts, which start with /publications/some-slug
+        const slugParts = publication.data.slug
+            .split('/')
+            .filter(Boolean)
+            .slice(1);
+        // make type plural, i.e. "books"
+        const type = publication.data.type + 's';
+        return {
+            params: {
+                publication: `/publications/${type}/${slugParts.join('/')}`,
+            },
+            props: { publication },
+        };
+    });
+}
+
+const { publication } = Astro.props;
+---
+
+<PageWrapper
+    footerMargin={true}     
+    id={publication.id}     
+    template="publicationsShow"     
+    title={publication.data.title}
+>
+    <Breadcrumbs collection="publications" style="darkest" />
+    <div class="content-wrapper">
+        <div class="panes" data-composition="diptych">
+            <div class="image-wrapper">
+                {
+                    publication.data.image ? (
+                        <SanityImage
+                            alt={publication.data.title}
+                            aspectRatio={[6, 9]}
+                            source={publication.data.image}
+                            width={600}
+                        />
+                    ) : (
+                        <img
+                            alt=""
+                            class="fallback-img"
+                            src="/images/pourdavoud-placeholder-portrait.webp"
+                            width={600}
+                        />
+                    )
+                }
+                <dl class="details">
+                    {publication.data.publisher && (
+                        <dt><strong>Publisher</strong></dt>
+                        <dd>{publication.data.publisher}</dd>
+                    )}
+                    {publication.data.publicationDate && (
+                        <dt><strong>Date</strong></dt>
+                        <dd>{publication.data.publicationDate}</dd>
+                    )}
+                    {publication.data.citation && (
+                        <dt><strong>Citation</strong></dt>
+                        <dd>{publication.data.citation}</dd>
+                    )}
+                </dl>
+            </div>
+            <div class="text-wrapper">
+                <header>
+                    <h1>{publication.data.title}</h1>
+                    {
+                        publication.data.subtitle && (
+                            <p class="subtitle">{publication.data.subtitle}</p>
+                        )
+                    }
+                    <div class="authors">
+                        <span>by</span>
+                        {
+                            publication.data.authors.map(async (author) => {
+                                if (author._type == 'author') {
+                                    return <span>{author.name}</span>;
+                                } else if (author.reference) {
+                                    const linkedPerson = await getEntry(
+                                        'people',
+                                        author.reference?._id
+                                    );
+                                    if (
+                                        linkedPerson?.data.affiliationType ==
+                                        'internal'
+                                    ) {
+                                        return (
+                                            <a href={linkedPerson.data.slug}>
+                                                {linkedPerson.data.title}
+                                            </a>
+                                        );
+                                    } else {
+                                        return (
+                                            <span>
+                                                {linkedPerson?.data.title}
+                                            </span>
+                                        );
+                                    }
+                                }
+                            })
+                        }
+                    </div>
+                </header>
+                {
+                    publication.data.description &&
+                        publication.data.description.length > 0 && (
+                            <section class="description">
+                                <h2 id="description">Description</h2>
+                                <div class="rich-text | flow">
+                                    <RichTextBlocks
+                                        blocks={publication.data.description}
+                                    />
+                                </div>
+                            </section>
+                        )
+                }
+                <div class="cta">
+                    {
+                        publication.data.publicationLink && (
+                            <a
+                                class="button-link"
+                                data-style="primary"
+                                href={publication.data.publicationLink}
+                                target="_blank"
+                            >
+                                View Publisher Details
+                            </a>
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .content-wrapper {
+        margin-block-start: var(--section-spacing);
+    }
+
+    h1 {
+        margin-block-start: var(--space-xl);
+    }
+
+    .panes {
+        --panes-gap: 4rem;
+        --panes-align: flex-start;
+    }
+
+    .image-wrapper {
+        --panes-width: 6rem;
+    }
+
+    .subtitle {
+        font-size: var(--step-1);
+        margin-block-start: var(--space-xs);
+    }
+
+    .authors {
+        border-block-start: 1px solid var(--site-border);
+        margin-block-start: var(--space-s);
+        padding-block-start: var(--space-s);
+    }
+
+    .description {
+        margin-block-start: var(--space-2xl);
+
+        & .rich-text {
+            margin-block-start: var(--space-l);
+        }
+    }
+
+    .cta {
+        margin-block-start: var(--space-xl);
+    }
+
+    .details {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        column-gap: 0px;
+        row-gap: 0.5rem;
+        font-size: 14px;
+        margin-block-start: var(--space-s);
+
+        & > * {
+            border-block-end: 1px solid var(--site-border);
+            padding-block-end: 0.5rem;
+        }
+
+        & dd {
+            padding-inline-start: 1rem;
+        }
+    }
+</style>

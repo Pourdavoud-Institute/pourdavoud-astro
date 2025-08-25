@@ -1,0 +1,87 @@
+---
+import ButtonLink from '@components/interactive/ButtonLink.astro';
+import type { ColumnsGroup } from '@content/schemaFragments/pageModules';
+import RichTextBlocksLite from '@components/richText/RichTextBlocksLite.astro';
+import v from 'voca';
+
+interface Props {
+    module: ColumnsGroup;
+    HeadingTag?: 'h2' | 'h3' | 'h4';
+}
+
+const { module, HeadingTag = 'h2' } = Astro.props;
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper">
+        <div
+            class="columns"
+            data-align={module.options.columnsAlign}
+            data-columns={module.columns.length}
+        >
+            {
+                module.columns.map((column) => (
+                    <div class="column | flow" data-tempo="allegro">
+                        <header>
+                            <HeadingTag id={v.slugify(column.heading)}>
+                                {column.heading}
+                            </HeadingTag>
+                        </header>
+                        <div class="rich-text | flow">
+                            {column.text && (
+                                <RichTextBlocksLite blocks={column.text} />
+                            )}
+                        </div>
+                        {column.cta && column.cta.length > 0 && (
+                            <div class="cta-links">
+                                {column.cta.map((link) => (
+                                    <ButtonLink link={link} />
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .columns {
+        --grid-gap: var(--space-2xl);
+        display: grid;
+        grid-template-columns: repeat(var(--grid-columns, 2), 1fr);
+        column-gap: var(--grid-gap);
+
+        &[data-columns='3'] {
+            --grid-columns: 3;
+        }
+
+        &[data-align='center'] {
+            text-align: center;
+            justify-item: center;
+        }
+
+        & > * + * {
+            &::before {
+                content: '';
+                position: absolute;
+                left: calc(var(--grid-gap) * -0.5);
+                height: 100%;
+                width: 1px;
+                background-color: var(--site-border);
+            }
+        }
+    }
+
+    .column {
+        position: relative;
+    }
+
+    .cta-links {
+        --flow-space: var(--space-l);
+    }
+</style>

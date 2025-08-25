@@ -1,0 +1,97 @@
+---
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import type { CollectionEntry } from 'astro:content';
+import SanityImage from '@components/SanityImage.astro';
+import { getPersonRole } from '@lib/utils/people';
+
+interface Props {
+    person: CollectionEntry<'people'>;
+}
+
+const { person } = Astro.props;
+
+const role = getPersonRole(person);
+---
+
+<header class="page-header with-bg-image" data-layout="person">
+    <Breadcrumbs collection="people" />
+    <div class="content-wrapper">
+        <div class="flex">
+            <div class="image-wrapper">
+                {
+                    person.data.image ? (
+                        <SanityImage
+                            alt={person.data.image?.alt}
+                            aspectRatio={[3, 4]}
+                            source={person.data.image}
+                            width={600}
+                        />
+                    ) : (
+                        <img
+                            alt="fallback"
+                            src="/images/pourdavoud-placeholder-portrait.webp"
+                            width={600}
+                        />
+                    )
+                }
+            </div>
+            <div class="text-wrapper | flow" data-tempo="vivace">
+                <h1>{person.data.title}</h1>
+                {role && <p class="role">{role}</p>}
+                {person.data.facultyTitle && <p>{person.data.facultyTitle}</p>}
+                {
+                    person.data.contact?.email && (
+                        <div class="contact | cluster">
+                            <p>
+                                <strong>Email: </strong>
+                                {person.data.contact.email}
+                            </p>
+                        </div>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+    <img alt="" class="bg-image" src="/images/default-bg-image-2.webp" />
+</header>
+
+<style>
+    header {
+        position: relative;
+        min-height: 28rem;
+        background: linear-gradient(
+            to bottom right,
+            var(--ucla-primary-blue),
+            var(--ucla-darker-blue)
+        );
+        color: var(--ucla-lightest-blue);
+    }
+
+    h1 {
+        color: var(--ucla-white);
+    }
+
+    .image-wrapper {
+        position: absolute;
+        top: 0;
+        width: 20rem;
+    }
+
+    .text-wrapper {
+        margin-block-start: var(--space-3xl);
+        margin-inline-start: calc(20rem + var(--space-2xl));
+        padding-block-start: 4rem;
+    }
+
+    .role {
+        font-size: var(--step-2);
+    }
+
+    .contact {
+        --flow-space: var(--space-s);
+        --cluster-space: var(--space-l);
+        border-block-start: 1px solid
+            color-mix(in srgb, transparent 70%, var(--ucla-lighter-blue));
+        padding-block-start: var(--space-s);
+    }
+</style>

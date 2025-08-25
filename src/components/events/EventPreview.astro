@@ -1,0 +1,65 @@
+---
+import { formatEventDate, formatEventDetails } from '@lib/utils/formatEvent';
+import type { CollectionEntry } from 'astro:content';
+import SanityImage from '@components/SanityImage.astro';
+
+interface Props {
+    HeadingTag?: 'h2' | 'h3' | 'h4';
+    event: CollectionEntry<'events'>;
+}
+
+const { HeadingTag = 'h3', event } = Astro.props;
+
+const eventDetails = formatEventDetails(event.data.details);
+const eventDatePreview = formatEventDate(event.data.details);
+---
+
+<article class="event-preview-featured" data-event-id={event.id}>
+    <a class="image-wrapper | frame image-scale-in" href={`${event.data.slug}`}>
+        {
+            event.data.image ? (
+                <SanityImage
+                    alt={event.data.image?.alt}
+                    aspectRatio={[3, 2]}
+                    source={event.data.image}
+                    width={800}
+                />
+            ) : (
+                <img alt="" />
+            )
+        }
+        <div class="date-preview">
+            <span class="month">{eventDatePreview.month}</span>
+            <span class="day">{eventDatePreview.day}</span>
+        </div>
+    </a>
+    <div class="text-wrapper | flow" data-tempo="allegro">
+        <HeadingTag class="title">
+            <a class="title-link" href={event.data.slug}
+                >{event.data.previewTitle ?? event.data.title}</a
+            >
+        </HeadingTag>
+        <div class="details">
+            <time datetime={event.data.details.startDate}>
+                <strong>{eventDetails.date}</strong>
+            </time>
+            {eventDetails.time && <span>{eventDetails.time}</span>}
+            {eventDetails.location && <span>{eventDetails.location}</span>}
+        </div>
+        {
+            event.data.categories.length > 0 && (
+                <div class="tag">{event.data.categories[0].title}</div>
+            )
+        }
+    </div>
+</article>
+
+<style>
+    .event-preview-featured {
+        max-width: 40rem;
+    }
+
+    .text-wrapper {
+        margin-block-start: var(--space-s);
+    }
+</style>

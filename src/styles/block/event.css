@@ -1,0 +1,62 @@
+:is(.event, .event-preview-featured, .event-preview-list) {
+    & .title {
+        font-size: var(--step-2);
+        font-weight: 700;
+    }
+
+    & .details > span::before {
+        content: '•';
+        color: var(--ucla-primary-blue);
+        padding-inline: var(--space-2xs);
+    }
+
+    & .date-preview {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.25rem;
+        position: absolute;
+        top: 0;
+        right: 0;
+        text-align: center;
+        background-color: var(--ucla-white);
+        color: var(--ucla-primary-blue);
+        min-width: 4rem;
+        padding: 0.7rem;
+        font-weight: 700;
+        line-height: 1.1;
+
+        & .month {
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        & .day {
+            font-size: 1.5em;
+        }
+    }
+}
+
+.event-preview-list {
+    display: grid;
+    grid-template-columns: 1fr min(26rem, 40%);
+    gap: var(--space-xl);
+    align-items: center;
+
+    & .text-wrapper {
+        & a {
+            text-underline-offset: 4px;
+            text-decoration-thickness: 0.1ex;
+        }
+    }
+}
+
+.events-list {
+    margin-block-start: var(--space-m);
+
+    & > * + * {
+        margin-block-start: var(--space-l);
+        padding-block-start: var(--space-l);
+        border-block-start: 1px solid var(--site-border);
+    }
+}

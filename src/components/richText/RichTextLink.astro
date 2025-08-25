@@ -1,0 +1,16 @@
+---
+import type { Link } from '@content/schemaFragments/sanityComponents';
+import type { MarkProps } from 'astro-portabletext/types';
+import { sanityLink } from '@lib/utils/sanityLink';
+
+type Props = MarkProps<never>;
+
+const props = Astro.props;
+
+const { markDef } = props.node;
+const linkParts = sanityLink(markDef);
+
+// children array passes through with <slot />
+---
+
+<a href={linkParts.url} target={linkParts.target}><slot /></a>

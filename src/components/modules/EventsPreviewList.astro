@@ -1,0 +1,126 @@
+---
+import { isAfter, sameDay, tzDate } from '@formkit/tempo';
+import ButtonLink from '@components/interactive/ButtonLink.astro';
+import CTALinks from '@components/interactive/CTALinks.astro';
+import type { CollectionEntry } from 'astro:content';
+import EventPreview from '@components/events/EventPreview.astro';
+import type { EventsPreviewList } from '@content/schemaFragments/pageModules';
+import type { Link } from '@content/schemaFragments/sanityComponents';
+import { getCollection } from 'astro:content';
+
+interface Props {
+    module: EventsPreviewList;
+    limit?: number; // default limit for events to show
+}
+
+const { module, limit = 3 } = Astro.props;
+
+const now = new Date();
+const events = await getCollection('events');
+const upcomingEvents: CollectionEntry<'events'>[] = [];
+const pastEvents: CollectionEntry<'events'>[] = [];
+
+// filter events
+for (let i = 0; i < events.length; i++) {
+    const event = events[i];
+
+    if (
+        // check if dates are same day with timezone offset
+        sameDay(
+            tzDate(event.data.details.startDate, 'America/Los_Angeles'),
+            now
+        )
+    ) {
+        upcomingEvents.push(event);
+    } else if (isAfter(event.data.details.startDate, now)) {
+        upcomingEvents.push(event);
+    } else {
+        pastEvents.push(event);
+    }
+}
+
+const links: Link[] = [
+    {
+        type: 'internal',
+        href: '/events',
+        label: 'View All Upcoming Events',
+    },
+    {
+        type: 'internal',
+        href: '/events/archive/1',
+        label: 'View All Past Events',
+    },
+];
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper">
+        {
+            module.showUpcoming && (
+                <div data-collection="upcoming">
+                    <h2 class="small-title | eyebrow" id="upcoming-events">
+                        Upcoming Events
+                    </h2>
+                    <div class="flex-items">
+                        {upcomingEvents.slice(0, limit).map((event) => (
+                            <EventPreview event={event} />
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+        {
+            module.showPast && (
+                <div data-collection="past">
+                    <h2 class="small-title eyebrow" id="recent-events">
+                        Recent Events
+                    </h2>
+                    <div class="flex-items">
+                        {pastEvents
+                            .sort((a, b) => {
+                                const dateA = new Date(
+                                    a.data.details.startDate
+                                );
+                                const dateB = new Date(
+                                    b.data.details.startDate
+                                );
+                                return (dateB as any) - (dateA as any);
+                            })
+                            .slice(0, limit)
+                            .map((event) => (
+                                <EventPreview event={event} />
+                            ))}
+                    </div>
+                </div>
+            )
+        }
+        <div class="cta-links | cluster">
+            {
+                links.map((link, i) => (
+                    <ButtonLink
+                        link={link}
+                        style={i == 0 ? 'primary' : 'primary-ghost'}
+                    />
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    [data-collection='upcoming'] {
+        margin-block-end: var(--space-2xl);
+    }
+
+    .flex-items {
+        margin-block-start: var(--space-m);
+    }
+
+    .cta-links {
+        --cluster-justify: center;
+        margin-block-start: var(--space-2xl);
+    }
+</style>

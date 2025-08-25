@@ -1,0 +1,53 @@
+---
+import DefaultTemplate from '@layouts/DefaultTemplate.astro';
+import HomeTemplate from '@layouts/HomeTemplate.astro';
+import IndexTemplate from '@layouts/IndexTemplate.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import ParentTemplate from '@layouts/ParentTemplate.astro';
+import { getCollection } from 'astro:content';
+import { workspaces } from '@lib/sanity/workspaces';
+
+export async function getStaticPaths() {
+    const pages = await getCollection('pages');
+
+    return pages.map((page) => ({
+        params: {
+            page:
+                page.data.slug === `/home-${workspaces.pourdavoud.slug}`
+                    ? '/'
+                    : page.data.slug,
+        },
+        props: { page },
+    }));
+}
+
+const { page } = Astro.props;
+
+// alias component to an existing template component
+let Template;
+switch (page.data.template) {
+    case 'landing':
+        Template = HomeTemplate;
+        break;
+    case 'index':
+        Template = IndexTemplate;
+        break;
+    case 'parent':
+        Template = ParentTemplate;
+        break;
+    default:
+        Template = DefaultTemplate;
+        break;
+}
+---
+
+<PageWrapper
+    footerMargin={page.data.options.footerMargin}
+    id={page.id}
+    og={page.data.openGraph}
+    seo={page.data.seo}
+    template={page.data.template}
+    title={page.data.title}
+>
+    <Template page={page} />
+</PageWrapper>

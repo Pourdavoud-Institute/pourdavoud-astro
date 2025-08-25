@@ -1,0 +1,12 @@
+---
+// override h2 block style to add slugified ID
+import v from 'voca';
+
+const { node, index, isInline, ...attrs } = Astro.props;
+
+const heading = node.children[0].text;
+---
+
+<h2 id={heading && v.slugify(heading)}>
+    <slot />
+</h2>

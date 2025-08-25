@@ -1,0 +1,10 @@
+.footer-link {
+    color: var(--ucla-lightest-blue);
+    text-decoration-color: transparent;
+    display: inline-block;
+
+    &:hover {
+        color: var(--ucla-white);
+        text-decoration-color: var(--ucla-white);
+    }
+}

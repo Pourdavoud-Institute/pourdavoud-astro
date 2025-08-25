@@ -1,0 +1,57 @@
+---
+import CardList from '@components/modules/CardList.astro';
+import type { CollectionEntry } from 'astro:content';
+import ColumnsGroup from '@components/modules/ColumnsGroup.astro';
+// import CollectionList from '@components/modules/CollectionList.astro';
+// import DisclosureSet from '@components/modules/DisclosureSet.astro';
+import EventsPreviewList from '@components/modules/EventsPreviewList.astro';
+import PeopleList from '@components/modules/PeopleList.astro';
+import PodcastFeed from '@components/modules/PodcastFeed.astro';
+import PostsList from '@components/modules/PostsList.astro';
+import PublicationsList from '@components/modules/PublicationsList.astro';
+import RelatedLinks from '@components/modules/RelatedLinks.astro';
+import RichText from '@components/modules/RichText.astro';
+import TextImageDiptych from '@components/modules/TextImageDiptych.astro';
+import TwoColumnText from '@components/modules/TwoColumnText.astro';
+
+interface Props {
+    modules: CollectionEntry<'pages'>['data']['modules'];
+}
+
+const { modules } = Astro.props;
+---
+
+<div class="sections | section-spacing-top" id="sections">
+    {
+        modules.map((module) => {
+            switch (module._type) {
+                case 'cardList':
+                    return <CardList module={module} />;
+                // case 'collectionList':
+                //     return <CollectionList />;
+                // case 'disclosureSet':
+                //     return <DisclosureSet />;
+                case 'columnsGroup':
+                    return <ColumnsGroup module={module} />;
+                case 'eventsPreviewList':
+                    return <EventsPreviewList module={module} />;
+                case 'featuredElement':
+                    return <TextImageDiptych module={module} />;
+                case 'peopleList':
+                    return <PeopleList module={module} />;
+                case 'podcastFeed':
+                    return <PodcastFeed module={module} />;
+                case 'postsList':
+                    return <PostsList module={module} />;
+                case 'publicationsList':
+                    return <PublicationsList module={module} />;
+                case 'relatedLinks':
+                    return <RelatedLinks module={module} />;
+                case 'richText':
+                    return <RichText contained={true} module={module} />;
+                case 'twoColumnText':
+                    return <TwoColumnText module={module} />;
+            }
+        })
+    }
+</div>

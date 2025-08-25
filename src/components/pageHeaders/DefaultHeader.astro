@@ -1,0 +1,47 @@
+---
+import type { BreadcrumbsCollection, BreadcrumbsStyle } from '@lib/utils/types';
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import type { PageHeader } from '@content/pages';
+
+interface Props {
+    title: string;
+    breadcrumbsStyle?: BreadcrumbsStyle;
+    breadcrumbsCollection?: BreadcrumbsCollection;
+}
+
+const {
+    title,
+    breadcrumbsStyle = 'default',
+    breadcrumbsCollection = 'pages',
+} = Astro.props;
+---
+
+<header class="page-header" data-layout="default">
+    <Breadcrumbs collection={breadcrumbsCollection} style={breadcrumbsStyle} />
+    <div class="content-wrapper">
+        <h1 class="mega-title">{title}</h1>
+    </div>
+</header>
+
+<style>
+    .page-header {
+        position: relative;
+    }
+
+    h1 {
+        position: relative;
+        margin-block-start: var(--space-3xl);
+        max-width: 58%;
+
+        /* Rule divider */
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: calc(var(--section-spacing) * -0.5);
+            height: 1px;
+            width: 6rem;
+            background-color: var(--ucla-gray-4);
+        }
+    }
+</style>

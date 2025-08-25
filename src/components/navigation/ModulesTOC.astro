@@ -1,0 +1,53 @@
+---
+/* Builds a TOC out of module headings (h2) */
+import type { CollectionEntry } from 'astro:content';
+import { getRichTextHeadings } from '@lib/utils/getRichTextHeadings';
+import v from 'voca';
+
+interface Props {
+    modules: CollectionEntry<'pages'>['data']['modules'];
+    type?: 'sidebar' | 'header'; // which toc style to display
+}
+
+const { modules, type = 'sidebar' } = Astro.props;
+---
+
+<div class="on-page-nav" data-type={type}>
+    <div class="small-title">On This Page</div>
+    <nav>
+        <ul class:list={[{ cluster: type == 'header' }]}>
+            {
+                modules.map((module) => {
+                    if ('heading' in module && module.heading) {
+                        return (
+                            <li>
+                                <a
+                                    class:list={[
+                                        { 'sidebar-link': type == 'sidebar' },
+                                    ]}
+                                    href={`#${v.slugify(module.heading)}`}
+                                >
+                                    {module.heading}
+                                </a>
+                            </li>
+                        );
+                    } else if (module._type == 'richText') {
+                        const richTextHeadings = getRichTextHeadings(module);
+                        return richTextHeadings.map((heading) => (
+                            <li>
+                                <a
+                                    class:list={[
+                                        { 'sidebar-link': type == 'sidebar' },
+                                    ]}
+                                    href={`#${v.slugify(heading)}`}
+                                >
+                                    {heading}
+                                </a>
+                            </li>
+                        ));
+                    }
+                })
+            }
+        </ul>
+    </nav>
+</div>

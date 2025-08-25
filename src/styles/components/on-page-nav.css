@@ -1,0 +1,23 @@
+.on-page-nav {
+    & .small-title {
+        font-size: var(--step--1);
+    }
+
+    &[data-type='header'] {
+        display: flex;
+        gap: 1.5rem;
+        align-items: baseline;
+        margin-block-start: var(--space-xs);
+    }
+
+    &[data-type='sidebar'] {
+        & .small-title {
+            padding-inline: 4px;
+        }
+
+        & nav {
+            border-block-start: 1px solid var(--ucla-primary-blue);
+            margin-block-start: var(--space-2xs);
+        }
+    }
+}

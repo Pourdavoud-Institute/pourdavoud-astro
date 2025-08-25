@@ -1,0 +1,64 @@
+---
+import type { Link } from '@content/schemaFragments/sanityComponents';
+import { sanityLink } from '@lib/utils/sanityLink';
+
+interface Props {
+    label: string;
+    links: Link[];
+}
+
+const { label, links } = Astro.props;
+---
+
+<div class="popover" x-data x-popover>
+    <button
+        class="nav-link with-icon | popover-button"
+        type="button"
+        x-popover:button
+    >
+        {label}
+        <svg
+            aria-hidden="true"
+            height="24"
+            name="UCLA Chevron Down"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d="M18 9.41L16.59 8L12 12.58L7.41 8L6 9.41L12 15.41L18 9.41Z"
+            ></path>
+        </svg>
+    </button>
+    <ul class="popover-panel" x-cloak x-popover:panel>
+        {
+            links.map((link) => {
+                const linkParts = sanityLink(link);
+                return (
+                    <li>
+                        <a
+                            class="nav-link"
+                            href={linkParts.url}
+                            target={linkParts.target}
+                        >
+                            {linkParts.label}
+                        </a>
+                    </li>
+                );
+            })
+        }
+    </ul>
+</div>
+
+<style>
+    .popover-panel {
+        & .nav-link {
+            /* font-weight: 700; */
+            justify-content: center;
+            text-align: center;
+
+            &:hover {
+                background-color: var(--ucla-gray-2);
+            }
+        }
+    }
+</style>
