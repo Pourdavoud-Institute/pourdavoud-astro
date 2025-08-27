@@ -4,7 +4,7 @@ This repository contains code that builds the front end files (HTML, CSS, and Ja
 
 ## Features
 
-- [Astro v5](https://astro.build/) TypeScript-based static site generator with various first- and third-party plugins with build-in [Vite](http://vite.dev/) server
+- [Astro v5](https://astro.build/) TypeScript-based static site generator with various first- and third-party plugins and built-in [Vite](http://vite.dev/) server
 - Astro's fully-typed [content collections](https://docs.astro.build/en/guides/content-collections/) loading headless data from [Sanity](https://www.sanity.io/) content platform (accessed with Sanity client + GROQ queries)
 - [Lightning CSS](https://lightningcss.dev/) scripts to transpile, bundle, and minify CSS
 - [Alpine JS](https://alpinejs.dev/start-here) and [Preact](https://preactjs.com/) for lightweight interactivity
