@@ -1,0 +1,37 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout og={undefined} seo={undefined} title="Search">
+    <main
+        class="page footer-margin"
+        data-template="search"
+        id="main-content"
+        tabindex="-1"
+    >
+        <div class="content-wrapper">
+            <header class="text-center | flow" data-tempo="allegro">
+                <h1>Search</h1>
+                <p>
+                    Start typing to search across this site for pages, events,
+                    and resources.
+                </p>
+            </header>
+            <div class="search-wrapper" id="search"></div>
+        </div>
+    </main>
+</BaseLayout>
+
+<style>
+    header {
+        margin-block-start: var(--space-xl);
+
+        & p {
+            font-size: var(--step-1);
+        }
+    }
+
+    .search-wrapper {
+        margin-block-start: var(--space-l);
+    }
+</style>
