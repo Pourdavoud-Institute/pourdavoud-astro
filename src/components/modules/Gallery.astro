@@ -1,0 +1,80 @@
+---
+import type { Gallery } from '@content/schemaFragments/pageModules';
+import SanityImage from '@components/SanityImage.astro';
+
+interface Props {
+    module: Gallery;
+}
+
+const { module } = Astro.props;
+
+/* todo: add more grid styles in options */
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper">
+        <div class="grid | gallery-images">
+            {
+                module.images.length > 0 &&
+                    module.images.map((image) => (
+                        <figure class="image-wrapper">
+                            <SanityImage alt={image.alt} source={image} />
+                            {image.caption && (
+                                <figcaption class="gallery-caption">
+                                    {image.caption}
+                                </figcaption>
+                            )}
+                        </figure>
+                    ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 0.5fr;
+        gap: var(--space-s);
+
+        & > :first-child {
+            grid-row: span 2;
+        }
+    }
+
+    :global(.gallery-images img) {
+        width: 100%;
+        /* height: 100%; */
+        /* object-fit: cover; */
+    }
+
+    .image-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: var(--ucla-gray-2);
+    }
+
+    figcaption {
+        position: absolute;
+        bottom: 0;
+        z-index: 2;
+        background: linear-gradient(
+            to top,
+            rgb(0 0 0 / 90%) 20px,
+            rgb(0 0 0 / 0%)
+        );
+        padding: var(--space-s);
+        font-size: var(--step-0);
+        color: white;
+        line-height: 1.35;
+        /* transform: translateX(-100%);
+        opacity: 0; */
+        transition: all 0.5s;
+    }
+</style>

@@ -2,6 +2,7 @@
 import { PortableText } from 'astro-portabletext';
 import type { PortableTextProps } from 'astro-portabletext/types';
 import RichTextBlock from './RichTextBlock.astro';
+import RichTextImage from './RichTextImage.astro';
 import RichTextLink from './RichTextLink.astro';
 import RichTextLinkGroup from './RichTextLinkGroup.astro';
 
@@ -15,6 +16,7 @@ const components: PortableTextProps['components'] = {
     block: RichTextBlock,
     type: {
         linkGroup: RichTextLinkGroup,
+        richTextImage: RichTextImage,
     },
     mark: {
         richTextLink: RichTextLink,

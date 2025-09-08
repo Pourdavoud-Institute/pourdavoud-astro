@@ -172,6 +172,18 @@ const FeaturedElement = z.object({
 
 export type FeaturedElement = z.infer<typeof FeaturedElement>;
 
+/** IMAGE GALLERY */
+const Gallery = z.object({
+    _type: z.literal('gallery'),
+    heading: z.string().nullable(),
+    images: z.array(FeaturedImage),
+    options: z.object({
+        sectionMargin: z.boolean().nullish(),
+    }),
+});
+
+export type Gallery = z.infer<typeof Gallery>;
+
 /** HERO BANNER */
 const HeroBanner = z.object({
     _type: z.literal('heroBanner'),
@@ -234,6 +246,7 @@ export const PageModules = z.array(
         DisclosureSet,
         EventsPreviewList,
         FeaturedElement,
+        Gallery,
         HeroBanner,
         HeroCover,
         PeopleList,

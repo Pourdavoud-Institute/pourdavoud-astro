@@ -4,6 +4,7 @@ import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
 import type { CollectionEntry } from 'astro:content';
 import ModulesTOC from '@components/navigation/ModulesTOC.astro';
 import type { PageHeader } from '@content/pages';
+import RichTextBlocksLite from '@components/richText/RichTextBlocksLite.astro';
 import SanityImage from '@components/SanityImage.astro';
 import type { SanityImage as SanityImageType } from '@lib/utils/types';
 
@@ -31,6 +32,13 @@ const {
         <div class="flow" data-tempo="moderato">
             <h1 class="mega-title">{title}</h1>
             {
+                header?.preview && header?.preview.length > 0 && (
+                    <div class="preview | text-center">
+                        <RichTextBlocksLite blocks={header.preview} />
+                    </div>
+                )
+            }
+            {
                 header?.image && (
                     <div class="image-wrapper">
                         <SanityImage
@@ -57,6 +65,12 @@ const {
         margin-block-start: var(--section-spacing);
         text-align: center;
         max-width: var(--wrapper-max-width-slim);
+        margin-inline: auto;
+    }
+
+    .preview {
+        font-size: var(--step-1);
+        max-width: var(--paragraph-measure);
         margin-inline: auto;
     }
 

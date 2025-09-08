@@ -5,6 +5,7 @@ import ColumnsGroup from '@components/modules/ColumnsGroup.astro';
 // import CollectionList from '@components/modules/CollectionList.astro';
 // import DisclosureSet from '@components/modules/DisclosureSet.astro';
 import EventsPreviewList from '@components/modules/EventsPreviewList.astro';
+import Gallery from '@components/modules/Gallery.astro';
 import PeopleList from '@components/modules/PeopleList.astro';
 import PodcastFeed from '@components/modules/PodcastFeed.astro';
 import PostsList from '@components/modules/PostsList.astro';
@@ -37,6 +38,8 @@ const { modules } = Astro.props;
                     return <EventsPreviewList module={module} />;
                 case 'featuredElement':
                     return <TextImageDiptych module={module} />;
+                case 'gallery':
+                    return <Gallery module={module} />;
                 case 'peopleList':
                     return <PeopleList module={module} />;
                 case 'podcastFeed':

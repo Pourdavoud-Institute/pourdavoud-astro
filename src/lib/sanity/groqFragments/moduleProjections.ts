@@ -84,6 +84,17 @@ export const COLUMNS_GROUP_PROJECTION = groq`_type == "columnsGroup" => {
     }
 }`;
 
+export const GALLERY_PROJECTION = groq`_type == "gallery" => {
+    heading,
+    "images": coalesce(
+        images[] ${FEATURED_IMAGE_PROJECTION},
+        []
+    ),
+    "options": {
+        sectionMargin,
+    }
+}`;
+
 export const POSTS_LIST_PROJECTION = groq`_type == "postsList" => {
     heading,
     selection,

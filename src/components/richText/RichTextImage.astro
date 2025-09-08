@@ -1,0 +1,35 @@
+---
+import SanityImage from '@components/SanityImage.astro';
+import type { SanityImage as SanityImageType } from '@lib/utils/types';
+
+interface RichTextImage extends SanityImageType {
+    _key: string;
+    _type: 'richTextImage';
+    loading?: 'lazy' | 'eager';
+    imageWidth?: string;
+}
+
+interface Props {
+    node: RichTextImage;
+}
+
+const { node } = Astro.props;
+// console.log(node);
+---
+
+<figure class="image-wrapper" style={`--image-width: ${node.imageWidth}`}>
+    <SanityImage alt={node.alt} classes="rich-text-image" source={node} />
+    {node.caption && <figcaption>{node.caption}</figcaption>}
+</figure>
+
+<style>
+    :global(.rich-text figure .rich-text-image) {
+        width: var(--image-width, 100%);
+    }
+
+    figcaption {
+        font-size: var(--step-0);
+        font-style: italic;
+        margin-block-start: 0.75rem;
+    }
+</style>
