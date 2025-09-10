@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+
+/* todo: customize search results for videos to show generic video thumbnail? */
 ---
 
 <BaseLayout og={undefined} seo={undefined} title="Search">
@@ -17,17 +19,36 @@ import BaseLayout from '@layouts/BaseLayout.astro';
                     and resources.
                 </p>
             </header>
-            <div class="search-wrapper" id="search"></div>
+            <div
+                class="search-wrapper"
+                id="search"
+                x-data="{
+                init() {
+                    window.addEventListener('DOMContentLoaded', (e) => {
+                        new PagefindUI({ element: '#search' });
+                        const searchInput = document.querySelector('.pagefind-ui__search-input');
+                        searchInput.focus();
+                    });
+                }
+            }"
+            >
+            </div>
         </div>
     </main>
 </BaseLayout>
 
 <style>
     header {
-        margin-block-start: var(--space-xl);
+        margin-block-start: var(--space-2xl);
 
         & p {
             font-size: var(--step-1);
+        }
+    }
+
+    .page {
+        & > .content-wrapper {
+            --wrapper-max-width: 1280px;
         }
     }
 
@@ -35,3 +56,5 @@ import BaseLayout from '@layouts/BaseLayout.astro';
         margin-block-start: var(--space-l);
     }
 </style>
+
+<script defer is:inline src="/pagefind/pagefind-ui.js"></script>

@@ -34,6 +34,7 @@
 @import 'components/nav-link.css' layer(main);
 @import 'components/on-page-nav.css' layer(main);
 @import 'components/popover.css' layer(main);
+@import 'components/search.css' layer(main);
 @import 'components/share-links.css' layer(main);
 @import 'components/sidebar-link.css' layer(main);
 @import 'components/skip-link.css' layer(main);

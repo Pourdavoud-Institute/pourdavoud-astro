@@ -15,17 +15,36 @@ interface Props {
     footerMargin?: boolean | null;
     seo?: SEOBlock;
     og?: OGBlock;
+    filterType?:
+        | 'category'
+        | 'event'
+        | 'page'
+        | 'person'
+        | 'post'
+        | 'publication'
+        | 'video'; // the resource type for constructing pagefind index filters
 }
 
-const { id, title, template, footerMargin = false, seo, og } = Astro.props;
+const {
+    id,
+    title,
+    template,
+    footerMargin = false,
+    seo,
+    og,
+    filterType = 'page',
+} = Astro.props;
 ---
 
 <BaseLayout og={og} seo={seo} title={title}>
     <main
         class:list={['page', { 'footer-margin': footerMargin }]}
+        data-filterType={filterType}
         data-id={id}
         data-pagefind-body
-        data-pagefind-filter="type:page"
+        data-pagefind-filter={filterType == 'page'
+            ? `type:page`
+            : `type[data-filterType], type:page`}
         data-template={template}
         id="main-content"
         tabindex="-1"
