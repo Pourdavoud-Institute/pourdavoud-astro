@@ -70,4 +70,8 @@
         --button-border: transparent;
         --button-border--hover: var(--button-border);
     }
+
+    &.with-icon {
+        --icon-size: 16px;
+    }
 }

@@ -9,6 +9,7 @@ import SpeakerBio from '@components/people/SpeakerBio.astro';
 import SpeakerPreview from '@components/people/SpeakerPreview.astro';
 import { formatEventDetails } from '@lib/utils/formatEvent';
 import { getCollection } from 'astro:content';
+import { isUpcoming } from '@lib/utils/isUpcoming';
 
 export async function getStaticPaths() {
     const events = await getCollection('events');
@@ -116,13 +117,29 @@ const eventSpeakers = await getCollection('speakers', ({ data }) =>
                 }
             </div>
             <div class="sidebar-panel">
-                {
-                    eventSpeakers.length > 0 && (
-                        <SpeakerPreview speakers={eventSpeakers} />
-                    )
-                }
-                <div>
-                    <ShareLinks client:load title={event.data.title} />
+                <div class="sidebar-elements">
+                    {
+                        event.data.details.rsvpLink &&
+                            isUpcoming(event.data.details.startDate) && (
+                                <a
+                                    class="button-link rsvp"
+                                    data-size="large"
+                                    data-style="success"
+                                    href={event.data.details.rsvpLink}
+                                    target="_blank"
+                                >
+                                    RSVP for Event
+                                </a>
+                            )
+                    }
+                    {
+                        eventSpeakers.length > 0 && (
+                            <SpeakerPreview speakers={eventSpeakers} />
+                        )
+                    }
+                    <div>
+                        <ShareLinks client:load title={event.data.title} />
+                    </div>
                 </div>
             </div>
         </article>
@@ -159,8 +176,21 @@ const eventSpeakers = await getCollection('speakers', ({ data }) =>
         border-block-end: 1px solid var(--site-border);
     }
 
-    :global(.event .sidebar-panel > * + *) {
-        margin-block-start: var(--space-xl);
+    .sidebar-elements {
+        position: sticky;
+        top: var(--space-m);
+    }
+
+    :global(.event .sidebar-elements > * + *) {
+        margin-block-start: var(--space-l);
+    }
+
+    .button-link.rsvp {
+        text-align: center;
+        justify-content: center;
+        width: 100%;
+        padding-block: 1rem;
+        padding-inline: 1.5rem;
     }
 
     .section-wrapper {
