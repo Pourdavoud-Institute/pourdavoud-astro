@@ -24,6 +24,7 @@ const posts = await getCollection('posts');
 ---
 
 <PageWrapper
+    filterType="category"
     footerMargin={true}
     id={category.id}
     template="postsTaxonomyTerm"
@@ -42,7 +43,9 @@ const posts = await getCollection('posts');
                 </div>
                 <div class="main-panel">
                     <div class="flow" data-tempo="allegro">
-                        <h2>{category.data.title} Posts</h2>
+                        <h2 data-pagefind-meta="title">
+                            {category.data.title} Posts
+                        </h2>
                         <p>
                             Showing {category.data.posts.length}
                             {

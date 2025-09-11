@@ -24,6 +24,7 @@ const events = await getCollection('events');
 ---
 
 <PageWrapper
+    filterType="category"
     footerMargin={true}
     id={category.id}
     template="eventsTaxonomyTerm"
@@ -46,7 +47,9 @@ const events = await getCollection('events');
                 </div>
                 <div class="main-panel">
                     <div class="flow" data-tempo="allegro">
-                        <h2>{category.data.title} Events</h2>
+                        <h2 data-pagefind-meta="title">
+                            {category.data.title} Events
+                        </h2>
                         <p>
                             Showing {category.data.events.length}
                             {

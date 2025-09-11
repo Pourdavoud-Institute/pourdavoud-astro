@@ -39,9 +39,13 @@ if (video.data.eventFiltersRef.length) {
 const videoSpeakers = await getCollection('speakers', ({ data }) =>
     video.data.speakersRef.some((speaker) => speaker._id == data._id)
 );
+
+const videoYoutubeID = getYouTubeID(video.data.url);
+const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.jpg`;
 ---
 
 <PageWrapper
+    filterType="video"
     footerMargin={true}
     id={video.id}
     template="videosShow"
@@ -75,8 +79,11 @@ const videoSpeakers = await getCollection('speakers', ({ data }) =>
                         <span>{format(video.data.date, 'MMM D, YYYY')}</span>
                     </div>
                 </header>
-                <div class="video-wrapper">
-                    <lite-youtube videoid={getYouTubeID(video.data.url)}
+                <div
+                    class="video-wrapper"
+                    data-pagefind-meta={`image_alt[title], image:${videoThumbnail}`}
+                >
+                    <lite-youtube videoid={videoYoutubeID}
                         ><a class="lite-youtube-fallback" href={video.data.url}
                             >Watch on YouTube</a
                         ></lite-youtube

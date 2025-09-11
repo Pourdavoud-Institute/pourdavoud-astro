@@ -23,6 +23,7 @@ const role = getPersonRole(person);
                         <SanityImage
                             alt={person.data.image?.alt}
                             aspectRatio={[3, 4]}
+                            data-pagefind-meta="image[src], image_alt[alt]"
                             source={person.data.image}
                             width={600}
                         />
