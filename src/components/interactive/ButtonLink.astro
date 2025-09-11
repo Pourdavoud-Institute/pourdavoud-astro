@@ -1,7 +1,8 @@
 ---
-/* ---------------------------------------------------------------------------
- * Component to build a button link out of a Sanity link object.
- * ---------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------
+ * Component to build a button link out of a Sanity link object. The UCLA "link
+ * external" icon is automatically added if the link has `target="_blank"`.
+ * ----------------------------------------------------------------------------
  */
 
 import type { Link } from '@content/schemaFragments/sanityComponents';
@@ -17,10 +18,12 @@ interface Props {
 const { style = 'primary', link, classes, ...attrs } = Astro.props;
 
 const linkParts = sanityLink(link);
+
+/* todo: test if it is ok that `a` tag gets `with-icon` class 100% of time */
 ---
 
 <a
-    class:list={[classes, 'button-link']}
+    class:list={[classes, 'button-link', 'with-icon']}
     data-style={style}
     href={linkParts.url}
     target={linkParts.target}

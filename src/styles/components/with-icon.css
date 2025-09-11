@@ -1,7 +1,7 @@
 .with-icon {
     & svg {
         position: relative;
-        top: 1px;
+        top: 0.5px;
         width: var(--icon-size, 20px);
         height: var(--icon-size, 20px);
         fill: currentColor;
