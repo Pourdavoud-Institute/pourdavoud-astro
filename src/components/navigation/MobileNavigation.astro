@@ -1,0 +1,343 @@
+---
+/* ----------------------------------------------------------------------------
+ * Mobile Navigation
+ * Hamburger menu / Alpine.js popover interactive component for screens below
+ * 1024px. The Alpine `$watch` directive on the popover panel listens for state
+ * changes to freeze scrolling on the root html element when open.
+ * ----------------------------------------------------------------------------
+ */
+
+import type { CollectionEntry } from 'astro:content';
+import { sanityLink } from '@lib/utils/sanityLink';
+
+interface Props {
+    navItems?: CollectionEntry<'navigation'>['data']['items'];
+    featuredNavItems: {
+        title: string;
+        url: string;
+    }[];
+}
+
+const { navItems, featuredNavItems } = Astro.props;
+---
+
+<div class="nav-mobile" x-data x-popover>
+    <button class="menu-open with-icon" type="button" x-popover:button>
+        <span class="visually-hidden">Open Menu</span>
+        <svg
+            aria-hidden="true"
+            class="ucla-icon__menu"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d="M3 18V16H21V18H3ZM3 13V11H21V13H3ZM3 8V6H21V8H3Z"></path>
+        </svg>
+    </button>
+    <div
+        class="overlay"
+        x-cloak
+        x-popover:overlay
+        x-transition:enter="transition-opacity"
+        x-transition:enter-end="transition-opacity__end"
+        x-transition:enter-start="transition-opacity__start"
+        x-transition:leave="transition-opacity"
+        x-transition:leave-end="transition-opacity__start"
+        x-transition:leave-start="transition-opacity__end"
+    >
+    </div>
+    <div
+        class="panel"
+        x-cloak
+        x-init="$watch('$popover.isOpen', (value) => {
+            if (value == true) {
+                document.documentElement.style.overflow = 'hidden';
+            } else {
+                document.documentElement.style.overflow = 'initial'; 
+            }
+        })"
+        x-popover:panel
+        x-transition:enter="transition-panel-slide"
+        x-transition:enter-end="transition-panel-slide__end"
+        x-transition:enter-start="transition-panel-slide__start"
+        x-transition:leave="transition-panel-slide"
+        x-transition:leave-end="transition-panel-slide__start"
+        x-transition:leave-start="transition-panel-slide__end"
+    >
+        <button class="menu-close with-icon" x-on:click="$popover.close()">
+            <span class="visually-hidden">Close Menu</span>
+            <svg
+                aria-hidden="true"
+                class="ucla-icon__close"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    d="M17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5Z"
+                ></path>
+            </svg>
+        </button>
+        <div class="panel-content">
+            <nav aria-label="Mobile">
+                <div class="nav-section featured">
+                    <div class="small-title">Featured</div>
+                    <ul class="items | flow" data-tempo="allegro">
+                        {
+                            featuredNavItems.map((navItem) => (
+                                <li>
+                                    <a
+                                        class="popover-nav-link featured"
+                                        href={navItem.url}
+                                    >
+                                        {navItem.title}
+                                    </a>
+                                </li>
+                            ))
+                        }
+                        <li>
+                            <a
+                                class="button-link with-icon"
+                                data-style="white"
+                                href="/search"
+                            >
+                                <svg
+                                    aria-hidden="true"
+                                    class="ucla-icon__search"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    width="24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M19.6 21L13.3 14.7C12.8 15.1 12.225 15.4167 11.575 15.65C10.925 15.8833 10.2333 16 9.5 16C7.68333 16 6.146 15.371 4.888 14.113C3.62933 12.8543 3 11.3167 3 9.5C3 7.68333 3.62933 6.14567 4.888 4.887C6.146 3.629 7.68333 3 9.5 3C11.3167 3 12.8543 3.629 14.113 4.887C15.371 6.14567 16 7.68333 16 9.5C16 10.2333 15.8833 10.925 15.65 11.575C15.4167 12.225 15.1 12.8 14.7 13.3L21 19.6L19.6 21ZM9.5 14C10.75 14 11.8127 13.5627 12.688 12.688C13.5627 11.8127 14 10.75 14 9.5C14 8.25 13.5627 7.18733 12.688 6.312C11.8127 5.43733 10.75 5 9.5 5C8.25 5 7.18733 5.43733 6.312 6.312C5.43733 7.18733 5 8.25 5 9.5C5 10.75 5.43733 11.8127 6.312 12.688C7.18733 13.5627 8.25 14 9.5 14Z"
+                                    ></path>
+                                </svg>
+                                <span>Search</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-section site">
+                    <div class="small-title">Site Navigation</div>
+                    <ul class="items">
+                        {
+                            navItems?.map((navItem) => {
+                                if (navItem.itemType == 'linkList') {
+                                    return (
+                                        <li>
+                                            <details>
+                                                <summary class="popover-nav-link summary">
+                                                    <span>{navItem.label}</span>
+                                                    <svg
+                                                        aria-hidden="true"
+                                                        class="ucla-icon__plus open"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        width="24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path d="M11 19V13H5V11H11V5H13V11H19V13H13V19H11Z" />
+                                                    </svg>
+                                                    <svg
+                                                        aria-hidden="true"
+                                                        class="ucla-icon__minus close"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        width="24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path d="M19 11L19 13L5 13L5 11L19 11Z" />
+                                                    </svg>
+                                                </summary>
+                                                <ul
+                                                    class="link-list | flow"
+                                                    data-tempo="allegro"
+                                                >
+                                                    {navItem.links.map(
+                                                        (childItem) => {
+                                                            const linkParts =
+                                                                sanityLink(
+                                                                    childItem
+                                                                );
+                                                            return (
+                                                                <li>
+                                                                    <a
+                                                                        class="popover-nav-link"
+                                                                        href={
+                                                                            linkParts.url
+                                                                        }
+                                                                        target={
+                                                                            linkParts.target
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            linkParts.label
+                                                                        }
+                                                                    </a>
+                                                                </li>
+                                                            );
+                                                        }
+                                                    )}
+                                                </ul>
+                                            </details>
+                                        </li>
+                                    );
+                                } else {
+                                    const linkParts = sanityLink(navItem);
+                                    return (
+                                        <li>
+                                            <a
+                                                class="popover-nav-link"
+                                                href={linkParts.url}
+                                                target={linkParts.target}
+                                            >
+                                                {linkParts.label}
+                                            </a>
+                                        </li>
+                                    );
+                                }
+                            })
+                        }
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<style>
+    .nav-mobile {
+        display: none;
+        place-self: flex-end;
+    }
+
+    :is(.menu-open, .menu-close) {
+        --icon-size: 2rem;
+        padding: 0.5rem;
+        margin-inline-end: -0.5rem;
+    }
+
+    .menu-open {
+        color: var(--ucla-primary-blue);
+    }
+
+    .menu-close {
+        position: absolute;
+        z-index: 1;
+        top: 1.75rem;
+        right: var(--gutter-spacing);
+        color: var(--ucla-white);
+    }
+
+    .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background-color: rgb(0 0 0 / 80%);
+        backdrop-filter: blur(8px);
+    }
+
+    .panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 50;
+        width: min(30rem, 90%);
+        height: 100dvh;
+        color: var(--ucla-white);
+        background-color: var(--ucla-darker-blue);
+        padding: var(--space-l) var(--space-l) 5rem;
+        box-shadow: var(--shadow-large);
+        overflow-y: auto;
+    }
+
+    .panel-content {
+        position: relative;
+        margin-block-start: 0.75rem;
+    }
+
+    .nav-section {
+        &:not(:first-of-type) {
+            margin-block-start: var(--space-l);
+            padding-block-start: var(--space-l);
+            border-block-start: 1px solid var(--ucla-primary-blue);
+        }
+
+        & .small-title {
+            color: var(--ucla-lightest-blue);
+        }
+
+        & .items {
+            margin-block-start: var(--space-s);
+        }
+    }
+
+    details {
+        & summary {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+
+            & svg {
+                position: relative;
+                top: 1.25px;
+                background-color: var(--ucla-lightest-blue);
+                border-radius: 999px;
+                color: var(--ucla-darker-blue);
+                height: 0.875rem;
+                width: 0.875rem;
+            }
+        }
+
+        & .open {
+            display: block;
+        }
+
+        & .close {
+            display: none;
+        }
+
+        &[open] {
+            & .open {
+                display: none;
+            }
+
+            & .close {
+                display: block;
+            }
+        }
+    }
+
+    .button-link {
+        --icon-size: 1.25rem;
+    }
+
+    .popover-nav-link {
+        font-size: var(--popover-nav-link-size, var(--step-1));
+        padding: 0.5rem;
+        font-weight: 700;
+        text-decoration: none;
+        margin-inline-start: -0.5rem;
+    }
+
+    .link-list {
+        border-inline-start: 1px solid var(--ucla-primary-blue);
+        margin-inline-start: 4px;
+        padding-inline-start: 1rem;
+        margin-block-start: 0.25rem;
+        margin-block-end: 1rem;
+
+        & .popover-nav-link {
+            --popover-nav-link-size: var(--step-0);
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .nav-mobile {
+            display: block;
+        }
+    }
+</style>

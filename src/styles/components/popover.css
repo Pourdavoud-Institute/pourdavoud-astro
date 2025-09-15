@@ -9,7 +9,7 @@
 
     & .popover-panel {
         position: absolute;
-        left: 50%;
+        left: calc(50% - 0.5rem);
         transform: translateX(-50%);
         margin-block-start: 4px;
         background-color: var(--ucla-white);

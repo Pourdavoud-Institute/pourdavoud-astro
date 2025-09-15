@@ -10,7 +10,7 @@ interface Props {
 const { navItems } = Astro.props;
 ---
 
-<nav aria-label="Main Navigation" class="nav-main">
+<nav aria-label="Main" class="nav-main">
     <ul class="cluster">
         {
             navItems &&
@@ -88,6 +88,12 @@ const { navItems } = Astro.props;
         & svg {
             width: 18px;
             height: 18px;
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .nav-main {
+            display: none;
         }
     }
 </style>

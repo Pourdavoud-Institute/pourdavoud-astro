@@ -40,3 +40,27 @@
         transform: translateY(0rem);
     }
 }
+
+.transition-opacity {
+    transition: opacity var(--transition-timing, 0.2s) ease;
+}
+
+.transition-opacity__start {
+    opacity: 0;
+}
+
+.transition-opacity__end {
+    opacity: 1;
+}
+
+.transition-panel-slide {
+    transition: transform var(--transition-timing, 0.3s) ease-in-out;
+}
+
+.transition-panel-slide__start {
+    transform: translateX(100%);
+}
+
+.transition-panel-slide__end {
+    transform: translateX(0%);
+}

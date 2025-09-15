@@ -1,13 +1,34 @@
 ---
 import FeaturedNavigation from '@components/navigation/FeaturedNavigation.astro';
 import MainNavigation from '@components/navigation/MainNavigation.astro';
+import MobileNavigation from '@components/navigation/MobileNavigation.astro';
 import UCLALogo from '@components/svg/UCLALogo.astro';
 import { getEntry } from 'astro:content';
 
+// get main nav by id
 const navigation = await getEntry(
     'navigation',
     'b2b3beb7-b8b4-44bb-9e5d-45c46f45a0b9'
 );
+
+const featuredNavItems = [
+    {
+        title: 'Events',
+        url: '/events',
+    },
+    {
+        title: 'Research',
+        url: '/research',
+    },
+    {
+        title: 'Publications',
+        url: '/publications',
+    },
+    {
+        title: 'Media',
+        url: '/media/video-library',
+    },
+];
 ---
 
 <header class:list={['site-header', Astro.url.pathname == '/' && 'home']}>
@@ -35,8 +56,14 @@ const navigation = await getEntry(
                 />
             </a>
         </div>
-        <MainNavigation navItems={navigation?.data.items} />
-        <FeaturedNavigation />
+        <div class="relative">
+            <MainNavigation navItems={navigation?.data.items} />
+            <FeaturedNavigation featuredNavItems={featuredNavItems} />
+            <MobileNavigation
+                featuredNavItems={featuredNavItems}
+                navItems={navigation?.data.items}
+            />
+        </div>
     </div>
 </header>
 
@@ -56,12 +83,27 @@ const navigation = await getEntry(
 
     .nav-wrapper {
         position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        & > :last-child {
+            flex-grow: 1;
+        }
     }
 
     .logos {
-        position: absolute;
+        /* position: absolute;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-50%); */
+        padding-block: 1rem;
         padding-inline-start: var(--gutter-spacing);
+    }
+
+    @media screen and (max-width: 1024px) {
+        .nav-wrapper {
+            align-items: center;
+            padding-inline-end: var(--gutter-spacing);
+        }
     }
 </style>

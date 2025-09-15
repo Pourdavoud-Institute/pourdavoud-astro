@@ -1,32 +1,37 @@
 ---
-const navItems = [
-    {
-        title: 'Events',
-        url: '/events',
-    },
-    {
-        title: 'Research',
-        url: '/research',
-    },
-    {
-        title: 'Publications',
-        url: '/publications',
-    },
-    {
-        title: 'Media',
-        url: '/media/video-library',
-    },
-    // {
-    //     title: 'Podcast',
-    //     url: '/media/podcast',
-    // },
-];
+// const navItems = [
+//     {
+//         title: 'Events',
+//         url: '/events',
+//     },
+//     {
+//         title: 'Research',
+//         url: '/research',
+//     },
+//     {
+//         title: 'Publications',
+//         url: '/publications',
+//     },
+//     {
+//         title: 'Media',
+//         url: '/media/video-library',
+//     },
+// ];
+
+interface Props {
+    featuredNavItems: {
+        title: string;
+        url: string;
+    }[];
+}
+
+const { featuredNavItems } = Astro.props;
 ---
 
 <div class="nav-featured">
     <ul class="cluster">
         {
-            navItems.map((navItem, i) => (
+            featuredNavItems.map((navItem, i) => (
                 <li>
                     <a
                         class="nav-link-featured"
@@ -84,6 +89,12 @@ const navItems = [
 
         &[data-tint='400'] {
             --nav-link-tint: var(--ucla-darkest-blue);
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .nav-featured {
+            display: none;
         }
     }
 </style>
