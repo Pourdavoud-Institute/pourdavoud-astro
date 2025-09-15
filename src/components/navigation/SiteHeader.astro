@@ -106,4 +106,34 @@ const featuredNavItems = [
             padding-inline-end: var(--gutter-spacing);
         }
     }
+
+    @media screen and (max-width: 640px) {
+        .nav-wrapper {
+            padding-inline-end: 1rem;
+        }
+
+        .logos {
+            padding-inline-start: 1rem;
+
+            & .logo-link-ucla {
+                width: 5rem;
+            }
+
+            & img {
+                max-width: 15rem;
+            }
+        }
+    }
+
+    @media screen and (max-width: 450px) {
+        .logos {
+            & .logo-link-ucla {
+                width: 4rem;
+            }
+
+            & img {
+                max-width: 13rem;
+            }
+        }
+    }
 </style>

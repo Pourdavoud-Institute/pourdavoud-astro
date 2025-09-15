@@ -59,4 +59,15 @@ const posts = await getCollection('posts');
         --cluster-justify: center;
         margin-block-start: var(--space-2xl);
     }
+
+    @media screen and (max-width: 768px) {
+        .collection-grid {
+            grid-template-columns: 1fr;
+            row-gap: var(--space-l);
+        }
+
+        .cta-links {
+            --cluster-justify: flex-start;
+        }
+    }
 </style>

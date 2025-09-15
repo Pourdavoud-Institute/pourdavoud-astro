@@ -174,4 +174,25 @@ const navigation = await getEntry(
             --cluster-justify: space-between;
         }
     }
+
+    @media screen and (max-width: 999px) {
+        .grid-12 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .info {
+            grid-column: span 4;
+        }
+
+        .nav-wrapper {
+            grid-column: span 4;
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        .nav-wrapper {
+            grid-template-columns: 1fr;
+            row-gap: var(--space-l);
+        }
+    }
 </style>

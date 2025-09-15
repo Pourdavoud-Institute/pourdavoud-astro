@@ -316,16 +316,18 @@
 }
 
 @media screen and (max-width: 480px) {
-    :root {
-        --gutter-spacing: var(--space-m);
-    }
-
     .flex-items {
         &:has(.person.preview) {
             & > * {
                 --flex-item-basis: 100%;
             }
         }
+    }
+}
+
+@media screen and (max-width: 450px) {
+    :root {
+        --gutter-spacing: var(--space-m);
     }
 }
 

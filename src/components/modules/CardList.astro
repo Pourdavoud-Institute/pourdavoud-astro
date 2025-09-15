@@ -50,4 +50,10 @@ const { module } = Astro.props;
         --grid-item-min-size: 20rem;
         margin-block-start: var(--space-xl);
     }
+
+    @media screen and (max-width: 768px) {
+        .entries {
+            row-gap: var(--space-xl);
+        }
+    }
 </style>
