@@ -1,7 +1,7 @@
 // @ts-check
 import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import node from '@astrojs/node';
 import preact from '@astrojs/preact';
 // import preactVite from '@preact/preset-vite';
@@ -48,4 +48,12 @@ export default defineConfig({
     adapter: node({
         mode: 'standalone',
     }),
+    env: {
+        schema: {
+            WEBHOOK_SECRET: envField.string({
+                context: 'server',
+                access: 'secret',
+            }),
+        },
+    },
 });
