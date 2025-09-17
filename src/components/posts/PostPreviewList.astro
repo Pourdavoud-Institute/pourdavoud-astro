@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import RichTextBlocksLite from '@components/richText/RichTextBlocksLite.astro';
 import { format } from '@formkit/tempo';
 
 interface Props {
@@ -32,11 +33,7 @@ const { post, HeadingTag = 'h3' } = Astro.props;
                 {format(post.data.displayDate, 'MMM D, YYYY')}
             </time>
         </div>
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet dolor,
-            reprehenderit eos aperiam tempore aspernatur in quis doloribus harum
-            voluptatibus.
-        </p>
+        {post.data.preview && <RichTextBlocksLite blocks={post.data.preview} />}
     </div>
 </article>
 

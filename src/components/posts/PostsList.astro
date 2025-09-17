@@ -12,3 +12,9 @@ const { posts } = Astro.props;
 <div class="posts-list">
     {posts.map((post) => <PostPreviewList post={post} />)}
 </div>
+
+<style>
+    .posts-list {
+        max-width: var(--paragraph-measure);
+    }
+</style>
