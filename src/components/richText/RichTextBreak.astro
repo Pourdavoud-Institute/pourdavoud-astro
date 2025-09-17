@@ -1,0 +1,13 @@
+---
+interface Props {
+    node: {
+        _key: string;
+        _type: 'break';
+        style: string;
+    };
+}
+
+const { node } = Astro.props;
+---
+
+{node.style == 'hr' && <hr />}
