@@ -92,4 +92,11 @@ const { item } = Astro.props;
             padding-inline: var(--space-2xs);
         }
     }
+
+    @media screen and (max-width: 640px) {
+        .podcast-preview {
+            grid-template-columns: 1fr;
+            row-gap: 1rem;
+        }
+    }
 </style>

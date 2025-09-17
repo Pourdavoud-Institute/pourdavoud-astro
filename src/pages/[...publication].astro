@@ -42,41 +42,43 @@ const { publication } = Astro.props;
 >
     <Breadcrumbs collection="publications" style="darkest" />
     <div class="content-wrapper">
-        <div class="panes" data-composition="diptych">
-            <div class="image-wrapper">
-                {
-                    publication.data.image ? (
-                        <SanityImage
-                            alt={publication.data.title}
-                            aspectRatio={[6, 9]}
-                            source={publication.data.image}
-                            width={600}
-                        />
-                    ) : (
-                        <img
-                            alt=""
-                            class="fallback-img"
-                            src="/images/pourdavoud-placeholder-portrait.webp"
-                            width={600}
-                        />
-                    )
-                }
-                <dl class="details">
-                    {publication.data.publisher && (
-                        <dt><strong>Publisher</strong></dt>
-                        <dd>{publication.data.publisher}</dd>
-                    )}
-                    {publication.data.publicationDate && (
-                        <dt><strong>Date</strong></dt>
-                        <dd>{publication.data.publicationDate}</dd>
-                    )}
-                    {publication.data.citation && (
-                        <dt><strong>Citation</strong></dt>
-                        <dd>{publication.data.citation}</dd>
-                    )}
-                </dl>
+        <div class="with-sidebar">
+            <div class="sidebar-panel">
+                <div class="image-wrapper">
+                    {
+                        publication.data.image ? (
+                            <SanityImage
+                                alt={publication.data.title}
+                                aspectRatio={[6, 9]}
+                                source={publication.data.image}
+                                width={600}
+                            />
+                        ) : (
+                            <img
+                                alt=""
+                                class="fallback-img"
+                                src="/images/pourdavoud-placeholder-portrait.webp"
+                                width={600}
+                            />
+                        )
+                    }
+                    <dl class="details">
+                        {publication.data.publisher && (
+                            <dt><strong>Publisher</strong></dt>
+                            <dd>{publication.data.publisher}</dd>
+                        )}
+                        {publication.data.publicationDate && (
+                            <dt><strong>Date</strong></dt>
+                            <dd>{publication.data.publicationDate}</dd>
+                        )}
+                        {publication.data.citation && (
+                            <dt><strong>Citation</strong></dt>
+                            <dd>{publication.data.citation}</dd>
+                        )}
+                    </dl>
+                </div>
             </div>
-            <div class="text-wrapper">
+            <div class="main-panel">
                 <header>
                     <h1>{publication.data.title}</h1>
                     {
@@ -157,13 +159,14 @@ const { publication } = Astro.props;
         margin-block-start: var(--space-xl);
     }
 
-    .panes {
-        --panes-gap: 4rem;
-        --panes-align: flex-start;
+    .with-sidebar {
+        --sidebar-gap: 4rem;
+        --sidebar-min-width: 22rem;
+        --main-min-width: 55%;
     }
 
     .image-wrapper {
-        --panes-width: 6rem;
+        max-width: 25rem;
     }
 
     .subtitle {
@@ -204,6 +207,16 @@ const { publication } = Astro.props;
 
         & dd {
             padding-inline-start: 1rem;
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .with-sidebar {
+            --sidebar-gap: var(--space-xl);
+        }
+
+        h1 {
+            margin: 0;
         }
     }
 </style>

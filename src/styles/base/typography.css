@@ -126,3 +126,9 @@ a:not([class]) {
         margin-block-end: var(--space-xs);
     }
 }
+
+@media screen and (max-width: 640px) {
+    .mega-title {
+        font-size: var(--step-5);
+    }
+}

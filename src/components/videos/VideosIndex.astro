@@ -102,6 +102,16 @@ const videoSpeakers = (
     />
 </div>
 
+<style>
+    @media screen and (max-width: 768px) {
+        :global(
+            .page[data-template='index'] [data-index='videos'] .back-to-top
+        ) {
+            display: none;
+        }
+    }
+</style>
+
 <!-- <script
     is:inline
     src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"

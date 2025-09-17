@@ -117,4 +117,10 @@ const authors = await Promise.all(publication.data.authors.map(async (entry) => 
     .text-wrapper {
         margin-block-start: var(--space-xs);
     }
+
+    @media screen and (max-width: 640px) {
+        .title-link {
+            font-size: var(--step-2);
+        }
+    }
 </style>

@@ -136,4 +136,33 @@ const {
     .on-page-nav {
         margin-block-start: var(--space-m);
     }
+
+    @media screen and (max-width: 900px) {
+        .grid-12 {
+            grid-template-columns: 1fr;
+            min-height: 0;
+
+            & > * {
+                grid-column: 1 / 2;
+            }
+        }
+
+        .text-wrapper {
+            padding-block-start: var(--space-3xl);
+            padding-block-end: var(--space-2xl);
+            max-width: none;
+            padding-inline: var(--gutter-spacing);
+        }
+
+        .preview {
+            margin-block-end: 0;
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        .text-wrapper {
+            padding-block-start: var(--space-2xl);
+            padding-block-end: var(--space-xl);
+        }
+    }
 </style>

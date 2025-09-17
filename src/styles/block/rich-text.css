@@ -103,3 +103,15 @@
         --flow-space: var(--space-l);
     }
 }
+
+@media screen and (max-width: 640px) {
+    .rich-text {
+        & blockquote {
+            padding-inline-start: 2rem;
+
+            &::before {
+                left: 0;
+            }
+        }
+    }
+}

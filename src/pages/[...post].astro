@@ -71,7 +71,10 @@ const { post } = Astro.props;
                 <div class="text-wrapper">
                     {
                         post.data.richText && (
-                            <RichText module={post.data.richText} />
+                            <RichText
+                                module={post.data.richText}
+                                withPadding={false}
+                            />
                         )
                     }
                 </div>
@@ -110,7 +113,8 @@ const { post } = Astro.props;
     }
 
     .with-sidebar {
-        --sidebar-gap: 6rem;
+        --main-min-width: 57%;
+        --sidebar-gap: 5rem;
         --sidebar-min-width: 20rem;
     }
 
@@ -149,5 +153,16 @@ const { post } = Astro.props;
         margin-block-start: var(--space-l);
         padding-block-start: var(--space-m);
         border-block-start: 1px solid var(--site-border);
+    }
+
+    @media screen and (max-width: 999px) {
+        .with-sidebar {
+            --main-min-width: 65%;
+            --sidebar-gap: 2rem;
+        }
+
+        .sidebar-panel {
+            margin-block-start: var(--space-m);
+        }
     }
 </style>

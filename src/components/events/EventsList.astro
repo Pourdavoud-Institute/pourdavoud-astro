@@ -12,3 +12,20 @@ const { events } = Astro.props;
 <div class="events-list">
     {events.map((event) => <EventPreviewList event={event} />)}
 </div>
+
+<style>
+    .events-list {
+        container: eventsListWrapper / inline-size;
+    }
+
+    @container eventsListWrapper (width < 700px) {
+        :global(.event-preview-list) {
+            grid-template-columns: 1fr;
+            row-gap: var(--space-m);
+        }
+
+        :global(.event-preview-list .image-wrapper) {
+            order: -1;
+        }
+    }
+</style>

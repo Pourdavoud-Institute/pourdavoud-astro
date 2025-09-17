@@ -82,6 +82,7 @@ const role = getPersonRole(person);
         margin-block-start: var(--space-3xl);
         margin-inline-start: calc(20rem + var(--space-2xl));
         padding-block-start: 4rem;
+        padding-block-end: 2rem;
     }
 
     .role {
@@ -94,5 +95,26 @@ const role = getPersonRole(person);
         border-block-start: 1px solid
             color-mix(in srgb, transparent 70%, var(--ucla-lighter-blue));
         padding-block-start: var(--space-s);
+    }
+
+    @media screen and (max-width: 768px) {
+        .flex {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-m);
+            align-items: flex-start;
+            padding-block: var(--space-l);
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 20rem;
+        }
+
+        .text-wrapper {
+            margin: 0;
+            padding: 0;
+        }
     }
 </style>

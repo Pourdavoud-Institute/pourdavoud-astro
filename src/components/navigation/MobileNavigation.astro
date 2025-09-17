@@ -127,7 +127,7 @@ const { navItems, featuredNavItems } = Astro.props;
                             navItems?.map((navItem) => {
                                 if (navItem.itemType == 'linkList') {
                                     return (
-                                        <li>
+                                        <li data-type="link-list">
                                             <details>
                                                 <summary class="popover-nav-link summary">
                                                     <span>{navItem.label}</span>
@@ -188,7 +188,7 @@ const { navItems, featuredNavItems } = Astro.props;
                                 } else {
                                     const linkParts = sanityLink(navItem);
                                     return (
-                                        <li>
+                                        <li data-type="single-link">
                                             <a
                                                 class="popover-nav-link"
                                                 href={linkParts.url}
@@ -333,6 +333,10 @@ const { navItems, featuredNavItems } = Astro.props;
         & .popover-nav-link {
             --popover-nav-link-size: var(--step-0);
         }
+    }
+
+    li[data-type='single-link'] {
+        margin-block-start: 0.5rem;
     }
 
     @media screen and (max-width: 1024px) {

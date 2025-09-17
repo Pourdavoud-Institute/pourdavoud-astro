@@ -2,16 +2,19 @@
     margin-block-start: var(--section-spacing);
 
     &[data-index='events'] {
+        --main-min-width: 70%;
         --sidebar-min-width: 12rem;
         --sidebar-gap: 4rem;
     }
 
     &[data-index='posts'] {
+        --main-min-width: 63%;
         --sidebar-min-width: 12rem;
         --sidebar-gap: 4rem;
     }
 
     &[data-index='videos'] {
+        --main-min-width: 58%;
         --sidebar-min-width: 17rem;
         --sidebar-gap: 4rem;
     }

@@ -21,7 +21,11 @@ const { module } = Astro.props;
 >
     <div class="content-wrapper | grid">
         <h2 id={v.slugify(module.heading)}>{module.heading}</h2>
-        {module.richText && <RichText module={module.richText} />}
+        {
+            module.richText && (
+                <RichText module={module.richText} withPadding={false} />
+            )
+        }
     </div>
 </section>
 
@@ -35,5 +39,18 @@ const { module } = Astro.props;
     .section-padding {
         padding-block: var(--section-spacing);
         background-color: var(--ucla-gray-1);
+    }
+
+    @media screen and (max-width: 1024px) {
+        .grid {
+            --two-column-text--columns: 1.5fr 3fr;
+            --two-column-text--gap: var(--space-l);
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .grid {
+            --two-column-text--columns: 1fr;
+        }
     }
 </style>

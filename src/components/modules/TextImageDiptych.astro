@@ -90,4 +90,26 @@ if (
     .image-wrapper {
         --panes-width: 45%;
     }
+
+    @media screen and (max-width: 899px) {
+        .panes {
+            --panes-gap: var(--space-l);
+        }
+
+        .text-wrapper {
+            --panes-width: 100%;
+        }
+
+        .image-wrapper {
+            --panes-width: 100%;
+            order: -1;
+            max-width: 30rem;
+        }
+    }
+
+    /* @media screen and (max-width: 768px) {
+        .panes {
+            --panes-gap: var(--space-l);
+        }
+    } */
 </style>

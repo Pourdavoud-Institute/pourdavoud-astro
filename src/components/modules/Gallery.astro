@@ -180,4 +180,19 @@ const { module } = Astro.props;
             opacity: 1;
         }
     }
+
+    @media screen and (max-width: 640px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .caption-toggle {
+            opacity: 1;
+        }
+
+        figcaption {
+            overflow-y: scroll;
+            height: 100%;
+        }
+    }
 </style>

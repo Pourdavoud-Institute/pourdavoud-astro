@@ -4,20 +4,28 @@ import type { RichText as RichTextModule } from '@content/schemaFragments/pageMo
 
 interface Props {
     module: RichTextModule;
-    contained?: boolean;
+    contained?: boolean; // if true, sets max width and margin-inline auto on child content
+    withPadding?: boolean; // if true, adds inline padding to parent wrapper
 }
 
-const { module, contained = false } = Astro.props;
+const { module, contained = false, withPadding = true } = Astro.props;
 ---
 
 <div
-    class:list={[
-        'rich-text | flow',
-        {
-            'section-margin': module.options?.sectionMargin,
-            contained: contained,
-        },
-    ]}
+    class:list={[{ 'content-wrapper': withPadding }]}
+    data-module={module._type}
 >
-    {module.blocks && <RichTextBlocks blocks={module.blocks} />}
+    <div
+        class:list={[
+            'rich-text | flow',
+            {
+                'section-margin': module.options?.sectionMargin,
+                contained: contained,
+            },
+        ]}
+    >
+        {module.blocks && <RichTextBlocks blocks={module.blocks} />}
+    </div>
 </div>
+
+<style></style>

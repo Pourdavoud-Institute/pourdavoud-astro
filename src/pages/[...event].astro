@@ -88,7 +88,10 @@ const eventSpeakers = await getCollection('speakers', ({ data }) =>
                 <div class="text-wrapper">
                     {
                         event.data.richText && (
-                            <RichText module={event.data.richText} />
+                            <RichText
+                                module={event.data.richText}
+                                withPadding={false}
+                            />
                         )
                     }
                     {
@@ -153,7 +156,8 @@ const eventSpeakers = await getCollection('speakers', ({ data }) =>
     }
 
     .with-sidebar {
-        --sidebar-gap: 6rem;
+        --main-min-width: 57%;
+        --sidebar-gap: 5rem;
         --sidebar-min-width: 20rem;
     }
 
@@ -205,6 +209,13 @@ const eventSpeakers = await getCollection('speakers', ({ data }) =>
 
         & .small-title {
             font-size: var(--step--1);
+        }
+    }
+
+    @media screen and (max-width: 999px) {
+        .with-sidebar {
+            --main-min-width: 65%;
+            --sidebar-gap: 2rem;
         }
     }
 </style>

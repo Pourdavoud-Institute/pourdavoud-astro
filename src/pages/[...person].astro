@@ -157,6 +157,7 @@ const { person } = Astro.props;
 
 <style>
     .with-sidebar {
+        --main-min-width: 57%;
         --sidebar-min-width: 20rem;
         --sidebar-gap: 4rem;
         margin-block-start: calc(var(--section-spacing) * 1.5);
@@ -225,6 +226,12 @@ const { person } = Astro.props;
             & .publications-list {
                 --grid-item-min-size: 12rem;
             }
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .with-sidebar {
+            margin-block-start: var(--section-spacing);
         }
     }
 </style>

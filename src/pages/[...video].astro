@@ -93,7 +93,10 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
                     {
                         video.data.richText && (
                             <section>
-                                <RichText module={video.data.richText} />
+                                <RichText
+                                    module={video.data.richText}
+                                    withPadding={false}
+                                />
                             </section>
                         )
                     }
@@ -180,7 +183,8 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
     }
 
     .with-sidebar {
-        --sidebar-gap: 6rem;
+        --main-min-width: 57%;
+        --sidebar-gap: 5rem;
         --sidebar-min-width: 20rem;
     }
 
@@ -234,5 +238,12 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
 
     .event-list {
         margin-block-start: var(--space-s);
+    }
+
+    @media screen and (max-width: 999px) {
+        .with-sidebar {
+            --main-min-width: 65%;
+            --sidebar-gap: 2rem;
+        }
     }
 </style>

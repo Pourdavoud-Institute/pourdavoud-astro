@@ -64,11 +64,27 @@ const breadcrumbsStyle = getBreadcrumbsStyleFromSlug(page.data.slug);
 
 <style>
     .with-sidebar {
+        --main-min-width: 65%;
         --sidebar-min-width: 14rem;
         --sidebar-gap: 3rem;
     }
 
     .sidebar-panel {
         margin-block-start: var(--section-spacing);
+    }
+
+    @media screen and (max-width: 768px) {
+        :global(
+            .page[data-template='default']
+                .with-sidebar
+                .main-panel
+                .content-wrapper
+        ) {
+            padding-inline: 0;
+        }
+
+        :global(.page[data-template='default'] .sections.section-spacing-top) {
+            margin-block-start: 0;
+        }
     }
 </style>

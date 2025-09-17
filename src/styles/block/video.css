@@ -40,9 +40,23 @@
 }
 
 .videos-list {
+    container: videosListWrapper / inline-size;
+    margin-block-start: var(--space-m);
+
     & > * + * {
         margin-block-start: var(--space-l);
         padding-block-start: var(--space-l);
         border-block-start: 1px solid var(--site-border);
+    }
+}
+
+@container videosListWrapper (width < 700px) {
+    .video-preview {
+        grid-template-columns: 1fr;
+        gap: var(--space-m);
+
+        & .image-wrapper {
+            order: -1;
+        }
     }
 }
