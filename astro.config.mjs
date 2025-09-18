@@ -45,15 +45,15 @@ export default defineConfig({
         '/media/videos': '/media/video-library',
     },
 
-    adapter: node({
-        mode: 'standalone',
-    }),
-    env: {
-        schema: {
-            WEBHOOK_SECRET: envField.string({
-                context: 'server',
-                access: 'secret',
-            }),
-        },
-    },
+    // adapter: node({
+    //     mode: 'standalone',
+    // }),
+    // env: {
+    //     schema: {
+    //         WEBHOOK_SECRET: envField.string({
+    //             context: 'server',
+    //             access: 'secret',
+    //         }),
+    //     },
+    // },
 });
