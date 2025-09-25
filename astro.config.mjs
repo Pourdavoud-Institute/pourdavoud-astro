@@ -2,10 +2,11 @@
 import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
 import { defineConfig, envField } from 'astro/config';
-import node from '@astrojs/node';
+// import node from '@astrojs/node';
 import preact from '@astrojs/preact';
 // import preactVite from '@preact/preset-vite';
 import sanity from '@sanity/astro';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +19,7 @@ export default defineConfig({
             useCdn: false,
         }),
         preact({ compat: true }),
+        sitemap(),
     ],
 
     image: {

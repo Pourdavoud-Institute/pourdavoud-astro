@@ -58,7 +58,8 @@ const url = Astro.url;
         ? (seo?.title ?? title)
         : `%s • ${siteSettings?.data.siteName}`}
 />
-
+<!-- Sitemap -->
+<link href="/sitemap-index.xml" rel="sitemap" />
 <!-- Favicon -->
 <link href="/pourdavoud-favicon.svg" rel="icon" type="image/svg+xml" />
 <link
