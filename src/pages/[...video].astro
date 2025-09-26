@@ -101,6 +101,14 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
                         )
                     }
                     {
+                        video.data.citation && (
+                            <div class="citation-wrapper">
+                                <h2 class="small-title">Citation</h2>
+                                <p>{video.data.citation}</p>
+                            </div>
+                        )
+                    }
+                    {
                         videoSpeakers.length > 0 && (
                             <section>
                                 <SpeakerBio speakers={videoSpeakers} />
@@ -208,14 +216,29 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
         }
     }
 
+    .citation-wrapper {
+        & .small-title {
+            font-size: var(--step--1);
+            color: var(--ucla-primary-blue);
+            margin-block-end: var(--space-2xs);
+            padding-block-end: var(--space-3xs);
+            border-block-end: 1px solid var(--site-border);
+        }
+
+        & p {
+            margin-block-start: var(--space-3xs);
+        }
+    }
+
     .sidebar-panel {
         margin-block-start: var(--space-m);
     }
 
     :global(.video .sidebar-panel .small-title) {
+        font-size: var(--step--1);
         color: var(--ucla-primary-blue);
         margin-block-end: var(--space-2xs);
-        padding-block-end: var(--space-2xs);
+        padding-block-end: var(--space-3xs);
         border-block-end: 1px solid var(--site-border);
     }
 
