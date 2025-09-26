@@ -40,7 +40,7 @@ const featuredNavItems = [
         <div class="logos | cluster">
             <a
                 aria-label="UCLA Logo"
-                class="logo-link-ucla"
+                class="logo-link ucla"
                 href="https://www.ucla.edu"
                 target="_blank"
             >
@@ -100,6 +100,12 @@ const featuredNavItems = [
         padding-inline-start: var(--gutter-spacing);
     }
 
+    .logo-link {
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+
     @media screen and (max-width: 1024px) {
         .nav-wrapper {
             align-items: center;
@@ -115,7 +121,7 @@ const featuredNavItems = [
         .logos {
             padding-inline-start: 1rem;
 
-            & .logo-link-ucla {
+            & .logo-link.ucla {
                 width: 5rem;
             }
 
@@ -127,7 +133,7 @@ const featuredNavItems = [
 
     @media screen and (max-width: 450px) {
         .logos {
-            & .logo-link-ucla {
+            & .logo-link.ucla {
                 width: 4rem;
             }
 

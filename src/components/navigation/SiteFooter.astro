@@ -38,11 +38,20 @@ const navigation = await getEntry(
                     <div class="logos | cluster">
                         <a
                             aria-label="UCLA Logo"
-                            class="logo-link-ucla"
+                            class="logo-link ucla"
                             href="https://www.ucla.edu"
                             target="_blank"
                         >
                             <UCLALogo />
+                        </a>
+                        <a class="logo-link pourdavoud" href="/">
+                            <img
+                                alt="Pourdavoud Institute logo"
+                                decoding="auto"
+                                loading="eager"
+                                src="/images/logos/pourdavoud-logo-web-white.svg"
+                                width="350"
+                            />
                         </a>
                     </div>
                     <div class="tagline">
@@ -130,6 +139,12 @@ const navigation = await getEntry(
 </footer>
 
 <style>
+    .logo-link {
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+
     .tagline {
         font-size: var(--step-1);
     }
@@ -159,7 +174,7 @@ const navigation = await getEntry(
 
         & .column {
             & ul {
-                margin-block-start: var(--space-m);
+                margin-block-start: var(--space-s);
             }
         }
     }
