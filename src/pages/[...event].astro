@@ -175,9 +175,10 @@ const eventSpeakers = await getCollection('speakers', ({ data }) =>
     }
 
     :global(.event .sidebar-panel .small-title) {
+        font-size: var(--step--1);
         color: var(--ucla-primary-blue);
         margin-block-end: var(--space-2xs);
-        padding-block-end: var(--space-2xs);
+        padding-block-end: var(--space-3xs);
         border-block-end: 1px solid var(--site-border);
     }
 
@@ -187,7 +188,7 @@ const eventSpeakers = await getCollection('speakers', ({ data }) =>
     }
 
     :global(.event .sidebar-elements > * + *) {
-        margin-block-start: var(--space-l);
+        margin-block-start: var(--space-xl);
     }
 
     .button-link.rsvp {
