@@ -23,7 +23,7 @@ const { speakers } = Astro.props;
                         speaker.data.image && 'with-sidebar',
                     ]}
                 >
-                    {speaker.data.image && (
+                    {speaker.data.image && speaker.data.image.asset && (
                         <div class="sidebar-panel">
                             <SanityImage
                                 alt={speaker.data.image.alt}
