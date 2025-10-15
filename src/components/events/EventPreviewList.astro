@@ -12,9 +12,14 @@ const { event } = Astro.props;
 
 const eventDetails = formatEventDetails(event.data.details);
 const eventDatePreview = formatEventDate(event.data.details);
+
+let tagList: string[] | undefined = undefined;
+if (event.data.tags.length > 0) {
+    tagList = event.data.tags.map((tag) => `tag-${tag.title.toLowerCase()}`);
+}
 ---
 
-<article class="event-preview-list" data-event-id={event.id}>
+<article class:list={['event-preview-list', tagList]} data-event-id={event.id}>
     <div class="text-wrapper | flow" data-tempo="allegro">
         {
             event.data.categories.length > 0 && (
