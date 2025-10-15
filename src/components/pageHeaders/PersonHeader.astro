@@ -30,6 +30,7 @@ const role = getPersonRole(person);
                     ) : (
                         <img
                             alt="fallback"
+                            class="fallback-img"
                             src="/images/pourdavoud-placeholder-portrait.webp"
                             width={600}
                         />
@@ -95,6 +96,11 @@ const role = getPersonRole(person);
         border-block-start: 1px solid
             color-mix(in srgb, transparent 70%, var(--ucla-lighter-blue));
         padding-block-start: var(--space-s);
+    }
+
+    .fallback-img {
+        aspect-ratio: 3/4;
+        object-fit: cover;
     }
 
     @media screen and (max-width: 768px) {
