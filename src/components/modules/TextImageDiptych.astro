@@ -53,7 +53,10 @@ if (
                 }
                 {module.cta.length > 0 && <CTALinks links={module.cta} />}
             </div>
-            <div class="image-wrapper">
+            <div
+                class="image-wrapper"
+                data-position={module.options.imagePosition}
+            >
                 <SanityImage
                     alt={module.image.alt}
                     aspectRatio={aspectRatio}
@@ -89,6 +92,10 @@ if (
 
     .image-wrapper {
         --panes-width: 45%;
+
+        &[data-position='left'] {
+            order: -1;
+        }
     }
 
     @media screen and (max-width: 899px) {
