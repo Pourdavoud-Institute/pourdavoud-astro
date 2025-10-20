@@ -6,7 +6,7 @@ const SanityImage = z.any();
 
 export const FeaturedImage = z.object({
     asset: SanityImage,
-    alt: z.string().optional(),
+    alt: z.string().nullish(),
     caption: z.string().nullish(),
     crop: z.any().nullish(),
     hotspot: z.any().nullish(),

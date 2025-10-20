@@ -10,7 +10,7 @@ export type SanityImage = {
     asset?: SanityImageAsset;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
+    alt?: string | null;
     caption?: string | null;
 };
 

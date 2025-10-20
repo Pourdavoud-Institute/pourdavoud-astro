@@ -1,10 +1,20 @@
 ---
+/* ----------------------------------------------------------------------------
+ * Sanity Image
+ * Wrapper around Astro's `Image` component that builds a Sanity source image
+ * using the `urlForImage` helper. Options can be passed to the URL builder to
+ * adjust size, crop, quality, etc. Alt text is handled by first checking for
+ * local field overrides, then falling back to the referenced asset's global
+ * field.
+ * ----------------------------------------------------------------------------
+ */
+
 import { Image } from 'astro:assets';
 import type { SanityImage } from '@lib/utils/types';
 import { urlForImage } from '@lib/sanity/urlForImage';
 
 interface Props {
-    alt?: string;
+    alt?: string | null; // optional local override for alt text
     aspectRatio?: [number, number]; // set in `[4, 3]` format
     attrs?: any; // additional attributes
     classes?: string;
@@ -59,7 +69,7 @@ if (crop) {
 ---
 
 <Image
-    alt={alt}
+    alt={alt ?? source.asset?.altText ?? ''}
     class:list={[classes, 'with-lqip']}
     data-aspect-ratio={computedAspectRatio}
     decoding={loading == 'lazy' ? 'async' : 'auto'}
