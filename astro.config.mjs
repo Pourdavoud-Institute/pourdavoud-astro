@@ -8,19 +8,17 @@ import preact from '@astrojs/preact';
 import sanity from '@sanity/astro';
 import sitemap from '@astrojs/sitemap';
 
+import vue from '@astrojs/vue';
+
 // https://astro.build/config
 export default defineConfig({
     site: 'https://pourdavoud.ucla.edu',
 
-    integrations: [
-        sanity({
-            projectId: '3z4imst3',
-            dataset: 'production',
-            useCdn: false,
-        }),
-        preact({ compat: true }),
-        sitemap(),
-    ],
+    integrations: [sanity({
+        projectId: '3z4imst3',
+        dataset: 'production',
+        useCdn: false,
+    }), preact({ compat: true }), sitemap(), vue()],
 
     image: {
         domains: ['cdn.sanity.io'],

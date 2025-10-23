@@ -17,5 +17,9 @@
         --main-min-width: 58%;
         --sidebar-min-width: 17rem;
         --sidebar-gap: 4rem;
+
+        & .main-panel {
+            margin-block-start: var(--space-xl);
+        }
     }
 }

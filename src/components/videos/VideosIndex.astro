@@ -1,7 +1,8 @@
 ---
 import type { PersonSpeaker } from '@content/schemaFragments/sanityComponents';
 import type { VideoEventFilter } from '@content/videos';
-import VideosCollection from '@components/videos/VideosCollection';
+// import VideosCollection from '@components/videos/VideosCollection';
+import VideosCollection from './VideosCollection.vue';
 import { getCollection } from 'astro:content';
 
 /* Prepare video collection */
@@ -94,12 +95,13 @@ const videoSpeakers = (
 ---
 
 <div class="content-wrapper">
-    <VideosCollection
+    <VideosCollection client:load videos={videos} />
+    <!-- <VideosCollection
         client:load
         events={videoEvents}
         speakers={videoSpeakers}
         videos={videos}
-    />
+    /> -->
 </div>
 
 <style>
