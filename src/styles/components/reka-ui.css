@@ -2,8 +2,17 @@
 
 /* Label */
 .ui__label {
+    display: inline-block;
     font-size: 14px;
     font-weight: 700;
+    margin-block-end: var(--space-3xs);
+}
+
+/* Tooltip */
+.ui-tooltip__content {
+    position: absolute;
+    background-color: var(--ucla-gray-9);
+    color: var(--ucla-white);
 }
 
 /* Select */
@@ -23,8 +32,8 @@
     transition: all 0.2s;
 
     & svg {
-        width: 1.5em;
-        height: 1.5em;
+        width: 20px;
+        height: 20px;
         fill: var(--ucla-primary-blue);
     }
 
@@ -76,6 +85,87 @@
 
 .ui-select__item_text {
     padding-inline-start: 18px;
+}
+
+/* Combobox */
+.ui-combobox__root {
+    position: relative;
+}
+
+.ui-combobox__anchor {
+    position: relative;
+}
+
+.ui-combobox__input {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1.15;
+    min-width: 18rem;
+    padding: 10px 32px 10px 12px;
+    border: 1px solid var(--ucla-gray-5);
+    background-color: var(--ucla-white);
+    outline: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.ui-combobox__content {
+    position: absolute;
+    z-index: 30;
+    overflow: hidden;
+    background-color: var(--ucla-white);
+    border-radius: 4px;
+    border: 1px solid var(--ucla-gray-4);
+    box-shadow: var(--shadow-base);
+}
+
+.ui-combobox__viewport {
+    padding: 4px;
+}
+
+.ui-combobox__item_indicator {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 8px;
+    left: 6px;
+    fill: var(--ucla-primary-blue);
+}
+
+/* todo: hide if value present, show on hover */
+.ui-combobox__trigger {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 100%;
+    /* background-color: var(--ucla-gray-2); */
+
+    & svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--ucla-primary-blue);
+    }
+}
+
+.ui-combobox__item {
+    position: relative;
+    padding: 4px 6px;
+    font-size: 14px;
+    border-radius: 2px;
+
+    &:hover {
+        background-color: var(--ucla-gray-1);
+    }
+
+    &[data-state='checked'] {
+        background-color: var(--ucla-lightest-blue);
+    }
 }
 
 /* Search */

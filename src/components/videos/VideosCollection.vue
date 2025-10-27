@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { CollectionEntry } from 'astro:content';
+import type { PersonSpeaker } from '@content/schemaFragments/sanityComponents';
+import type { VideoEventFilter } from '@content/videos';
 import { ref, computed, onMounted, watchEffect } from 'vue';
 import {
     PaginationEllipsis,
@@ -10,22 +12,31 @@ import {
     PaginationNext,
     PaginationPrev,
     PaginationRoot,
+    TooltipProvider,
 } from 'reka-ui';
 import VideoSort, {
     type SortTerm,
     type SortOptions,
 } from './filterControls/VideoSort.vue';
+import VideoFilter from './filterControls/VideoFilter.vue';
 import VideoSearch from './filterControls/VideoSearch.vue';
+import VideoPreview from './VideoPreview.vue';
 import v from 'voca';
 
 interface Props {
     videos: CollectionEntry<'videos'>[];
+    events: VideoEventFilter[];
+    speakers: PersonSpeaker[];
 }
 
 const props = defineProps<Props>();
 
+// filter and sort refs - current state
 const sort = ref<SortOptions>('dateDesc');
 const searchFilter = ref<string>('');
+const eventFilter = ref<VideoEventFilter>();
+const speakerFilter = ref<PersonSpeaker>();
+// pagination refs - current state
 const currentPage = ref<number>(1);
 const pageOffset = ref<number>(30);
 
@@ -50,35 +61,59 @@ const sortTerms: SortTerm[] = [
 
 // component must be mounted to access browser APIs like `window`
 onMounted(() => {
-    // check for existing params in url
+    // check for existing params in url when page is navigated to
     let params = new URLSearchParams(window.location.search);
     if (params.size) {
         // get param keys
         const sortParam = params.get('sort');
         const searchParam = params.get('q');
+        const paginateParam = params.get('offset');
         // set params, validate against acceptable values
+        // sort - validate that it is actual SortOption
         if (sortParam && sortTerms.some((t) => t.value === sortParam)) {
             sort.value = sortParam as SortOptions;
         } else {
             // fallback to default if malformed params
             sort.value = 'dateDesc';
         }
+        // search
         if (searchParam) {
             searchFilter.value = searchParam ?? '';
         }
+        // paginate - test if coerced value is a number or NaN
+        if (paginateParam && !Number.isNaN(Number(paginateParam))) {
+            // calculate current page from offset
+            const offset = Number(paginateParam);
+            currentPage.value = Math.round(offset / pageOffset.value) + 1;
+        } else {
+            // fallback to first page if malformed params
+            currentPage.value = 1;
+        }
     }
 
-    // set params when refs change
+    // set new search params when refs change
     watchEffect(() => {
         // get current url and params
         const url = new URL(window.location.href);
-        // reset existing params
         const params = url.searchParams;
+
+        // reset existing params
+        // sort
         params.set('sort', sort.value);
+        // search
         if (searchFilter.value) {
             params.set('q', searchFilter.value);
         } else {
             params.delete('q');
+        }
+        // paginate
+        if (currentPage.value > 1) {
+            params.set(
+                'offset',
+                `${(currentPage.value - 1) * pageOffset.value}`,
+            );
+        } else {
+            params.delete('offset');
         }
 
         // push state
@@ -88,9 +123,9 @@ onMounted(() => {
 
 const filteredList = computed(() => {
     if (searchFilter.value) {
-        // when search value is present, reset pagination to 1
+        // when a search value is present, reset pagination to 1
         currentPage.value = 1;
-        // console.log(searchFilter.value);
+
         // use voca to standardize input against video titles
         return props.videos.filter((item) =>
             v.includes(
@@ -170,16 +205,36 @@ const filterDescription = computed(() => {
 
     return message;
 });
+
+// helper functions
+/** Reset the search filter and paginated list when input is cleared */
+function clearSearch() {
+    searchFilter.value = '';
+    currentPage.value = 1;
+}
+
+function scrollToTop(e: PointerEvent) {
+    const container = document.querySelector('#videos-index');
+    container?.scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 
 <template>
     <div>
         <div class="filters-panel">
+            <div class="small-title">Filters</div>
             <div class="cluster">
                 <VideoSearch
                     :search="searchFilter"
                     @update-search="(v) => (searchFilter = v)"
-                    @clear-search="searchFilter = ''"
+                    @clear-search="clearSearch"
+                />
+                <VideoFilter
+                    title="Filter by Event"
+                    name="eventFilter"
+                    :filter="eventFilter"
+                    :options="events"
+                    @update-filter="(v) => (eventFilter = v)"
                 />
                 <VideoSort
                     :sort="sort"
@@ -189,48 +244,66 @@ const filterDescription = computed(() => {
             </div>
         </div>
         <div class="main-panel">
-            <div>
+            <div class="filter-description">
                 <em>{{ filterDescription }}</em>
+                <p>
+                    event filter: {{ eventFilter?.title }},
+                    {{ eventFilter?._id }}
+                </p>
             </div>
-            <div class="videos-list">
-                <p>current page: {{ currentPage }}</p>
-                <ul class="videos-list">
-                    <li v-for="(video, index) in paginatedList" :key="video.id">
-                        <p>{{ index + 1 }}</p>
-                        <p>
-                            <strong>{{ video.data.title }}</strong>
-                        </p>
-                        <p>{{ video.data.date }}</p>
+            <div class="videos-list-wrapper">
+                <!-- <p>current page: {{ currentPage }}</p> -->
+                <ul class="videos-list | fluid-grid">
+                    <li v-for="video in paginatedList" :key="video.id">
+                        <VideoPreview :video="video" />
                     </li>
                 </ul>
                 <PaginationRoot
+                    class="ui-pagination__root"
                     v-model:page="currentPage"
                     :total="videoCount"
                     :items-per-page="pageOffset"
                     :show-edges="true"
+                    v-slot="{ page, pageCount }"
                     @update:page="(v) => console.log(`current page: ${v}`)"
                 >
                     <PaginationList v-slot="{ items }">
-                        <PaginationFirst />
-                        <PaginationPrev />
-                        <template v-for="(page, index) in items" :key="index">
+                        <PaginationPrev asChild v-show="page !== 1">
+                            <button
+                                class="ui-pagination__button button-link"
+                                data-size="small"
+                                data-style="primary"
+                                @click="scrollToTop"
+                            >
+                                Prev
+                            </button>
+                        </PaginationPrev>
+                        <template v-for="(page, index) in items">
                             <PaginationListItem
                                 v-if="page.type === 'page'"
                                 :value="page.value"
+                                :key="index"
+                                class="ui-pagination__page"
                             >
-                                <div>
-                                    <p>
-                                        <strong>{{ page.value }}</strong>
-                                    </p>
-                                    <!-- <p>{{ page.data.date }}</p> -->
-                                </div>
+                                {{ page.value }}
                             </PaginationListItem>
-                            <PaginationEllipsis v-else
+                            <PaginationEllipsis
+                                v-else
+                                :key="page.type"
+                                :index="index"
                                 >&#8230;</PaginationEllipsis
                             >
                         </template>
-                        <PaginationNext />
-                        <PaginationLast />
+                        <PaginationNext asChild v-show="page !== pageCount">
+                            <button
+                                class="ui-pagination__button button-link"
+                                data-size="small"
+                                data-style="primary"
+                                @click="scrollToTop"
+                            >
+                                Next
+                            </button>
+                        </PaginationNext>
                     </PaginationList>
                 </PaginationRoot>
             </div>

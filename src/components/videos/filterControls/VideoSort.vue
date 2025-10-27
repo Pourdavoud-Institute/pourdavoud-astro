@@ -37,7 +37,7 @@ defineEmits(['updateSort']);
         <Label class="ui__label" for="sort">Sort by</Label>
         <select-root
             :model-value="sort"
-            @update:model-value="(v) => $emit('updateSort', v)"
+            @update:model-value="(v: SortOptions) => $emit('updateSort', v)"
         >
             <select-trigger
                 id="sort"

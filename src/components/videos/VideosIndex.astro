@@ -95,7 +95,12 @@ const videoSpeakers = (
 ---
 
 <div class="content-wrapper">
-    <VideosCollection client:load videos={videos} />
+    <VideosCollection
+        client:load
+        events={videoEvents}
+        speakers={videoSpeakers}
+        videos={videos}
+    />
     <!-- <VideosCollection
         client:load
         events={videoEvents}

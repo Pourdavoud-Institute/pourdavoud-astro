@@ -3,6 +3,8 @@ import { Label } from 'reka-ui';
 
 /** todo: add debounce function for @keyup
  * @link https://www.joshwcomeau.com/snippets/javascript/debounce/
+ *
+ * todo: add button indicator and event for clearing search
  */
 
 interface Props {

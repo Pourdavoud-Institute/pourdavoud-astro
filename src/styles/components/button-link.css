@@ -42,6 +42,10 @@
         --button-bg--hover: var(--ucla-state-blue--hover);
         --button-border: var(--ucla-state-blue--default);
         --button-border--hover: var(--ucla-state-blue--hover);
+
+        &:disabled {
+            --button-bg: var(--ucla-lighter-blue);
+        }
     }
 
     &[data-style='primary-ghost'] {

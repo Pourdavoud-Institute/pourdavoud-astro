@@ -18,6 +18,14 @@
         --sidebar-min-width: 17rem;
         --sidebar-gap: 4rem;
 
+        & .filters-panel {
+            & .small-title {
+                color: var(--ucla-primary-blue);
+                font-size: var(--step--1);
+                margin-block-end: var(--space-2xs);
+            }
+        }
+
         & .main-panel {
             margin-block-start: var(--space-xl);
         }
