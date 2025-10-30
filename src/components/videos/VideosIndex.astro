@@ -1,9 +1,9 @@
 ---
 import type { PersonSpeaker } from '@content/schemaFragments/sanityComponents';
 import type { VideoEventFilter } from '@content/videos';
-// import VideosCollection from '@components/videos/VideosCollection';
 import VideosCollection from './VideosCollection.vue';
 import { getCollection } from 'astro:content';
+import v from 'voca';
 
 /* Prepare video collection */
 const videos = await getCollection('videos');
@@ -72,15 +72,28 @@ for (let i = 0; i < videos.length; i++) {
 const videoEvents = (
     Array.from(videoEventsMap.values()) as VideoEventFilter[]
 ).sort((a, b) => {
-    if (a.title < b.title) {
+    // standardize titles for more accurate sorting
+    let titleA = v.chain(a.title).slugify().value();
+    let titleB = v.chain(b.title).slugify().value();
+
+    // strip the starting `the-`s
+    if (v.startsWith(titleA, 'the-')) {
+        titleA = v.slice(titleA, 4);
+    }
+    if (v.startsWith(titleB, 'the-')) {
+        titleB = v.slice(titleB, 4);
+    }
+
+    if (titleA < titleB) {
         return -1;
     }
-    if (a.title > b.title) {
+    if (titleA > titleB) {
         return 1;
     }
     return 0;
 });
 
+// todo: better sort using voca standardized strings
 const videoSpeakers = (
     Array.from(videoSpeakersMap.values()) as PersonSpeaker[]
 ).sort((a, b) => {
@@ -101,15 +114,20 @@ const videoSpeakers = (
         speakers={videoSpeakers}
         videos={videos}
     />
-    <!-- <VideosCollection
-        client:load
-        events={videoEvents}
-        speakers={videoSpeakers}
-        videos={videos}
-    /> -->
 </div>
 
 <style>
+    /* center header items */
+    :global(.page[data-id='6692b13d-799d-4784-ba2c-e1a03000b0c0'] h1) {
+        text-align: center;
+        max-width: none;
+    }
+
+    :global(.page[data-id='6692b13d-799d-4784-ba2c-e1a03000b0c0'] h1::after) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
     @media screen and (max-width: 768px) {
         :global(
             .page[data-template='index'] [data-index='videos'] .back-to-top
@@ -118,8 +136,3 @@ const videoSpeakers = (
         }
     }
 </style>
-
-<!-- <script
-    is:inline
-    src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"
-></script> -->

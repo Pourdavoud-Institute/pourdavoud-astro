@@ -45,7 +45,7 @@ defineEmits(['updateFilter']);
                 <combobox-input
                     class="ui-combobox__input"
                     :id="name"
-                    placeholder="Select..."
+                    placeholder="Search or select..."
                     :display-value="(v: Filter) => v?.title"
                 />
                 <combobox-trigger class="ui-combobox__trigger">
@@ -63,7 +63,7 @@ defineEmits(['updateFilter']);
                     </svg>
                 </combobox-trigger>
             </combobox-anchor>
-            <combobox-content class="ui-combobox__content">
+            <combobox-content class="ui-combobox__content" sticky="partial">
                 <combobox-viewport class="ui-combobox__viewport">
                     <combobox-empty />
                     <combobox-item
@@ -73,7 +73,26 @@ defineEmits(['updateFilter']);
                         :text-value="option.title"
                         class="ui-combobox__item"
                     >
-                        {{ option.title }}
+                        <combobox-item-indicator
+                            class="ui-combobox__item_indicator"
+                            asChild
+                        >
+                            <svg
+                                class="ucla-icon__check"
+                                aria-hidden="true"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M9.7 18.025L4 12.325L5.425 10.9L9.7 15.175L18.875 6L20.3 7.425L9.7 18.025Z"
+                                />
+                            </svg>
+                        </combobox-item-indicator>
+                        <span class="ui-combobox__item_text">{{
+                            option.title
+                        }}</span>
                     </combobox-item>
                 </combobox-viewport>
             </combobox-content>

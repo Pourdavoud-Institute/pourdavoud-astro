@@ -39,7 +39,7 @@ const speakersList = computed(() => {
 </script>
 
 <template>
-    <article class="video-preview">
+    <article class="video-preview__grid">
         <a class="image-wrapper" :href="`/media${video.data.slug}`">
             <div class="overlay">
                 <h2 class="title">{{ video.data.title }}</h2>

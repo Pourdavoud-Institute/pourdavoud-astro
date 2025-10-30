@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { Label } from 'reka-ui';
+import { debounce } from '@lib/utils/videos';
 
 /** todo: add debounce function for @keyup
  * @link https://www.joshwcomeau.com/snippets/javascript/debounce/
- *
- * todo: add button indicator and event for clearing search
  */
 
 interface Props {
@@ -36,7 +35,7 @@ defineEmits(['updateSearch', 'clearSearch']);
                 type="text"
                 class="ui-search__input"
                 :value="search"
-                placeholder="Search titles"
+                placeholder="Search titles & speakers"
                 @keyup="
                     (e) =>
                         $emit(

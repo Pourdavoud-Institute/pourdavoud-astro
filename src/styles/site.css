@@ -15,7 +15,6 @@
 @import 'base/animations.css' layer(utilities);
 
 /*** External */
-@import 'external/choices.css' layer(external);
 
 /*** Main */
 @import 'block/event.css' layer(main);

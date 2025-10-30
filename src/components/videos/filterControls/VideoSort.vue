@@ -58,20 +58,20 @@ defineEmits(['updateSort']);
                     />
                 </svg>
             </select-trigger>
-            <SelectPortal>
-                <SelectContent
+            <select-portal>
+                <select-content
                     class="ui-select__content"
                     position="item-aligned"
                     sticky="partial"
                 >
-                    <SelectViewport class="ui-select__viewport">
-                        <SelectItem
+                    <select-viewport class="ui-select__viewport">
+                        <select-item
                             v-for="(option, index) in sortTerms"
                             :key="index"
                             :value="option.value"
                             class="ui-select__item"
                         >
-                            <SelectItemIndicator
+                            <select-item-indicator
                                 class="ui-select__item_indicator"
                                 asChild
                             >
@@ -87,14 +87,14 @@ defineEmits(['updateSort']);
                                         d="M9.7 18.025L4 12.325L5.425 10.9L9.7 15.175L18.875 6L20.3 7.425L9.7 18.025Z"
                                     />
                                 </svg>
-                            </SelectItemIndicator>
-                            <SelectItemText class="ui-select__item_text">{{
+                            </select-item-indicator>
+                            <select-item-text class="ui-select__item_text">{{
                                 option.text
-                            }}</SelectItemText>
-                        </SelectItem>
-                    </SelectViewport>
-                </SelectContent>
-            </SelectPortal>
+                            }}</select-item-text>
+                        </select-item>
+                    </select-viewport>
+                </select-content>
+            </select-portal>
         </select-root>
     </div>
 </template>
