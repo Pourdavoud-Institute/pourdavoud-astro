@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import type { VideoEventFilter } from '@content/videos';
 import type { PersonSpeaker } from '@content/schemaFragments/sanityComponents';
+import Fuse from 'fuse.js';
 import { ref, computed, onMounted, watchEffect } from 'vue';
 import {
     PaginationEllipsis,
@@ -178,10 +179,46 @@ onMounted(() => {
 });
 
 /** Filters */
-// filter video list
-const filteredList = computed(() => {
+// filter query with fuzzy search
+const queryList = computed(() => {
     let list = props.videos;
 
+    // initialize new Fuse class for fuzzy search on title and speaker
+    // options are set to be more conservative when finding results
+    const fuse = new Fuse(list, {
+        keys: ['data.title', 'data.speakersRef.title'],
+        ignoreDiacritics: true,
+        includeScore: true,
+        shouldSort: true,
+        minMatchCharLength: 2,
+        location: 0,
+        threshold: 0.4,
+        distance: 700, // 0.4 x 700 = 280 characters from location
+    });
+
+    if (searchFilter.value) {
+        // when a search value is present, reset pagination to 1
+        currentPage.value = 1;
+
+        // return fuzzy search results, filter out scores above 0.7
+        // (1.0 is complete mismatch)
+        list = fuse
+            .search(searchFilter.value)
+            .filter((item) => item.score && item.score < 0.7)
+            .map((item) => {
+                return item.item;
+            });
+    }
+
+    return list;
+});
+
+// filter video list
+const filteredList = computed(() => {
+    // let list = props.videos;
+    let list = queryList.value;
+
+    /*
     // filter list on search query value
     if (searchFilter.value) {
         // when a search value is present, reset pagination to 1
@@ -227,6 +264,7 @@ const filteredList = computed(() => {
             return false;
         });
     }
+    */
 
     // filter list on selected event
     if (eventFilter.value) {

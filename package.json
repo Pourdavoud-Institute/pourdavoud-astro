@@ -40,6 +40,7 @@
         "browserslist": "^4.24.5",
         "choices.js": "^11.1.0",
         "fast-xml-parser": "^5.2.5",
+        "fuse.js": "^7.1.0",
         "get-youtube-id": "^1.0.1",
         "groq": "^3.89.0",
         "lightningcss": "^1.30.1",
