@@ -1,17 +1,27 @@
 <script setup lang="ts">
 import { Label } from 'reka-ui';
 import { debounce } from '@lib/utils/videos';
-
-/** todo: add debounce function for @keyup
- * @link https://www.joshwcomeau.com/snippets/javascript/debounce/
- */
+import { onMounted } from 'vue';
 
 interface Props {
     search: string;
 }
 
 defineProps<Props>();
-defineEmits(['updateSearch', 'clearSearch']);
+const emit = defineEmits(['updateSearch', 'clearSearch']);
+
+let debounced: Function;
+// set up debounce function when component mounts
+onMounted(() => {
+    debounced = debounce((e: KeyboardEvent) => {
+        emit('updateSearch', (e.target as HTMLInputElement)?.value);
+    });
+});
+
+// call debounce on keyup input
+function handleInput(e: KeyboardEvent) {
+    debounced(e);
+}
 </script>
 
 <template>
@@ -36,13 +46,7 @@ defineEmits(['updateSearch', 'clearSearch']);
                 class="ui-search__input"
                 :value="search"
                 placeholder="Search titles & speakers"
-                @keyup="
-                    (e) =>
-                        $emit(
-                            'updateSearch',
-                            (e.target as HTMLInputElement)?.value,
-                        )
-                "
+                @keyup="handleInput"
                 @keyup.escape="$emit('clearSearch')"
             />
         </div>

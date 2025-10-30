@@ -66,7 +66,6 @@ export function debounce(fn: any, wait?: number) {
         window.clearTimeout(timeoutId);
 
         timeoutId = window.setTimeout(() => {
-            console.log('debouncing', fn);
             fn.apply(null, args);
         }, wait ?? 250);
     };
