@@ -1,0 +1,286 @@
+/** Styles for Reka UI Components */
+
+/* Label */
+.ui__label {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-block-end: var(--space-3xs);
+}
+
+/* Tooltip */
+.ui-tooltip__content {
+    position: absolute;
+    background-color: var(--ucla-gray-9);
+    color: var(--ucla-white);
+}
+
+/* Select */
+.ui-select__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem;
+    border-radius: 2px;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    width: 11rem;
+    font-size: 14px;
+    line-height: 1.15;
+    border: 1px solid var(--ucla-gray-5);
+    background-color: var(--ucla-white);
+    outline: 3px solid transparent;
+    transition: all 0.2s;
+
+    & svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--ucla-primary-blue);
+    }
+
+    &:hover {
+        border-color: var(--ucla-lighter-blue);
+    }
+
+    &:is(:focus, [aria-expanded='true']) {
+        border-color: var(--ucla-lighter-blue);
+        outline-color: var(--ucla-lightest-blue);
+    }
+}
+
+.ui-select__content {
+    overflow: hidden;
+    background-color: var(--ucla-white);
+    border-radius: 4px;
+    border: 1px solid var(--ucla-gray-4);
+    box-shadow: var(--shadow-base);
+}
+
+.ui-select__viewport {
+    padding: 4px;
+}
+
+.ui-select__item {
+    position: relative;
+    padding: 4px 6px;
+    font-size: 14px;
+    border-radius: 2px;
+
+    &:hover {
+        background-color: var(--ucla-gray-1);
+    }
+
+    &[data-state='checked'] {
+        background-color: var(--ucla-lightest-blue);
+    }
+}
+
+.ui-select__item_indicator {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 8px;
+    left: 6px;
+    fill: var(--ucla-primary-blue);
+}
+
+.ui-select__item_text {
+    padding-inline-start: 18px;
+}
+
+/* Combobox */
+.ui-combobox__root {
+    position: relative;
+}
+
+.ui-combobox__anchor {
+    position: relative;
+}
+
+.ui-combobox__input {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1.15;
+    min-width: 15rem;
+    padding: 10px 32px 10px 12px;
+    border: 1px solid var(--ucla-gray-5);
+    background-color: var(--ucla-white);
+    outline: 3px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+        border-color: var(--ucla-lighter-blue);
+    }
+
+    &:focus {
+        border-color: var(--ucla-lighter-blue);
+        outline-color: var(--ucla-lightest-blue);
+    }
+}
+
+.ui-combobox__content {
+    position: absolute;
+    z-index: 30;
+    overflow: hidden;
+    width: 100%;
+    background-color: var(--ucla-white);
+    border-radius: 4px;
+    border: 1px solid var(--ucla-gray-4);
+    box-shadow: var(--shadow-base);
+    overflow-y: scroll;
+    max-height: 18rem;
+}
+
+.ui-combobox__viewport {
+    padding: 4px;
+    /* max-height: 18rem; */
+    overflow: unset !important;
+}
+
+.ui-combobox__item_indicator {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 8px;
+    left: 6px;
+    fill: var(--ucla-primary-blue);
+}
+
+/* todo: hide if value present, show on hover */
+.ui-combobox__trigger {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 100%;
+    /* background-color: var(--ucla-gray-2); */
+
+    & svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--ucla-primary-blue);
+    }
+}
+
+.ui-combobox__item {
+    position: relative;
+    padding: 4px 6px;
+    font-size: 14px;
+    border-radius: 2px;
+
+    &:hover {
+        background-color: var(--ucla-gray-1);
+    }
+
+    &[data-state='checked'] {
+        background-color: var(--ucla-lightest-blue);
+    }
+
+    &[data-highlighted] {
+        background-color: var(--ucla-gray-1);
+    }
+}
+
+.ui-combobox__item_indicator {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 8px;
+    left: 6px;
+    fill: var(--ucla-primary-blue);
+}
+
+.ui-combobox__item_text {
+    padding-inline-start: 18px;
+}
+
+/* Search */
+.ui-search__wrapper {
+    position: relative;
+
+    & svg {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        width: 1.15em;
+        height: 1.15em;
+        fill: var(--ucla-primary-blue);
+    }
+}
+
+.ui-search__input {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 1.15;
+    min-width: 16.5rem;
+    padding: 10px 12px 10px 32px;
+    border: 1px solid var(--ucla-gray-5);
+    background-color: var(--ucla-white);
+    outline: 3px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+        border-color: var(--ucla-lighter-blue);
+    }
+
+    &:focus {
+        border-color: var(--ucla-lighter-blue);
+        outline-color: var(--ucla-lightest-blue);
+    }
+}
+
+/* Toggle Group */
+.ui-toggle-group__root {
+    --cluster-space: 0;
+}
+
+.ui-toggle-group__item {
+    padding: 6px 12px 8px;
+
+    & svg {
+        --icon-size: 16px;
+    }
+}
+
+/* Pagination */
+.ui-pagination__root {
+    --cluster-space: 4px;
+    --cluster-justify: center;
+    margin-block-start: var(--space-l);
+    padding-block-start: var(--space-l);
+}
+
+.ui-pagination__button {
+    padding: 6px 12px 8px;
+
+    & svg {
+        --icon-size: 16px;
+    }
+}
+
+.ui-pagination__page {
+    border: 1px solid var(--ucla-gray-3);
+    text-align: center;
+    padding: 4.5px;
+    width: 32px;
+    transition: all 0.2s;
+
+    &:hover {
+        color: var(--ucla-primary-blue);
+        border-color: var(--ucla-primary-blue);
+    }
+
+    &[data-selected='true'] {
+        color: var(--ucla-white);
+        background-color: var(--ucla-primary-blue);
+        font-weight: 700;
+    }
+}

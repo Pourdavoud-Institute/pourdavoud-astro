@@ -43,6 +43,13 @@
     text-align: center;
 }
 
+.center-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 /* Spacing */
 .section-spacing {
     margin-block: var(--section-spacing);

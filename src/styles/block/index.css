@@ -17,5 +17,45 @@
         --main-min-width: 58%;
         --sidebar-min-width: 17rem;
         --sidebar-gap: 4rem;
+
+        & .filters-panel {
+            --cluster-justify: center;
+            & .small-title {
+                color: var(--ucla-primary-blue);
+                font-size: var(--step--1);
+            }
+        }
+
+        & .clear-filters {
+            --cluster-justify: center;
+            --flow-space: var(--space-s);
+        }
+
+        & .list-info {
+            --cluster-justify: space-between;
+
+            &.contained {
+                max-width: var(--wrapper-max-width-slim);
+                margin-inline: auto;
+            }
+
+            & .list-views {
+                --cluster-justify: flex-start;
+            }
+        }
+
+        & .main-panel {
+            margin-block-start: var(--space-xl);
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .index-wrapper {
+        &[data-index='videos'] {
+            & :is(.filters-panel, .clear-filters) {
+                --cluster-justify: flex-start;
+            }
+        }
     }
 }

@@ -15,7 +15,6 @@
 @import 'base/animations.css' layer(utilities);
 
 /*** External */
-@import 'external/choices.css' layer(external);
 
 /*** Main */
 @import 'block/event.css' layer(main);
@@ -41,3 +40,4 @@
 @import 'components/tag.css' layer(main);
 @import 'components/title-link.css' layer(main);
 @import 'components/with-icon.css' layer(main);
+@import 'components/reka-ui.css' layer(main);
