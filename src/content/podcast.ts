@@ -33,7 +33,7 @@ export const podcast = defineCollection({
         pubDate: z.coerce.date(),
         season: z.number().nullish(),
         episode: z.union([z.string(), z.number()]).nullable(),
-        duration: z.number(),
+        duration: z.coerce.number().optional(),
         link: z.string(),
     }),
 });
