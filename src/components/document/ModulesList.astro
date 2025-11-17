@@ -3,7 +3,7 @@ import CardList from '@components/modules/CardList.astro';
 import type { CollectionEntry } from 'astro:content';
 import ColumnsGroup from '@components/modules/ColumnsGroup.astro';
 // import CollectionList from '@components/modules/CollectionList.astro';
-// import DisclosureSet from '@components/modules/DisclosureSet.astro';
+import DisclosureSet from '@components/modules/DisclosureSet.astro';
 import EventsPreviewList from '@components/modules/EventsPreviewList.astro';
 import Gallery from '@components/modules/Gallery.astro';
 import PeopleList from '@components/modules/PeopleList.astro';
@@ -30,8 +30,8 @@ const { modules } = Astro.props;
                     return <CardList module={module} />;
                 // case 'collectionList':
                 //     return <CollectionList />;
-                // case 'disclosureSet':
-                //     return <DisclosureSet />;
+                case 'disclosureSet':
+                    return <DisclosureSet module={module} />;
                 case 'columnsGroup':
                     return <ColumnsGroup module={module} />;
                 case 'eventsPreviewList':

@@ -136,6 +136,17 @@ export type PublicationsList = z.infer<typeof PublicationsList>;
 /** DISCLOSURE SET */
 const DisclosureSet = z.object({
     _type: z.literal('disclosureSet'),
+    heading: z.string(),
+    preview: RichTextBlocks,
+    items: z.array(
+        z.object({
+            heading: z.string(),
+            blocks: RichTextBlocks,
+        }),
+    ),
+    options: z.object({
+        sectionMargin: z.boolean().nullish(),
+    }),
 });
 
 export type DisclosureSet = z.infer<typeof DisclosureSet>;

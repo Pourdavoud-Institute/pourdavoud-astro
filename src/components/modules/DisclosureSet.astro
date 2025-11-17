@@ -1,5 +1,135 @@
 ---
+import type { DisclosureSet } from '@content/schemaFragments/pageModules';
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import RichTextBlocksLite from '@components/richText/RichTextBlocksLite.astro';
+import v from 'voca';
 
+interface Props {
+    module: DisclosureSet;
+}
+
+const { module } = Astro.props;
 ---
 
-<section data-module="disclosureSet">disclosure set</section>
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper with-border-top">
+        <header class="flow" data-tempo="moderato">
+            <h2 class="heading" id={v.slugify(module.heading)}>
+                {module.heading}
+            </h2>
+            {
+                module.preview && module.preview.length > 0 && (
+                    <div class="rich-text | flow">
+                        <RichTextBlocksLite blocks={module.preview} />
+                    </div>
+                )
+            }
+        </header>
+        <div class="disclosure-items">
+            {
+                module.items.map((item, i) => (
+                    <details open={i == 0}>
+                        <summary>
+                            <h3 id={v.slugify(item.heading)}>{item.heading}</h3>
+                            <svg
+                                aria-hidden="true"
+                                class="ucla-plus closed"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path d="M11 19V13H5V11H11V5H13V11H19V13H13V19H11Z" />
+                            </svg>
+                            <svg
+                                aria-hidden="true"
+                                class="ucla-minus open"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path d="M19 11L19 13L5 13L5 11L19 11Z" />
+                            </svg>
+                        </summary>
+                        {item.blocks && item.blocks.length > 0 && (
+                            <div class="rich-text | flow">
+                                <RichTextBlocks blocks={item.blocks} />
+                            </div>
+                        )}
+                    </details>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .disclosure-items {
+        margin-block-start: var(--space-l);
+
+        & > * + * {
+            margin-block-start: var(--space-m);
+        }
+
+        & summary {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+
+            &:hover h3 {
+                color: var(--ucla-primary-blue);
+            }
+        }
+
+        & details {
+            border-block-end: 1px solid
+                var(--disclosure-border, var(--site-border));
+            padding-block-end: var(--space-m);
+
+            & :is(svg.open, svg.closed) {
+                fill: var(--ucla-primary-blue);
+            }
+
+            & svg.open {
+                display: none;
+            }
+
+            & svg.closed {
+                display: block;
+            }
+
+            &[open] {
+                & svg.open {
+                    display: block;
+                }
+
+                & svg.closed {
+                    display: none;
+                }
+
+                & h3 {
+                    color: var(--ucla-primary-blue);
+                }
+            }
+
+            & :is(.rich-text, .publications-list) {
+                margin-block-start: var(--space-l);
+                margin-block-end: var(--space-2xl);
+            }
+
+            & .publications-list {
+                --grid-item-min-size: 12rem;
+            }
+        }
+    }
+
+    :global([data-module='disclosureSet'] .disclosure-items .rich-text ol) {
+        list-style-type: none;
+        padding-inline-start: 0;
+    }
+</style>

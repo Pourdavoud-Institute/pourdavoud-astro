@@ -189,6 +189,9 @@ export const DISCLOSURE_SET_PROJECTION = groq`_type == "disclosureSet" => {
                 _type == "richTextLink" => ${LINK_PROJECTION}
             }
         }
+    },
+    "options": {
+        sectionMargin
     }
 }`;
 
