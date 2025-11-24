@@ -47,6 +47,19 @@ export const events = defineCollection({
                 slug: z.string(),
             }),
         ),
+        place: z.array(
+            z.object({
+                name: z.string(),
+                location: z.object({
+                    streetAddress: z.string(),
+                    extendedAddress: z.string().nullish(),
+                    addressLocality: z.string(),
+                    addressRegion: z.string(),
+                    postalCode: z.string(),
+                    addressCountry: z.string(),
+                }),
+            }),
+        ),
         videos: z.array(z.object({ _id: z.string() })),
         categories: z.array(
             z.object({
