@@ -5,6 +5,7 @@ import IndexTemplate from '@layouts/IndexTemplate.astro';
 import PageWrapper from '@components/document/PageWrapper.astro';
 import ParentTemplate from '@layouts/ParentTemplate.astro';
 import { getCollection } from 'astro:content';
+import { organizationStructuredData } from '@lib/utils/jsonLD';
 import { workspaces } from '@lib/sanity/workspaces';
 
 export async function getStaticPaths() {
@@ -39,6 +40,8 @@ switch (page.data.template) {
         Template = DefaultTemplate;
         break;
 }
+
+// add organization structured data to About/Our Mission page
 ---
 
 <PageWrapper
@@ -46,6 +49,9 @@ switch (page.data.template) {
     id={page.id}
     og={page.data.openGraph}
     seo={page.data.seo}
+    structuredData={page.id === 'ca090807-715c-4e1a-b14f-87beafa19309'
+        ? organizationStructuredData()
+        : undefined}
     template={page.data.template}
     title={page.data.title}
 >

@@ -1,6 +1,10 @@
 import { type CollectionEntry } from 'astro:content';
 import { urlForImage } from '@lib/sanity/urlForImage';
+import { getEntry } from 'astro:content';
 
+const siteSettings = await getEntry('settings', 'siteSettingsPourdavoud');
+
+/** Generated structured data for `events` content type to use with JSON-LD format. */
 export const eventStructuredData = (
     event: CollectionEntry<'events'>,
 ): Record<string, any> => {
@@ -80,6 +84,77 @@ export const eventStructuredData = (
         schema.startDate = event.data.details.startDate;
         schema.endDate = event.data.details.endDate;
     }
+
+    return schema;
+};
+
+/** Generated organization structured data to use with JSON-LD format. */
+export const organizationStructuredData = (): Record<string, any> => {
+    const schema: Record<string, any> = {
+        '@context': 'https://schema.org',
+        '@type': 'EducationalOrganization',
+        url: siteSettings?.data.siteDomain,
+        sameAs: [
+            'https://humanities.ucla.edu/academics/pourdavoud-center-study-iranian-world',
+            'https://www.facebook.com/pourdavouducla',
+            'https://nelc.ucla.edu/iranian/pourdavoud-center-study-iranian-world-established-ucla',
+        ],
+        logo: 'https://pourdavoud.ucla.edu/images/logos/pourdavoud-logo-web.svg',
+        name: siteSettings?.data.seo?.title,
+        alternateName: siteSettings?.data.siteName,
+        description: siteSettings?.data.seo?.description,
+        email: 'info@pourdavoud.ucla.edu',
+        telephone: '(310) 206–6042',
+        contactPoint: {
+            '@type': 'ContactPoint',
+            email: 'info@pourdavoud.ucla.edu',
+            telephone: '(310) 206–6042',
+            availableLanguage: [
+                {
+                    '@type': 'Language',
+                    name: 'English',
+                    alternateName: 'en',
+                },
+                {
+                    '@type': 'Language',
+                    name: 'Persian',
+                    alternateName: 'fa',
+                },
+            ],
+            hoursAvailable: {
+                '@type': 'OpeningHoursSpecification',
+                opens: '08:00:00',
+                closes: '17:00:00',
+            },
+        },
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: '10745 Dickson Plaza',
+            extendedAddress: 'Royce Hall 212',
+            addressLocality: 'Los Angeles',
+            addressRegion: 'CA',
+            postalCode: '90095',
+            addressCountry: 'US',
+        },
+        slogan: 'The premier research center for the study of ancient Iran',
+        keywords:
+            'Iran,Iranian,Persia,Persian,Achaemenid,Sasanian,Egypt,archaeology,antiquity',
+        foundingDate: '2017-01-01',
+        // foundingLocation: '',
+        parentOrganization: {
+            '@type': 'EducationalOrganization',
+            name: 'UCLA College Division of Humanities',
+            url: 'https://humanities.ucla.edu',
+            description:
+                'UCLA Humanities is a division of the UCLA College, part of the University of California, Los Angeles.',
+            parentOrganization: {
+                '@type': 'EducationalOrganization',
+                name: 'University of California, Los Angeles',
+                alternateName: 'UCLA',
+                url: 'https://www.ucla.edu',
+            },
+        },
+    };
 
     return schema;
 };
