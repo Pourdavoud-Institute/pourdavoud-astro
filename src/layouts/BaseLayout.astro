@@ -15,9 +15,10 @@ interface Props {
     title: string;
     seo: SEOBlock;
     og: OGBlock;
+    structuredData?: Record<string, any>;
 }
 
-const { title, seo, og } = Astro.props;
+const { title, seo, og, structuredData } = Astro.props;
 ---
 
 <!doctype html>
@@ -25,7 +26,12 @@ const { title, seo, og } = Astro.props;
     <head>
         <meta charset="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <HeadMeta og={og} seo={seo} title={title} />
+        <HeadMeta
+            og={og}
+            seo={seo}
+            structuredData={structuredData}
+            title={title}
+        />
         <HeadAssets />
     </head>
     <body>
