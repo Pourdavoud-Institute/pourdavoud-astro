@@ -35,6 +35,20 @@ export const EVENTS_QUERY = groq`*[_type == "event" && $workspaceID in workspace
         },
         []
     ),
+    "place": coalesce(
+        placeRef[] {
+            name,
+            location-> {
+                streetAddress,
+                extendedAddress,
+                addressLocality,
+                addressRegion,
+                postalCode,
+                addressCountry,
+            },
+        },
+        []
+    ),
     "videos": *[_type == "video" && references(^._id) && $workspaceID in workspaces[]._ref] {
         _id,
     },
