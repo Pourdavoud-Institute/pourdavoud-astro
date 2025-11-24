@@ -7,6 +7,7 @@ import SanityImage from '@components/SanityImage.astro';
 import ShareLinks from '@components/interactive/ShareLinks.tsx';
 import SpeakerBio from '@components/people/SpeakerBio.astro';
 import SpeakerPreview from '@components/people/SpeakerPreview.astro';
+import { eventStructuredData } from '@lib/utils/jsonLD';
 import { formatEventDetails } from '@lib/utils/formatEvent';
 import { getCollection } from 'astro:content';
 import { isUpcoming } from '@lib/utils/isUpcoming';
@@ -54,6 +55,9 @@ if (event.data.tags.length > 0) {
     filterType="event"
     footerMargin={true}
     id={event.id}
+    structuredData={event.data.place.length > 0
+        ? eventStructuredData(event)
+        : undefined}
     template="eventsShow"
     title={event.data.previewTitle ?? event.data.title}
 >

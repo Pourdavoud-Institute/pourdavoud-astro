@@ -11,9 +11,10 @@ interface Props {
     title: string;
     seo: SEOBlock;
     og: OGBlock;
+    structuredData?: Record<string, any>; // add structured data for JSON-LD
 }
 
-const { title, seo, og } = Astro.props;
+const { title, seo, og, structuredData } = Astro.props;
 
 const siteSettings = await getEntry('settings', 'siteSettingsPourdavoud');
 
@@ -75,3 +76,12 @@ const url = Astro.url;
     type="image/png"
 />
 <link href="/pourdavoud-favicon.svg" rel="shortcut icon" />
+{
+    structuredData && (
+        <script
+            is:inline
+            set:html={JSON.stringify(structuredData)}
+            type="application/ld+json"
+        />
+    )
+}
