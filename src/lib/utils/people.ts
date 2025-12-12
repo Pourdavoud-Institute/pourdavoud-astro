@@ -1,5 +1,9 @@
 import type { CollectionEntry } from 'astro:content';
 import { workspaces } from '@lib/sanity/workspaces';
+import {
+    SanityUCLADepartments as departments,
+    SanityPeopleCategories as categories,
+} from '@lib/sanity/dicts';
 
 /** Helper to match a person's role or faculty title with the workspace id
  * @param person Person collection entry
@@ -20,6 +24,13 @@ export const getPersonRole = (
         role = person.data.facultyTitle;
     } else if (person.data.institution) {
         role = person.data.institution;
+    } else if (
+        person.data.categories.find((c) => c?._id === categories.gradStudent.id)
+    ) {
+        role = 'Graduate Student';
+        if (person.data.department) {
+            role += `, ${departments[person.data.department]}`;
+        }
     }
     return role;
 };

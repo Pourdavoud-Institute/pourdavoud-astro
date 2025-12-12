@@ -1,8 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import SanityImage from '@components/SanityImage.astro';
+import {SanityPeopleCategories as categories } from "@lib/sanity/dicts";
 import { getPersonRole } from '@lib/utils/people';
-import { workspaces } from '@lib/sanity/workspaces';
 
 interface Props {
     HeadingTag?: 'h2' | 'h3' | 'p';
@@ -19,7 +19,7 @@ let isInternal = false;
 const role = getPersonRole(person);
 
 // set link
-if (person.data.affiliationType == "internal") {
+if (person.data.affiliationType == "internal" || person.data.categories.find((c) => c?._id === categories.gradStudent.id)) {
     link = person.data.slug;
     isInternal = true;
 } else if (person.data.facultyLink) {

@@ -4,12 +4,15 @@ import PageWrapper from '@components/document/PageWrapper.astro';
 import PersonHeader from '@components/pageHeaders/PersonHeader.astro';
 import PublicationPreview from '@components/publications/PublicationPreview.astro';
 import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import { SanityPeopleCategories as categories } from '@lib/sanity/dicts';
 import v from 'voca';
 
 export async function getStaticPaths() {
     const people = await getCollection(
         'people',
-        ({ data }) => data.affiliationType == 'internal'
+        ({ data }) =>
+            data.affiliationType == 'internal' ||
+            data.categories.find((c) => c?._id === categories.gradStudent.id)
     );
 
     return people.map((person) => ({

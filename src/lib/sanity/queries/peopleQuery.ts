@@ -24,6 +24,7 @@ export const PEOPLE_QUERY = groq`*[_type == "person" && $workspaceID in workspac
         },
         []
     ),
+    department,
     institution,
     facultyTitle,
     facultyLink,
@@ -57,6 +58,7 @@ export const PEOPLE_QUERY = groq`*[_type == "person" && $workspaceID in workspac
     },
     "categories": coalesce(
         categories[]->{
+            _id,
             _type,
             title,
             "slug": slug.current

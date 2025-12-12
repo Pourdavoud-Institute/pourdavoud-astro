@@ -5,6 +5,7 @@ import {
     ImageLink,
     RichTextBlocks,
 } from '@content/schemaFragments/sanityComponents';
+import { SanityPeopleCategories as categories } from '@lib/sanity/dicts';
 
 /** CARD LIST */
 const CardList = z.object({
@@ -66,12 +67,21 @@ const PeopleList = z.object({
     _type: z.literal('peopleList'),
     heading: z.string().nullish(),
     selection: z.union([z.literal('auto'), z.literal('manual')]),
-    filter: z.union([
-        z.literal('all'),
-        z.literal('c1521379-8de4-4b5d-9e0f-5765f2a4d62e'),
-        z.literal('c852a954-828d-4d81-8c1e-39299b23e5a7'),
-        z.literal('cae812fd-2c96-437c-9c75-8b3a04307be5'),
+    // people category IDs
+    filter: z.enum([
+        'all',
+        categories.staff.id,
+        categories.faculty.id,
+        categories.affiliate.id,
+        categories.gradStudent.id,
     ]),
+    // filter: z.union([
+    //     z.literal('all'),
+    //     // z.literal('c1521379-8de4-4b5d-9e0f-5765f2a4d62e'),
+    //     // z.literal('c852a954-828d-4d81-8c1e-39299b23e5a7'),
+    //     // z.literal('cae812fd-2c96-437c-9c75-8b3a04307be5'),
+    //     // z.literal('226fe6c7-8fcf-4f83-a69c-6bd83c4a00fd'),
+    // ]),
     entries: z.array(
         z.object({
             _id: z.string(),

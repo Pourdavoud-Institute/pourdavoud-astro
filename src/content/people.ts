@@ -45,6 +45,7 @@ export const people = defineCollection({
                 }),
             }),
         ),
+        department: z.string().nullish(),
         institution: z.string().nullish(),
         facultyLink: z.string().nullish(),
         facultyTitle: z.string().nullish(),
@@ -79,6 +80,7 @@ export const people = defineCollection({
         categories: z.array(
             z
                 .object({
+                    _id: z.string(),
                     _type: z.string(),
                     title: z.string(),
                     slug: z.string(),
