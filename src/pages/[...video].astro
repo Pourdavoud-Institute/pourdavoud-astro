@@ -3,7 +3,7 @@ import { getCollection, getEntry } from 'astro:content';
 import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
 import PageWrapper from '@components/document/PageWrapper.astro';
 import RichText from '@components/modules/RichText.astro';
-import ShareLinks from '@components/interactive/ShareLinks.tsx';
+import ShareLinks from '@components/interactive/ShareLinks.astro';
 import SpeakerBio from '@components/people/SpeakerBio.astro';
 import SpeakerPreview from '@components/people/SpeakerPreview.astro';
 import { format } from '@formkit/tempo';
@@ -166,7 +166,7 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
                     )
                 }
                 <div>
-                    <ShareLinks client:load title={video.data.title} />
+                    <ShareLinks title={video.data.title} />
                 </div>
                 <!-- <div class="details">
                     <h2 class="small-title">Video Details</h2>
