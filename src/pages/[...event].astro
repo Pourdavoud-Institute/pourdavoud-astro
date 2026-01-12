@@ -170,6 +170,18 @@ if (event.data.tags.length > 0) {
                                     data-style="success"
                                     href={event.data.details.rsvpLink}
                                     target="_blank"
+                                    x-data="{
+                                        handleClick(e) {
+                                            // trigger GA custom event
+                                            const pageTitle = document.title;
+                                            const url = e.target.href;
+                                            gtag('event', 'rsvp_click', {
+                                                'event_name': pageTitle,
+                                                'rsvp_link': url
+                                            });
+                                        } 
+                                    }"
+                                    x-on:click="handleClick"
                                 >
                                     RSVP for Event
                                 </a>

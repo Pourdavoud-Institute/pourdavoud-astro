@@ -39,6 +39,11 @@ const { title } = Astro.props;
                 window.navigator.share({ title: this.title, url }).then(() => {
                     console.log('sharing', url);
                     this.webShareMessage = 'Link shared!';
+                    // trigger custom GA event
+                    gtag('event', 'page_share', {
+                        'page_name': this.title,
+                        'page_url': url
+                    });
                     setTimeout(() => {
                         this.webShareMessage = '';
                     }, 3000);
@@ -51,6 +56,11 @@ const { title } = Astro.props;
                 window.navigator.clipboard.writeText(url).then(() => {
                     console.log('copying', url);
                     this.clipboardMessage = 'Link copied!';
+                    // trigger custom GA event
+                    gtag('event', 'page_copy', {
+                        'page_name': this.title,
+                        'page_url': url
+                    });
                     setTimeout(() => {
                         this.clipboardMessage = '';
                     }, 3000);
