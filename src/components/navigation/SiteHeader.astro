@@ -2,13 +2,12 @@
 import FeaturedNavigation from '@components/navigation/FeaturedNavigation.astro';
 import MainNavigation from '@components/navigation/MainNavigation.astro';
 import MobileNavigation from '@components/navigation/MobileNavigation.astro';
-import UCLALogo from '@components/svg/UCLALogo.astro';
 import { getEntry } from 'astro:content';
 
 // get main nav by id
 const navigation = await getEntry(
     'navigation',
-    'b2b3beb7-b8b4-44bb-9e5d-45c46f45a0b9'
+    'b2b3beb7-b8b4-44bb-9e5d-45c46f45a0b9',
 );
 
 const featuredNavItems = [
@@ -38,20 +37,12 @@ const featuredNavItems = [
     </a>
     <div class="nav-wrapper">
         <div class="logos | cluster">
-            <a
-                aria-label="UCLA Logo"
-                class="logo-link ucla"
-                href="https://www.ucla.edu"
-                target="_blank"
-            >
-                <UCLALogo />
-            </a>
-            <a class="logo-link pourdavoud" href="/">
+            <a class="logo-link" href="/">
                 <img
-                    alt="Pourdavoud Institute logo"
+                    alt="UCLA Pourdavoud Institute logo"
                     decoding="auto"
                     loading="eager"
-                    src="/images/logos/pourdavoud-logo-web.svg"
+                    src="/images/logos/pourdavoud-logo-UCLA.svg"
                     width="325"
                 />
             </a>
@@ -93,11 +84,12 @@ const featuredNavItems = [
     }
 
     .logos {
-        /* position: absolute;
-        top: 50%;
-        transform: translateY(-50%); */
         padding-block: 1rem;
         padding-inline-start: var(--gutter-spacing);
+
+        & img {
+            width: 28rem;
+        }
     }
 
     .logo-link {
@@ -121,24 +113,24 @@ const featuredNavItems = [
         .logos {
             padding-inline-start: 1rem;
 
-            & .logo-link.ucla {
-                width: 5rem;
-            }
-
             & img {
-                max-width: 15rem;
+                max-width: 20rem;
             }
         }
     }
 
     @media screen and (max-width: 450px) {
         .logos {
-            & .logo-link.ucla {
-                width: 4rem;
-            }
-
             & img {
-                max-width: 13rem;
+                max-width: 15rem;
+            }
+        }
+    }
+
+    @media screen and (max-width: 350px) {
+        .logos {
+            & img {
+                max-width: 12rem;
             }
         }
     }

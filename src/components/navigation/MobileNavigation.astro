@@ -160,7 +160,7 @@ const { navItems, featuredNavItems } = Astro.props;
                                                         (childItem) => {
                                                             const linkParts =
                                                                 sanityLink(
-                                                                    childItem
+                                                                    childItem,
                                                                 );
                                                             return (
                                                                 <li>
@@ -179,7 +179,7 @@ const { navItems, featuredNavItems } = Astro.props;
                                                                     </a>
                                                                 </li>
                                                             );
-                                                        }
+                                                        },
                                                     )}
                                                 </ul>
                                             </details>
@@ -211,6 +211,7 @@ const { navItems, featuredNavItems } = Astro.props;
 <style>
     .nav-mobile {
         display: none;
+        justify-content: flex-end;
         place-self: flex-end;
     }
 
@@ -341,7 +342,7 @@ const { navItems, featuredNavItems } = Astro.props;
 
     @media screen and (max-width: 1024px) {
         .nav-mobile {
-            display: block;
+            display: flex;
         }
     }
 </style>
