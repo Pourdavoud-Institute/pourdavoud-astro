@@ -37,6 +37,7 @@ defineEmits(['updateFilter']);
         <Label class="ui__label" :for="name">{{ title ?? 'Filter by' }}</Label>
         <combobox-root
             class="ui-combobox__root"
+            :id="name"
             :name="name"
             :model-value="filter"
             @update:model-value="(v) => $emit('updateFilter', v)"
