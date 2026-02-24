@@ -1,12 +1,12 @@
 ---
-import { isAfter, sameDay, tzDate } from '@formkit/tempo';
+import { addMonth, isAfter, isBefore, sameDay, tzDate } from '@formkit/tempo';
 import ButtonLink from '@components/interactive/ButtonLink.astro';
-import CTALinks from '@components/interactive/CTALinks.astro';
 import type { CollectionEntry } from 'astro:content';
 import EventPreview from '@components/events/EventPreview.astro';
 import type { EventsPreviewList } from '@content/schemaFragments/pageModules';
 import type { Link } from '@content/schemaFragments/sanityComponents';
 import { getCollection } from 'astro:content';
+import { sortUpcoming } from '@lib/utils/sortEvents';
 
 interface Props {
     module: EventsPreviewList;
@@ -16,6 +16,7 @@ interface Props {
 const { module, limit = 3 } = Astro.props;
 
 const now = new Date();
+const monthLimit = 6;
 const events = await getCollection('events');
 const upcomingEvents: CollectionEntry<'events'>[] = [];
 const pastEvents: CollectionEntry<'events'>[] = [];
@@ -26,15 +27,16 @@ for (let i = 0; i < events.length; i++) {
 
     if (
         // check if dates are same day with timezone offset
-        sameDay(
+        // filter to show only upcoming within next 6 months (same as Events Index)
+        (sameDay(
             tzDate(event.data.details.startDate, 'America/Los_Angeles'),
-            now
-        )
+            now,
+        ) ||
+            isAfter(event.data.details.startDate, now)) &&
+        isBefore(event.data.details.startDate, addMonth(now, monthLimit))
     ) {
         upcomingEvents.push(event);
-    } else if (isAfter(event.data.details.startDate, now)) {
-        upcomingEvents.push(event);
-    } else {
+    } else if (isBefore(event.data.details.startDate, now)) {
         pastEvents.push(event);
     }
 }
@@ -51,6 +53,8 @@ const links: Link[] = [
         label: 'View All Past Events',
     },
 ];
+
+const upcomingSorted = sortUpcoming(upcomingEvents);
 ---
 
 <section
@@ -65,7 +69,7 @@ const links: Link[] = [
                         Upcoming Events
                     </h2>
                     <div class="flex-items">
-                        {upcomingEvents.slice(0, limit).map((event) => (
+                        {upcomingSorted.slice(0, limit).map((event) => (
                             <EventPreview event={event} />
                         ))}
                     </div>
@@ -82,10 +86,10 @@ const links: Link[] = [
                         {pastEvents
                             .sort((a, b) => {
                                 const dateA = new Date(
-                                    a.data.details.startDate
+                                    a.data.details.startDate,
                                 );
                                 const dateB = new Date(
-                                    b.data.details.startDate
+                                    b.data.details.startDate,
                                 );
                                 return (dateB as any) - (dateA as any);
                             })

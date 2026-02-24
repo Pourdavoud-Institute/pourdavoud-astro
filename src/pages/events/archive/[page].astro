@@ -14,16 +14,16 @@ export async function getStaticPaths({
 }) {
     const now = new Date();
     const pastEvents = await getCollection('events', ({ data }) =>
-        isBefore(data.details.startDate, now)
+        isBefore(data.details.startDate, now),
     );
 
     return paginate(
         pastEvents.sort((a, b) =>
             isBefore(a.data.details.startDate, b.data.details.startDate)
                 ? 1
-                : -1
+                : -1,
         ),
-        { pageSize: 10 }
+        { pageSize: 10 },
     );
 }
 
@@ -45,7 +45,7 @@ const { page } = Astro.props;
                 </div>
                 <div class="main-panel">
                     <div class="flow" data-tempo="allegro">
-                        <h2>Recent Events</h2>
+                        <h2>Past Events</h2>
                         <p>
                             Showing results {page.start + 1}-{page.end + 1} of {
                                 page.total
