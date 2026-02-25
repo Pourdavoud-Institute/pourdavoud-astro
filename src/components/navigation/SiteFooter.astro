@@ -188,6 +188,15 @@ const navigation = await getEntry(
         & .cluster:first-of-type {
             --cluster-justify: space-between;
         }
+
+        & .footer-link {
+            text-decoration-color: var(--ucla-lightest-blue);
+            font-weight: 700;
+
+            &:hover {
+                text-decoration-color: transparent;
+            }
+        }
     }
 
     @media screen and (max-width: 999px) {
