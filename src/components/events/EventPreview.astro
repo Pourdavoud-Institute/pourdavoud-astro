@@ -34,6 +34,11 @@ const eventDatePreview = formatEventDate(event.data.details);
         </div>
     </a>
     <div class="text-wrapper | flow" data-tempo="allegro">
+        {
+            event.data.categories.length > 0 && (
+                <div class="tag">{event.data.categories[0].title}</div>
+            )
+        }
         <HeadingTag class="title">
             <a class="title-link" href={event.data.slug}
                 >{event.data.previewTitle ?? event.data.title}</a
@@ -46,11 +51,6 @@ const eventDatePreview = formatEventDate(event.data.details);
             {eventDetails.time && <span>{eventDetails.time}</span>}
             {eventDetails.location && <span>{eventDetails.location}</span>}
         </div>
-        {
-            event.data.categories.length > 0 && (
-                <div class="tag">{event.data.categories[0].title}</div>
-            )
-        }
     </div>
 </article>
 

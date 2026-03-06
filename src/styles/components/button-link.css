@@ -4,7 +4,7 @@
     gap: var(--button-gap, 0.5em);
     font-size: var(--step-0);
     padding-block-start: 0.5rem; /* 0.35rem 0.25rem */
-    padding-block-end: 0.65rem;
+    padding-block-end: 0.6rem;
     padding-inline: 1rem; /* 0.75rem */
     text-decoration: none;
     /* border-radius: var(--rounded-xs); */

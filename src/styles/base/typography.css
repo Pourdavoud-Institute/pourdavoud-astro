@@ -1,7 +1,8 @@
 :root {
-    --font-primary: acumin-pro, 'Public Sans', sans-serif;
-    --font-heading: linotype-sabon, serif, 'EB Garamond', serif;
-    --font-heading-weight: 400;
+    /* --font-primary: acumin-pro, 'Public Sans', sans-serif; */
+    --font-primary: 'Public Sans', sans-serif;
+    --font-heading: 'EB Garamond', serif;
+    --font-heading-weight: 500;
     --leading-normal: 1.6;
     --leading-tight: 1.15;
 
