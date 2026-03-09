@@ -9,7 +9,8 @@ Use this project to make changes to template files, add new site integrations, o
 - [Astro v5](https://astro.build/) TypeScript-based static site generator with various first- and third-party plugins and built-in [Vite](http://vite.dev/) server
 - Astro's fully-typed [content collections](https://docs.astro.build/en/guides/content-collections/) loading headless data from the [Sanity](https://www.sanity.io/) content platform (accessed with Sanity client + [GROQ queries](https://www.sanity.io/docs/content-lake/how-queries-work))
 - [Lightning CSS](https://lightningcss.dev/) scripts to transpile, bundle, and minify CSS
-- [Alpine JS](https://alpinejs.dev/start-here) and [Preact](https://preactjs.com/) for lightweight page interactivity
+- [Alpine JS](https://alpinejs.dev/start-here) for lightweight page interactivity
+- Video Library featuring advanced filter/sort/search UI built with [Vue.js](https://vuejs.org/) and [Reka](https://reka-ui.com/) components
 - [Pagefind](https://pagefind.app/) static site search indexing with built-in live search UI
 - Fluid typography scaling and spacing with [Utopia](https://utopia.fyi/)
 - Formatting with [Prettier](https://prettier.io/) and linting with [ESLint](https://eslint.org/) + Astro plugin
