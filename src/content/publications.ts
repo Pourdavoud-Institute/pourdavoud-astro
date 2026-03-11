@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
-import { sanityClient } from 'sanity:client';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { sanityClient } from '@lib/sanity/client';
 import type { SanityDocument } from '@sanity/client';
 import { PUBLICATIONS_QUERY } from '@lib/sanity/queries/publicationsQuery';
 import { workspaces } from '@lib/sanity/workspaces';

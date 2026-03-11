@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
-import { sanityClient } from 'sanity:client';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { sanityClient } from '@lib/sanity/client';
 import {
     EVENT_CATEGORIES_QUERY,
     POST_CATEGORIES_QUERY,

@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
-import { sanityClient } from 'sanity:client';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { sanityClient } from '@lib/sanity/client';
 import { POSTS_QUERY } from '@lib/sanity/queries/postsQuery';
 import type { SanityDocument } from '@sanity/client';
 import { RichText } from '@content/schemaFragments/pageModules';

@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
-import { sanityClient } from 'sanity:client';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { sanityClient } from '@lib/sanity/client';
 import { SITE_SETTINGS_QUERY } from '@lib/sanity/queries/siteSettingsQuery';
 import type { SanityDocument } from '@sanity/client';
 import { SEOBlock, OGBlock } from '@content/schemaFragments/sanityComponents';

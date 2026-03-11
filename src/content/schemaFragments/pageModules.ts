@@ -1,4 +1,4 @@
-import { z } from 'astro:content';
+import { z } from 'astro/zod';
 import {
     FeaturedImage,
     Link,
@@ -75,13 +75,6 @@ const PeopleList = z.object({
         categories.affiliate.id,
         categories.gradStudent.id,
     ]),
-    // filter: z.union([
-    //     z.literal('all'),
-    //     // z.literal('c1521379-8de4-4b5d-9e0f-5765f2a4d62e'),
-    //     // z.literal('c852a954-828d-4d81-8c1e-39299b23e5a7'),
-    //     // z.literal('cae812fd-2c96-437c-9c75-8b3a04307be5'),
-    //     // z.literal('226fe6c7-8fcf-4f83-a69c-6bd83c4a00fd'),
-    // ]),
     entries: z.array(
         z.object({
             _id: z.string(),

@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { XMLParser } from 'fast-xml-parser';
 
 export const podcast = defineCollection({

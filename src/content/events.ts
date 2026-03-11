@@ -1,7 +1,7 @@
-import { defineCollection, z } from 'astro:content';
-import { sanityClient } from 'sanity:client';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { sanityClient } from '@lib/sanity/client';
 import { EVENTS_QUERY } from '@lib/sanity/queries/eventsQuery';
-// import { EventCategory } from '@content/taxonomies';
 import { FeaturedImage } from '@content/schemaFragments/sanityComponents';
 import { RichText } from '@content/schemaFragments/pageModules';
 import type { SanityDocument } from '@sanity/client';

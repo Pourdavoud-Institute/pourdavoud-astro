@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
-import { sanityClient } from 'sanity:client';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { sanityClient } from '@lib/sanity/client';
 import { NAVIGATION_QUERY } from '@lib/sanity/queries/navigationQuery';
 import { Link } from '@content/schemaFragments/sanityComponents';
 import type { SanityDocument } from '@sanity/client';
