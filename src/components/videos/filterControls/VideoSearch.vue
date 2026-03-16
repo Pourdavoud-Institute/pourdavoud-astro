@@ -5,9 +5,11 @@ import { onMounted } from 'vue';
 
 interface Props {
     search: string;
+    placeholderText?: string; // override search placeholder text
 }
 
-defineProps<Props>();
+const { search, placeholderText = 'Search titles & speakers' } =
+    defineProps<Props>();
 const emit = defineEmits(['updateSearch', 'clearSearch']);
 
 let debounced: Function;
@@ -45,7 +47,7 @@ function handleInput(e: KeyboardEvent) {
                 type="text"
                 class="ui-search__input"
                 :value="search"
-                placeholder="Search titles & speakers"
+                :placeholder="placeholderText"
                 @keyup="handleInput"
                 @keyup.escape="$emit('clearSearch')"
             />

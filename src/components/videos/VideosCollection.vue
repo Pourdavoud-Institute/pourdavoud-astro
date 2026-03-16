@@ -12,10 +12,7 @@ import {
     PaginationPrev,
     PaginationRoot,
 } from 'reka-ui';
-import VideoSort, {
-    type SortTerm,
-    type SortOptions,
-} from './filterControls/VideoSort.vue';
+import RekaSelect from '@components/reka-vue/RekaSelect.vue';
 import VideoFilter from './filterControls/VideoFilter.vue';
 import VideoSearch from './filterControls/VideoSearch.vue';
 import VideoView, { type ViewOptions } from './filterControls/VideoView.vue';
@@ -34,10 +31,11 @@ interface Props {
 const props = defineProps<Props>();
 
 /** Constants / Defaults */
+type SortOptions = 'dateDesc' | 'dateAsc' | 'titleAsc' | 'titleDesc';
 const DEFAULT_SORT: SortOptions = 'dateDesc';
 const DEFAULT_VIEW: ViewOptions = 'list';
 const PAGE_OFFSET = 30;
-const sortTerms: SortTerm[] = [
+const sortOptions: { text: string; value: string }[] = [
     {
         text: 'Date, Newest to Oldest',
         value: 'dateDesc',
@@ -58,10 +56,10 @@ const sortTerms: SortTerm[] = [
 
 /** Refs */
 // filter and sort refs
-const sort = ref<SortOptions>(DEFAULT_SORT);
-const searchFilter = ref<string>(''); // query string
-const eventFilter = ref<VideoEventFilter>();
-const speakerFilter = ref<PersonSpeaker>();
+const activeSort = ref<SortOptions>(DEFAULT_SORT);
+const activeSearchFilter = ref<string>(''); // query string
+const activeEventFilter = ref<VideoEventFilter>();
+const activeSpeakerFilter = ref<PersonSpeaker>();
 // pagination refs
 const currentPage = ref<number>(1);
 const pageOffset = ref<number>(PAGE_OFFSET);
@@ -85,24 +83,24 @@ onMounted(() => {
 
         // set params: set from existing params, validate against acceptable values
         // sort - validate existing SortOption
-        if (sortParam && sortTerms.some((t) => t.value === sortParam)) {
-            sort.value = sortParam as SortOptions;
+        if (sortParam && sortOptions.some((t) => t.value === sortParam)) {
+            activeSort.value = sortParam as SortOptions;
         } else {
             // fallback to default if malformed params
-            sort.value = 'dateDesc';
+            activeSort.value = 'dateDesc';
         }
         // search filter
         if (searchParam) {
-            searchFilter.value = searchParam ?? '';
+            activeSearchFilter.value = searchParam ?? '';
         }
         // event filter - validate existing event
         if (eventParam && props.events.some((e) => e._id === eventParam)) {
             // look up event from id
             const event = props.events.find((e) => e._id === eventParam);
-            eventFilter.value = event;
+            activeEventFilter.value = event;
         } else {
             // fallback to default if malformed params
-            eventFilter.value = undefined;
+            activeEventFilter.value = undefined;
         }
         // speaker filter - validate existing speaker
         if (
@@ -110,10 +108,10 @@ onMounted(() => {
             props.speakers.some((p) => p._id === speakerParam)
         ) {
             const speaker = props.speakers.find((p) => p._id === speakerParam);
-            speakerFilter.value = speaker;
+            activeSpeakerFilter.value = speaker;
         } else {
             // fallback to default if malformed params
-            speakerFilter.value = undefined;
+            activeSpeakerFilter.value = undefined;
         }
         // view - validate options
         if (viewParam && ['grid', 'list'].includes(viewParam)) {
@@ -142,22 +140,22 @@ onMounted(() => {
 
         // reset all existing params & add/update new
         // sort
-        params.set(vParams.sort, sort.value);
+        params.set(vParams.sort, activeSort.value);
         // search
-        if (searchFilter.value) {
-            params.set(vParams.search, searchFilter.value);
+        if (activeSearchFilter.value) {
+            params.set(vParams.search, activeSearchFilter.value);
         } else {
             params.delete(vParams.search);
         }
         // event filter
-        if (eventFilter.value) {
-            params.set(vParams.event, eventFilter.value._id);
+        if (activeEventFilter.value) {
+            params.set(vParams.event, activeEventFilter.value._id);
         } else {
             params.delete(vParams.event);
         }
         // speaker filter
-        if (speakerFilter.value) {
-            params.set(vParams.speaker, speakerFilter.value._id);
+        if (activeSpeakerFilter.value) {
+            params.set(vParams.speaker, activeSpeakerFilter.value._id);
         } else {
             params.delete(vParams.speaker);
         }
@@ -196,14 +194,14 @@ const queryList = computed(() => {
         distance: 700, // 0.4 x 700 = 280 characters from location
     });
 
-    if (searchFilter.value) {
+    if (activeSearchFilter.value) {
         // when a search value is present, reset pagination to 1
         currentPage.value = 1;
 
         // return fuzzy search results, filter out scores above 0.7
         // (1.0 is complete mismatch)
         list = fuse
-            .search(searchFilter.value)
+            .search(activeSearchFilter.value)
             .filter((item) => item.score && item.score < 0.7)
             .map((item) => {
                 return item.item;
@@ -267,26 +265,27 @@ const filteredList = computed(() => {
     */
 
     // filter list on selected event
-    if (eventFilter.value) {
+    if (activeEventFilter.value) {
         // when an event filter value is present, reset pagination to 1
         currentPage.value = 1;
 
         list = list.filter(
             (item) =>
                 item.data.eventFiltersRef.length > 0 &&
-                item.data.eventFiltersRef[0]._id === eventFilter.value?._id,
+                item.data.eventFiltersRef[0]._id ===
+                    activeEventFilter.value?._id,
         );
     }
 
     // filter list on selected speaker
-    if (speakerFilter.value) {
+    if (activeSpeakerFilter.value) {
         // when a speaker filter value is present, reset pagination to 1
         currentPage.value = 1;
 
         list = list.filter(
             (item) =>
                 item.data.speakersRef.length > 0 &&
-                item.data.speakersRef[0]._id === speakerFilter.value?._id,
+                item.data.speakersRef[0]._id === activeSpeakerFilter.value?._id,
         );
     }
 
@@ -302,8 +301,8 @@ const filterDescription = computed(() => {
         message = `Showing ${videoCount.value} results`;
     }
 
-    if (searchFilter.value) {
-        message += ` for ${searchFilter.value}`;
+    if (activeSearchFilter.value) {
+        message += ` for ${activeSearchFilter.value}`;
     }
 
     const totalPages = Math.floor(videoCount.value / pageOffset.value) + 1;
@@ -320,12 +319,12 @@ const sortedList = computed(() => {
     const list = [...filteredList.value];
 
     // sort by date
-    if (sort.value === 'dateAsc' || sort.value === 'dateDesc') {
+    if (activeSort.value === 'dateAsc' || activeSort.value === 'dateDesc') {
         return list.sort((a, b) => {
             const dateA = new Date(a.data.date);
             const dateB = new Date(b.data.date);
 
-            if (sort.value === 'dateDesc') {
+            if (activeSort.value === 'dateDesc') {
                 // latest to oldest
                 return (dateB as any) - (dateA as any);
             }
@@ -349,10 +348,10 @@ const sortedList = computed(() => {
         }
 
         if (titleA < titleB) {
-            return sort.value === 'titleAsc' ? -1 : 1;
+            return activeSort.value === 'titleAsc' ? -1 : 1;
         }
         if (titleA > titleB) {
-            return sort.value === 'titleAsc' ? 1 : -1;
+            return activeSort.value === 'titleAsc' ? 1 : -1;
         }
         return 0;
     });
@@ -378,9 +377,9 @@ const filteredEventOptions = computed(() => {
     let list = props.events;
 
     // get the associated speaker object when filter ref is set
-    if (speakerFilter.value) {
+    if (activeSpeakerFilter.value) {
         const associatedSpeaker = props.speakers.find(
-            (item) => item._id === speakerFilter.value?._id,
+            (item) => item._id === activeSpeakerFilter.value?._id,
         );
 
         // check assoc. speaker's attached event refs
@@ -401,9 +400,9 @@ const filteredSpeakerOptions = computed(() => {
     let list = props.speakers;
 
     // get associated event object when filter ref is set
-    if (eventFilter.value) {
+    if (activeEventFilter.value) {
         const associatedEvent = props.events.find(
-            (item) => item._id === eventFilter.value?._id,
+            (item) => item._id === activeEventFilter.value?._id,
         );
 
         // check assoc. event's attached speaker refs
@@ -424,12 +423,12 @@ const filteredSpeakerOptions = computed(() => {
 const showClearFilters = computed(() => {
     let show = false;
     // show if not default sort or search term present
-    if (sort.value !== DEFAULT_SORT || searchFilter.value) {
+    if (activeSort.value !== DEFAULT_SORT || activeSearchFilter.value) {
         show = true;
     }
 
     // show if both main filters are on (hide if only one)
-    if (eventFilter.value && speakerFilter.value) {
+    if (activeEventFilter.value && activeSpeakerFilter.value) {
         show = true;
     }
 
@@ -438,27 +437,27 @@ const showClearFilters = computed(() => {
 
 // clear speaker filter
 const showClearSpeakerFilter = computed(() => {
-    return speakerFilter.value ? true : false;
+    return activeSpeakerFilter.value ? true : false;
 });
 
 // clear event filter
 const showClearEventFilter = computed(() => {
-    return eventFilter.value ? true : false;
+    return activeEventFilter.value ? true : false;
 });
 
 /** Helpers */
 // reset the search filter and paginated list when input is cleared
 function clearSearch() {
-    searchFilter.value = '';
+    activeSearchFilter.value = '';
     currentPage.value = 1;
 }
 
 // reset all filters & search values
 function clearFilters() {
     clearSearch();
-    sort.value = DEFAULT_SORT;
-    eventFilter.value = undefined;
-    speakerFilter.value = undefined;
+    activeSort.value = DEFAULT_SORT;
+    activeEventFilter.value = undefined;
+    activeSpeakerFilter.value = undefined;
 }
 
 // scroll to top of pagination container
@@ -473,28 +472,30 @@ function scrollToTop(e: PointerEvent) {
         <!-- <div class="small-title">Filters</div> -->
         <div class="cluster">
             <video-search
-                :search="searchFilter"
-                @update-search="(v) => (searchFilter = v)"
+                :search="activeSearchFilter"
+                @update-search="(v) => (activeSearchFilter = v)"
                 @clear-search="clearSearch"
             />
             <video-filter
                 title="Filter by Speaker"
                 name="speakerFilter"
-                :filter="speakerFilter"
+                :filter="activeSpeakerFilter"
                 :options="filteredSpeakerOptions"
-                @update-filter="(v) => (speakerFilter = v)"
+                @update-filter="(v) => (activeSpeakerFilter = v)"
             />
             <video-filter
                 title="Filter by Event"
                 name="eventFilter"
-                :filter="eventFilter"
+                :filter="activeEventFilter"
                 :options="filteredEventOptions"
-                @update-filter="(v) => (eventFilter = v)"
+                @update-filter="(v) => (activeEventFilter = v)"
             />
-            <video-sort
-                :sort="sort"
-                :sort-terms="sortTerms"
-                @update-sort="(v) => (sort = v)"
+            <reka-select
+                label="Sort by"
+                input-name="sort"
+                :filter-value="activeSort"
+                :select-options="sortOptions"
+                @update-filter-value="(v) => (activeSort = v)"
             />
         </div>
         <div class="clear-filters | cluster">
@@ -503,7 +504,7 @@ function scrollToTop(e: PointerEvent) {
                 class="button-link with-icon"
                 data-style="primary"
                 data-size="small"
-                @click="() => (speakerFilter = undefined)"
+                @click="() => (activeSpeakerFilter = undefined)"
             >
                 <svg
                     width="24"
@@ -516,14 +517,14 @@ function scrollToTop(e: PointerEvent) {
                         d="M17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5Z"
                     />
                 </svg>
-                <span>{{ speakerFilter?.title }}</span>
+                <span>{{ activeSpeakerFilter?.title }}</span>
             </button>
             <button
                 v-if="showClearEventFilter"
                 class="button-link with-icon"
                 data-style="primary"
                 data-size="small"
-                @click="() => (eventFilter = undefined)"
+                @click="() => (activeEventFilter = undefined)"
             >
                 <svg
                     width="24"
@@ -536,7 +537,7 @@ function scrollToTop(e: PointerEvent) {
                         d="M17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5Z"
                     />
                 </svg>
-                <span>{{ eventFilter?.title }}</span>
+                <span>{{ activeEventFilter?.title }}</span>
             </button>
             <button
                 v-if="showClearFilters"
