@@ -1,6 +1,7 @@
 ---
+import { isBefore, parse } from '@formkit/tempo';
+import PodcastCollection from '@components/media/PodcastCollection.vue';
 import type { PodcastFeed } from '@content/schemaFragments/pageModules';
-import PodcastPreview from '@components/media/PodcastPreview.astro';
 import { getCollection } from 'astro:content';
 import v from 'voca';
 
@@ -10,18 +11,47 @@ interface Props {
 
 const { module } = Astro.props;
 
+/* Prepare podcast collection */
 const podcastFeed = await getCollection('podcast');
+
+/* Prepare filters */
+const podcastSeasonMap = new Map<number, any>();
+for (const item of podcastFeed) {
+    if (item.data.season) {
+        podcastSeasonMap.set(item.data.season, undefined);
+    }
+}
+
+const podcastSeasons = Array.from(podcastSeasonMap.keys()).sort((a, b) =>
+    a > b ? -1 : 1,
+);
+
+// initial sort by most recent
+const itemsSorted = podcastFeed.sort((a, b) => {
+    if (isBefore(a.data.pubDate, b.data.pubDate)) {
+        return 1;
+    }
+    if (isBefore(b.data.pubDate, a.data.pubDate)) {
+        return -1;
+    }
+    return 0;
+});
 ---
 
 <section
     class:list={[{ 'section-margin': module.options.sectionMargin }]}
     data-module={module._type}
+    id={module._type}
 >
     <div class="content-wrapper slim">
-        <h2 id={v.slugify(module.heading)}>{module.heading}</h2>
-        <div class="entries">
-            {podcastFeed.map((item) => <PodcastPreview item={item} />)}
-        </div>
+        <h2 class="center-all" id={v.slugify(module.heading)}>
+            {module.heading}
+        </h2>
+        <PodcastCollection
+            client:idle
+            items={itemsSorted}
+            seasons={podcastSeasons}
+        />
     </div>
 </section>
 

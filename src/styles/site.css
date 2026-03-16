@@ -20,6 +20,7 @@
 @import 'block/event.css' layer(main);
 @import 'block/index.css' layer(main);
 @import 'block/page.css' layer(main);
+@import 'block/podcast.css' layer(main);
 @import 'block/post.css' layer(main);
 @import 'block/rich-text.css' layer(main);
 @import 'block/video.css' layer(main);

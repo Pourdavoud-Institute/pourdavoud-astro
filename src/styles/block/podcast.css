@@ -1,0 +1,65 @@
+[data-module='podcastFeed'] {
+    & .filters-panel {
+        --cluster-justify: center;
+        margin-block-start: var(--space-l);
+    }
+}
+
+.podcast-list-wrapper {
+    margin-block-start: var(--space-xl);
+}
+
+.podcast-list {
+    & > * + * {
+        padding-block-start: var(--flow-space);
+        border-block-start: 1px solid var(--site-border);
+    }
+}
+
+.podcast-preview__list {
+    & .title {
+        --flow-space: 0px;
+        font-size: var(--step-2);
+        font-weight: 700;
+    }
+
+    & .small-title {
+        --cluster-space: 0.5rem;
+        font-size: var(--step--1);
+        margin-block-end: var(--space-3xs);
+    }
+
+    & .season {
+        color: var(--site-text);
+    }
+
+    & .info {
+        & time {
+            font-weight: 700;
+        }
+    }
+
+    & .duration {
+        position: relative;
+
+        &::before {
+            content: '•';
+            color: var(--ucla-primary-blue);
+            padding-inline: var(--space-2xs);
+        }
+    }
+
+    & .player {
+        --flow-space: var(--space-m);
+
+        & audio {
+            width: 80%;
+        }
+
+        & a {
+            display: block;
+            margin-block-start: 0.5rem;
+            font-size: var(--step--1);
+        }
+    }
+}
