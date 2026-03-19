@@ -16,9 +16,15 @@ const message = 'This page doesn’t exist or the content has been moved.';
             <header class="text-center | flow" data-tempo="allegro">
                 <h1>{title}</h1>
                 <p>{message}</p>
-                <a class="button-link" data-style="primary" href="/"
-                    >Back to Home</a
-                >
+                <div class="buttons | cluster">
+                    <a class="button-link" data-style="primary" href="/">Home</a
+                    >
+                    <a
+                        class="button-link"
+                        data-style="primary-ghost"
+                        href="/search">Search</a
+                    >
+                </div>
             </header>
             <div class="image-wrapper">
                 <img
@@ -40,6 +46,10 @@ const message = 'This page doesn’t exist or the content has been moved.';
         & p {
             font-size: var(--step-1);
         }
+    }
+
+    .buttons {
+        --cluster-justify: center;
     }
 
     .button-link {
