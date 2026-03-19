@@ -27,7 +27,6 @@ pnpm-debug.log*
 .idea/
 
 # local
-.vscode/extensions.json
 .vscode/launch.json
 
 # server
