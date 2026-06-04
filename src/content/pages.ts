@@ -44,6 +44,11 @@ export const pages = defineCollection({
                 slug: z.string(),
             })
             .nullish(),
+        children: z.array(
+            z.object({
+                _id: z.string(),
+            }),
+        ),
         template: PageTemplate,
         indexCollection: z
             .enum(['events', 'upcoming-events', 'videos', 'posts', 'podcast'])

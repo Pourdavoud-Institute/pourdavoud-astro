@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { type CollectionEntry, getEntries } from 'astro:content';
 import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
 import ModulesList from '@components/document/ModulesList.astro';
 import ModulesTOC from '@components/navigation/ModulesTOC.astro';
@@ -27,12 +27,18 @@ switch (page.data.header?.layout) {
 }
 
 const breadcrumbsStyle = getBreadcrumbsStyleFromSlug(page.data.slug);
+
+const pageChildren = await getEntries(
+    page.data.children.map((item) => ({ collection: 'pages', id: item._id })),
+);
+console.log(pageChildren);
 ---
 
 {
     page.data.header ? (
         <Header
             breadcrumbsStyle={breadcrumbsStyle}
+            children={pageChildren}
             header={page.data.header}
             modules={page.data.modules}
             title={page.data.title}
