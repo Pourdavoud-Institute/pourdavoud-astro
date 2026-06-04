@@ -6,7 +6,7 @@ Use this project to make changes to template files, add new site integrations, o
 
 ## Features
 
-- [Astro v5](https://astro.build/) TypeScript-based static site generator with various first- and third-party plugins and built-in [Vite](http://vite.dev/) server
+- [Astro v6](https://astro.build/) TypeScript-based static site generator with various first- and third-party plugins and built-in [Vite](http://vite.dev/) server
 - Astro's fully-typed [content collections](https://docs.astro.build/en/guides/content-collections/) loading headless data from the [Sanity](https://www.sanity.io/) content platform (accessed with Sanity client + [GROQ queries](https://www.sanity.io/docs/content-lake/how-queries-work))
 - [Lightning CSS](https://lightningcss.dev/) scripts to transpile, bundle, and minify CSS
 - [Alpine JS](https://alpinejs.dev/start-here) for lightweight page interactivity
@@ -20,10 +20,10 @@ Use this project to make changes to template files, add new site integrations, o
 
 ### 1. Prerequisites
 
-To get started locally, ensure that you have [Node](https://nodejs.org/en) and the [npm package manager](https://www.npmjs.com/) installed on your system. The easiest way to do this is by downloading Node, nvm (the Node version manager), and npm all together via the [Node downloads page](https://nodejs.org/en/download).
+To get started locally, ensure that you have [Node](https://nodejs.org/en) and the a Node package manager (i.e., npm or pnpm) installed on your system. The easiest way to do this is by downloading Node, nvm (the Node version manager), and npm/pnpm all together via the [Node downloads page](https://nodejs.org/en/download).
 
 - [Node](https://nodejs.org/en) (JavaScript runtime environment)
-- [npm](https://www.npmjs.com/) (Node package manager)
+- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/) (Node package manager – pnpm is recommended)
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) (version control)
 
 ### 2. Clone repository
@@ -35,10 +35,10 @@ git clone https://github.com/Pourdavoud-Institute/pourdavoud-astro.git
 cd pourdavoud-astro
 ```
 
-### 3. Install dependencies with `npm`
+### 3. Install dependencies with npm/pnpm
 
 ```sh
-npm install
+pnpm install
 ```
 
 ### 4. Run scripts
@@ -48,10 +48,10 @@ The project's `package.json` file registers the following scripts:
 <!-- prettier-ignore -->
 | Script | Description |
 | ------ | ----------- |
-| `npm run dev` | Starts the Astro dev server. |
-| `npm run index` | Uses `pagefind` to index all marked pages for search. |
-| `npm run build` | Builds site to `dist` output directory and runs `index` (see above). |
-| `npm run preview` | Previews the *built* site files in a local environment. |
+| `pnpm run dev` | Starts the Astro dev server. |
+| `pnpm run index` | Uses `pagefind` to index all marked pages for search. |
+| `pnpm run build` | Builds site to `dist` output directory and runs `index` (see above). |
+| `pnpm run preview` | Previews the *built* site files in a local environment. |
 
 ## Project Structure
 
