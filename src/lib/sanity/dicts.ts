@@ -23,10 +23,12 @@ export const SanityPeopleCategories = {
 };
 
 export const SanityUCLADepartments: Record<string, string> = {
+    anthropology: 'Anthropology',
     'art-history': 'Art History',
     alc: 'Asian Languages & Cultures',
     classics: 'Classics',
     cmrs: 'Center for Medieval and Renaissance Studies',
     history: 'History',
     nelc: 'Near Eastern Languages and Cultures',
+    pies: 'Program in Indo-European Studies',
 };

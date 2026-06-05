@@ -25,6 +25,7 @@ export const PEOPLE_QUERY = groq`*[_type == "person" && $workspaceID in workspac
         []
     ),
     department,
+    "departments": coalesce(departments, []),
     institution,
     facultyTitle,
     facultyLink,

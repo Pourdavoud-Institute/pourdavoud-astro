@@ -51,10 +51,25 @@ export const pages = defineCollection({
         ),
         template: PageTemplate,
         indexCollection: z
-            .enum(['events', 'upcoming-events', 'videos', 'posts', 'podcast'])
+            .enum([
+                'events',
+                'upcoming-events',
+                'videos',
+                'people',
+                'posts',
+                'podcast',
+            ])
             .nullish(),
         header: PageHeader.nullish(),
         modules: PageModules,
+        people: z.object({
+            peopleGrid: z.array(
+                z.object({
+                    _id: z.string(),
+                }),
+            ),
+            peopleFilter: z.string().nullish(),
+        }),
         options: z.object({
             layout: z.enum(['default', 'sidebar']).nullish(),
             footerMargin: z.boolean().nullish(),
