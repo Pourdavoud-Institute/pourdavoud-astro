@@ -1,0 +1,8 @@
+.section-nav {
+    --flow-space: var(--space-l);
+    --cluster-justify: center;
+
+    & .small-title {
+        font-size: var(--step--1);
+    }
+}

@@ -63,6 +63,12 @@ export const PAGES_QUERY = groq`*[_type == "page" && $workspaceID in workspaces[
         ${RICH_TEXT_PROJECTION},
         ${TWO_COLUMN_TEXT_PROJECTION}
     }, []),
+    "people": {
+        "peopleGrid": coalesce(peopleGrid[]->{
+            _id
+        }, []),
+        peopleFilter
+    },
     "options": {
         layout,
         footerMargin

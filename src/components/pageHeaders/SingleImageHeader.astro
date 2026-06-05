@@ -11,6 +11,7 @@ import type { SanityImage as SanityImageType } from '@lib/utils/types';
 interface Props {
     title: string;
     header?: PageHeader;
+    children?: CollectionEntry<'pages'>[];
     modules?: CollectionEntry<'pages'>['data']['modules'];
     breadcrumbsStyle?: BreadcrumbsStyle;
     breadcrumbsCollection?: BreadcrumbsCollection;
@@ -20,6 +21,7 @@ interface Props {
 const {
     title,
     header,
+    children,
     modules,
     breadcrumbsStyle = 'default',
     breadcrumbsCollection = 'pages',
@@ -36,6 +38,26 @@ const {
                     <div class="preview | text-center">
                         <RichTextBlocksLite blocks={header.preview} />
                     </div>
+                )
+            }
+            {
+                children && children.length > 0 && (
+                    <nav aria-label="Section" class="section-nav">
+                        <ul class="cluster">
+                            <li class="small-title">Section Menu</li>
+                            {children
+                                ?.sort((a, b) =>
+                                    a.data.title > b.data.title ? 1 : -1,
+                                )
+                                .map((child) => (
+                                    <li>
+                                        <a href={child.data.slug}>
+                                            {child.data.title}
+                                        </a>
+                                    </li>
+                                ))}
+                        </ul>
+                    </nav>
                 )
             }
             {

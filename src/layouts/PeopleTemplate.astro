@@ -1,0 +1,170 @@
+---
+import { type CollectionEntry, getEntry } from 'astro:content';
+import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
+import PersonPreview from '@components/people/PersonPreview.astro';
+import { SanityUCLADepartments } from '@lib/sanity/dicts';
+import SingleImageHeader from '@components/pageHeaders/SingleImageHeader.astro';
+import SplitPaneHeader from '@components/pageHeaders/SplitPaneHeader.astro';
+import { getBreadcrumbsStyleFromSlug } from '@lib/utils/getBreadcrumbsStyleFromSlug';
+
+interface Props {
+    page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+
+let Header;
+switch (page.data.header?.layout) {
+    case 'singleImage':
+        Header = SingleImageHeader;
+        break;
+    case 'splitPane':
+        Header = SplitPaneHeader;
+        break;
+    default:
+        Header = DefaultHeader;
+        break;
+}
+
+const breadcrumbsStyle = getBreadcrumbsStyleFromSlug(page.data.slug);
+
+const people = await Promise.all(
+    page.data.people.peopleGrid.map(async (person) => {
+        const linked = await getEntry('people', person._id);
+        return linked;
+    }),
+);
+
+let filters: { title: string; key: string }[] = [];
+
+// create set of filters from what are actually attached to people - remove empty
+if (page.data.people.peopleFilter === 'department') {
+    const peopleDepartments = new Set();
+    for (const person of people) {
+        if (person?.data.departments.length) {
+            for (const department of person?.data?.departments) {
+                peopleDepartments.add(department);
+            }
+        }
+    }
+
+    filters = Array.from(peopleDepartments)
+        .map((v) => ({
+            key: v as string,
+            title: SanityUCLADepartments[v as string],
+        }))
+        .sort((a, b) => (a.title < b.title ? -1 : 1));
+}
+---
+
+{
+    page.data.header ? (
+        <Header
+            breadcrumbsStyle={breadcrumbsStyle}
+            header={page.data.header}
+            modules={page.data.modules}
+            title={page.data.title}
+        />
+    ) : (
+        <DefaultHeader title={page.data.title} />
+    )
+}
+<div class="content-wrapper">
+    <div class="filters" data-filter={page.data.people.peopleFilter}>
+        <p class="small-title">Filter by {page.data.people.peopleFilter}</p>
+        <div class="cluster">
+            <button
+                class="button-link"
+                data-size="small"
+                data-style="primary"
+                id="all">All</button
+            >
+            {
+                filters.map((filter) => (
+                    <button
+                        class="button-link"
+                        data-size="small"
+                        data-style="primary-ghost"
+                        id={filter.key}
+                    >
+                        {filter.title}
+                    </button>
+                ))
+            }
+        </div>
+    </div>
+    <div class="entries | fluid-grid">
+        {
+            people.map(
+                (person) =>
+                    person && (
+                        <PersonPreview
+                            HeadingTag="h2"
+                            person={person}
+                            showImage={true}
+                        />
+                    ),
+            )
+        }
+    </div>
+</div>
+
+<style>
+    .content-wrapper {
+        margin-block-start: var(--section-spacing);
+    }
+
+    .entries {
+        margin-block-start: var(--space-2xl);
+    }
+
+    .filters {
+        & .small-title {
+            font-size: var(--step--1);
+            color: var(--ucla-primary-blue);
+        }
+    }
+
+    :global(.person.animate-in) {
+        animation: filter-item-in 750ms;
+    }
+
+    :global(.person.animate-out) {
+        animation: filter-item-out 250ms;
+    }
+</style>
+
+<script>
+    const list = document.querySelector<HTMLElement>('.entries');
+    const listItems = document.querySelectorAll<HTMLElement>('.person');
+    const filterType =
+        document.querySelector<HTMLElement>('.filters')?.dataset.filter;
+    const filters =
+        document.querySelectorAll<HTMLButtonElement>('.filters button');
+
+    filters.forEach((filter) =>
+        filter.addEventListener('click', () => {
+            filterList(filter.id, filterType);
+            filters.forEach((filter) => {
+                filter.classList.remove('active');
+                filter.dataset.style = 'primary-ghost';
+            });
+            filter.classList.add('active');
+            filter.dataset.style = 'primary';
+        }),
+    );
+
+    function filterList(key: string, type?: string) {
+        if (key == 'all') {
+            list?.replaceChildren(...listItems);
+        } else if (type == 'department') {
+            const filtered = [...listItems].filter((item) => {
+                const parts = item.dataset.personDepartments?.split(',');
+                return parts?.includes(key);
+            });
+            list?.replaceChildren(...filtered);
+        } else if (type == 'type') {
+            // filter by type
+        }
+    }
+</script>

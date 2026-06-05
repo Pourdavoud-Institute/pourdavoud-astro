@@ -75,6 +75,7 @@ export const PageTemplate = z.enum([
     'listing',
     'index',
     'eventsIndex',
+    'people',
     'info',
     'parent',
     'utility',

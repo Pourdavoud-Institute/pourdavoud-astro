@@ -25,11 +25,22 @@ if (person.data.affiliationType == "internal" || person.data.categories.find((c)
 } else if (person.data.facultyLink) {
     link = person.data.facultyLink;
 }
+
+let departments = "";
+if (person.data.departments.length) {
+    departments = person.data.departments.join(",");
+} else {
+    departments = "-";
+}
+
+// remove `/` from category slugs to create ids for data attribute
 ---
 
 <article
-    class="person preview"
+    class="person preview | animate-in"
+    data-person-departments={departments}
     data-person-id={person.id}
+    data-person-type={person.data.categories.map((category) => category?.slug.slice(1)).join(",")}
 >
     {
         link ? (
@@ -55,10 +66,12 @@ if (person.data.affiliationType == "internal" || person.data.categories.find((c)
             </Fragment>
             <div class="text-wrapper | flow" data-tempo="allegro">
                 <HeadingTag class="name">
-                    {person.data.title}
+                    <a class="title-link" href={link} target={isInternal ? "_self" : "_blank"}>
+                        {person.data.title}
+                    </a>
                 </HeadingTag>
                 {role && (<p class="title">{role}</p>)}
-                <a href={link} target={isInternal ? "_self" : "_blank"}>{isInternal ? "View Bio" : "View Profile"}</a>
+                {/* <a href={link} target={isInternal ? "_self" : "_blank"}>{isInternal ? "View Bio" : "View Profile"}</a> */}
             </div>
         ) : (
         <div class="text-wrapper | flow" data-tempo="allegro">
@@ -71,8 +84,19 @@ if (person.data.affiliationType == "internal" || person.data.categories.find((c)
 </article>
 
 <style>
+    .person {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
     .frame {
-        --frame-aspect-ratio: 3/4;
+        /* --frame-aspect-ratio: 3/4; */
+        --frame-aspect-ratio: 1/1;
+        border-radius: 999px;
+        width: 12rem;
+        height: 12rem;
     }
 
     .text-wrapper {
