@@ -2,7 +2,7 @@ import groq from 'groq';
 import { FEATURED_IMAGE_PROJECTION } from '@lib/sanity/groqFragments/commonProjections';
 import { RICH_TEXT_PROJECTION } from '@lib/sanity/groqFragments/moduleProjections';
 
-export const POSTS_QUERY = groq`*[_type == "post" && $workspaceID in workspaces[]._ref] | order(displayDate desc) {
+export const POSTS_QUERY = groq`*[_type == "post" && $workspaceID in workspaces[]._ref] {
     _id,
     _type,
     _updatedAt,

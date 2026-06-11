@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 const { category } = Astro.props;
 
 const posts = await getCollection('posts');
-// const associatedEvents
+// associated posts will already be in order from sanity category query
 ---
 
 <PageWrapper
@@ -63,8 +63,8 @@ const posts = await getCollection('posts');
                                     (associatedPost) =>
                                         posts.find(
                                             (post) =>
-                                                post.id == associatedPost._id
-                                        )
+                                                post.id == associatedPost._id,
+                                        ),
                                 )}
                             />
                         )
