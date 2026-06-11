@@ -43,6 +43,20 @@ export const FEATURED_ELEMENT_PROJECTION = groq`_type == "featuredElement" => {
     }
 }`;
 
+export const CALLOUT_TEXT_PROJECTION = groq`_type == "calloutText" => {
+    heading,
+    "text": coalesce(text, []),
+    "cta": coalesce(
+        cta[] ${LINK_PROJECTION},
+        []
+    ),
+    "options": {
+        "textAlign": coalesce(textAlign, "default"),
+        "backgroundColor": coalesce(backgroundColor, "default"),
+        sectionMargin
+    }
+}`;
+
 export const COLLECTION_LIST_PROJECTION = groq`_type == "collectionList" => {
     heading,
     collection,

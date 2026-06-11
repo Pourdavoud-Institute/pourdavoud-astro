@@ -5,6 +5,7 @@ import {
     SEO_PROJECTION,
 } from '@lib/sanity/groqFragments/commonProjections';
 import {
+    CALLOUT_TEXT_PROJECTION,
     CARD_LIST_PROJECTION,
     COLLECTION_LIST_PROJECTION,
     COLUMNS_GROUP_PROJECTION,
@@ -46,6 +47,7 @@ export const PAGES_QUERY = groq`*[_type == "page" && $workspaceID in workspaces[
     },
     "modules": coalesce([...modules_landing[], ...modules_default[], ...modules_information[]] {
         _type,
+        ${CALLOUT_TEXT_PROJECTION},
         ${CARD_LIST_PROJECTION},
         ${COLLECTION_LIST_PROJECTION},
         ${COLUMNS_GROUP_PROJECTION},

@@ -7,6 +7,23 @@ import {
 } from '@content/schemaFragments/sanityComponents';
 import { SanityPeopleCategories as categories } from '@lib/sanity/dicts';
 
+/** CALLOUT TEXT */
+const CalloutText = z.object({
+    _type: z.literal('calloutText'),
+    heading: z.string(),
+    text: z.array(z.any()),
+    cta: z.array(Link).nullish(),
+    options: z.object({
+        sectionMargin: z.boolean().nullish(),
+        textAlign: z.enum(['default', 'center']).nullish(),
+        backgroundColor: z
+            .enum(['default', 'primary-light', 'neutral-light', 'primary-dark'])
+            .nullish(),
+    }),
+});
+
+export type CalloutText = z.infer<typeof CalloutText>;
+
 /** CARD LIST */
 const CardList = z.object({
     _type: z.literal('cardList'),
@@ -254,6 +271,7 @@ export type TwoColumnText = z.infer<typeof TwoColumnText>;
 /** Union type to use in page modules key */
 export const PageModules = z.array(
     z.union([
+        CalloutText,
         CardList,
         CollectionList,
         ColumnsGroup,
