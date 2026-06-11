@@ -30,7 +30,7 @@ const { post, HeadingTag = 'h3' } = Astro.props;
         </HeadingTag>
         <div class="details">
             <time datetime={post.data.displayDate}>
-                {format(post.data.displayDate, 'MMM D, YYYY')}
+                {format(post.data.displayDate, 'long')}
             </time>
         </div>
         {post.data.preview && <RichTextBlocksLite blocks={post.data.preview} />}
