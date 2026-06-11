@@ -16,7 +16,7 @@ export const LINK_PROJECTION = groq`{
         reference-> {
             _id,
             "slug": slug.current,
-            _type == "page" || _type == "event" => {
+            _type == "page" || _type == "event" || _type == "post" => {
                 title,
             },
             _type == "person" => {
