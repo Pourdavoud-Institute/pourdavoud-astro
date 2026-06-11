@@ -1,4 +1,5 @@
 ---
+import CalloutText from '@components/modules/CalloutText.astro';
 import CardList from '@components/modules/CardList.astro';
 import type { CollectionEntry } from 'astro:content';
 import ColumnsGroup from '@components/modules/ColumnsGroup.astro';
@@ -26,6 +27,8 @@ const { modules } = Astro.props;
     {
         modules.map((module) => {
             switch (module._type) {
+                case 'calloutText':
+                    return <CalloutText module={module} />;
                 case 'cardList':
                     return <CardList module={module} />;
                 // case 'collectionList':

@@ -1,0 +1,106 @@
+---
+import ButtonLink from '@components/interactive/ButtonLink.astro';
+import type { CalloutText } from '@content/schemaFragments/pageModules';
+import RichTextBlocksLite from '@components/richText/RichTextBlocksLite.astro';
+import v from 'voca';
+
+interface Props {
+    module: CalloutText;
+    HeadingTag?: 'h2' | 'h3' | 'h4';
+}
+
+const { module, HeadingTag = 'h2' } = Astro.props;
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <div class="content-wrapper">
+        <div
+            class="content | flow"
+            data-align={module.options.textAlign}
+            data-background={module.options.backgroundColor}
+            data-tempo="allegro"
+        >
+            <header>
+                <HeadingTag id={v.slugify(module.heading)}>
+                    {module.heading}
+                </HeadingTag>
+            </header>
+            <div class="rich-text | flow">
+                {module.text && <RichTextBlocksLite blocks={module.text} />}
+            </div>
+            {
+                module.cta && module.cta.length > 0 && (
+                    <div class="cta-links">
+                        {module.cta.map((link) => (
+                            <ButtonLink link={link} />
+                        ))}
+                    </div>
+                )
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .content {
+        position: relative;
+        background: var(--callout-bg, transparent);
+        color: var(--callout-text, inherit);
+        padding: var(--callout-padding, 0);
+        max-width: var(--callout-width, none);
+        margin-inline: auto;
+
+        & .rich-text {
+            max-width: 80%;
+        }
+
+        &[data-align='center'] {
+            --callout-width: var(--wrapper-max-width-slim);
+            text-align: center;
+
+            & .rich-text {
+                margin-inline: auto;
+            }
+        }
+
+        &[data-background='primary-light'] {
+            --callout-bg: linear-gradient(
+                to bottom right,
+                color-mix(in srgb, var(--ucla-lightest-blue), white 30%),
+                var(--ucla-lighter-blue)
+            );
+            --callout-padding: var(--space-2xl);
+        }
+
+        &[data-background='neutral-light'] {
+            --callout-bg: var(--ucla-gray-1);
+            --callout-padding: var(--space-2xl);
+        }
+
+        &[data-background='primary-dark'] {
+            --callout-bg: var(--ucla-darker-blue);
+            --callout-text: var(--ucla-white);
+            --callout-padding: var(--space-2xl);
+
+            & h2 {
+                color: var(--callout-text);
+            }
+
+            & .button-link {
+                --button-text: var(--ucla-primary-blue);
+                --button-text--hover: var(--ucla-white);
+                --button-bg: var(--ucla-white);
+                --button-bg--hover: transparent;
+                --button-border: var(--ucla-white);
+                --button-border--hover: var(--button-border);
+            }
+        }
+    }
+
+    .cta-links {
+        --flow-space: var(--space-l);
+    }
+</style>
