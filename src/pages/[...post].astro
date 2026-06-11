@@ -96,7 +96,7 @@ const { post } = Astro.props;
                 <div class="publish-date | flow">
                     <div class="small-title">Published on</div>
                     <time datetime={post.data.displayDate}
-                        >{format(post.data.displayDate, 'MMM D, YYYY')}</time
+                        >{format(post.data.displayDate, 'long')}</time
                     >
                 </div>
                 <div>
