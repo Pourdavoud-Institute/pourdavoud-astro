@@ -36,7 +36,7 @@
 
     & img {
         --flow-space: var(--space-xl);
-        border-radius: var(--rounded-xs);
+        /* border-radius: var(--rounded-xs); */
 
         & + * {
             --flow-space: var(--space-xl);
@@ -55,6 +55,10 @@
         }
     }
 
+    & figure {
+        margin-block: var(--space-xl);
+    }
+
     & ul {
         list-style-type: disc;
     }
@@ -64,7 +68,7 @@
     }
 
     & :is(ul, ol) {
-        padding-inline-start: var(--space-s);
+        padding-inline-start: var(--space-l);
 
         & > * + * {
             margin-block-start: var(--space-2xs);
