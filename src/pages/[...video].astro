@@ -37,7 +37,7 @@ if (video.data.eventFiltersRef.length) {
 }
 
 const videoSpeakers = await getCollection('speakers', ({ data }) =>
-    video.data.speakersRef.some((speaker) => speaker._id == data._id)
+    video.data.speakersRef.some((speaker) => speaker._id == data._id),
 );
 
 const videoYoutubeID = getYouTubeID(video.data.url);
@@ -57,13 +57,7 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
             <div class="main-panel">
                 <header>
                     <div>
-                        <!-- {
-                            filterTagHref && (
-                                <a class="tag" href={filterTagHref}>
-                                    {filterTagTitle}
-                                </a>
-                            )
-                        } -->
+                        <p class="small-title eyebrow">Video</p>
                         <h1>{video.data.title}</h1>
                     </div>
                     <div class="details">
@@ -132,12 +126,13 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
                                     async (event) => {
                                         const associatedEvent = await getEntry(
                                             'events',
-                                            event._id
+                                            event._id,
                                         );
                                         if (associatedEvent) {
                                             const eventDetails =
                                                 formatEventDetails(
-                                                    associatedEvent.data.details
+                                                    associatedEvent.data
+                                                        .details,
                                                 );
                                             return (
                                                 <div class="event">
@@ -159,7 +154,7 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
                                                 </div>
                                             );
                                         }
-                                    }
+                                    },
                                 )}
                             </div>
                         </div>
@@ -196,8 +191,12 @@ const videoThumbnail = `https://img.youtube.com/vi/${videoYoutubeID}/mqdefault.j
         --sidebar-min-width: 20rem;
     }
 
+    .eyebrow {
+        font-size: var(--step--1);
+    }
+
     h1 {
-        margin-block-start: var(--space-s);
+        margin-block-start: var(--space-3xs);
         /* font-size: var(--step-4); */
     }
 
