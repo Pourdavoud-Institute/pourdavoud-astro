@@ -142,7 +142,7 @@ const PublicationsList = z.object({
     entries: z.array(
         z.object({
             _id: z.string(),
-            _type: z.literal('publication'),
+            _type: z.literal('work'),
             slug: z.string(),
         }),
     ),

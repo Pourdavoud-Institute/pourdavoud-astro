@@ -2,28 +2,25 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { sanityClient } from '@lib/sanity/client';
 import type { SanityDocument } from '@sanity/client';
-import { PUBLICATIONS_QUERY } from '@lib/sanity/queries/publicationsQuery';
+import { WORKS_QUERY } from '@lib/sanity/queries/worksQuery';
 import { workspaces } from '@lib/sanity/workspaces';
 import { RichTextBlocks } from '@content/schemaFragments/sanityComponents';
 
-export const publications = defineCollection({
+export const works = defineCollection({
     loader: async () => {
-        const publications = await sanityClient.fetch<SanityDocument[]>(
-            PUBLICATIONS_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
+        const works = await sanityClient.fetch<SanityDocument[]>(WORKS_QUERY, {
+            workspaceID: workspaces.pourdavoud.id,
+        });
 
-        return publications.map((publication) => ({
-            id: publication._id,
-            ...publication,
+        return works.map((work) => ({
+            id: work._id,
+            ...work,
         }));
     },
 
     schema: z.object({
         _id: z.string(),
-        _type: z.literal('publication'),
+        _type: z.literal('work'),
         title: z.string(),
         subtitle: z.string().nullish(),
         slug: z.string(),

@@ -21,7 +21,7 @@ const events = await getCollection('events');
 const eventCategories = await getCollection('eventCategories');
 const videos = await getCollection('videos');
 const people = await getCollection('people');
-const publications = await getCollection('publications');
+const publications = await getCollection('works');
 const posts = await getCollection('posts');
 const postCategories = await getCollection('postCategories');
 
@@ -58,23 +58,23 @@ for (let i = 0; i < urlParts.length; i++) {
         switch (collection) {
             case 'events':
                 breadcrumb.title = events.find(
-                    ({ data }) => data.slug == currentHref
+                    ({ data }) => data.slug == currentHref,
                 )?.data.title;
                 break;
             case 'eventCategories':
                 breadcrumb.title = eventCategories.find(
                     ({ data }) =>
-                        `/events/categories${data.slug}` == currentHref
+                        `/events/categories${data.slug}` == currentHref,
                 )?.data.title;
                 break;
             case 'videos':
                 breadcrumb.title = videos.find(
-                    ({ data }) => `/media${data.slug}` == currentHref
+                    ({ data }) => `/media${data.slug}` == currentHref,
                 )?.data.title;
                 break;
             case 'people':
                 breadcrumb.title = people.find(
-                    ({ data }) => data.slug == currentHref
+                    ({ data }) => data.slug == currentHref,
                 )?.data.title;
                 break;
             case 'publications':
@@ -92,24 +92,24 @@ for (let i = 0; i < urlParts.length; i++) {
                 break;
             case 'posts':
                 breadcrumb.title = posts.find(
-                    ({ data }) => data.slug == currentHref
+                    ({ data }) => data.slug == currentHref,
                 )?.data.title;
                 break;
             case 'postCategories':
                 breadcrumb.title = postCategories.find(
-                    ({ data }) => `/news/categories${data.slug}` == currentHref
+                    ({ data }) => `/news/categories${data.slug}` == currentHref,
                 )?.data.title;
                 break;
             default:
                 breadcrumb.title = pages.find(
-                    ({ data }) => data.slug == currentHref
+                    ({ data }) => data.slug == currentHref,
                 )?.data.title;
                 break;
         }
     } else {
         // search pages for title
         breadcrumb.title = pages.find(
-            ({ data }) => data.slug == currentHref
+            ({ data }) => data.slug == currentHref,
         )?.data.title;
     }
 

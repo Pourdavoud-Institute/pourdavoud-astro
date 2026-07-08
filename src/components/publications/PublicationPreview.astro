@@ -5,7 +5,7 @@ import { getEntry } from 'astro:content';
 
 interface Props {
     HeadingTag?: 'h2' | 'h3' | 'p';
-    publication: CollectionEntry<'publications'>;
+    publication: CollectionEntry<'works'>;
 }
 
 const { HeadingTag = 'h3', publication } = Astro.props;

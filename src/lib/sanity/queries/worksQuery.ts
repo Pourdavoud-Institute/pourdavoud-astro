@@ -1,7 +1,7 @@
 import groq from 'groq';
 import { LINK_PROJECTION } from '@lib/sanity/groqFragments/commonProjections';
 
-export const PUBLICATIONS_QUERY = groq`*[_type == "publication" && $workspaceID in workspaces[]._ref] {
+export const WORKS_QUERY = groq`*[_type == "work" && $workspaceID in workspaces[]._ref] {
     _id,
     _type,
     title,

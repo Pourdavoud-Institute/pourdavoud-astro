@@ -12,7 +12,7 @@ export async function getStaticPaths() {
         'people',
         ({ data }) =>
             data.affiliationType == 'internal' ||
-            data.categories.find((c) => c?._id === categories.gradStudent.id)
+            data.categories.find((c) => c?._id === categories.gradStudent.id),
     );
 
     return people.map((person) => ({
@@ -128,8 +128,8 @@ const { person } = Astro.props;
                                                         async (entry) => {
                                                             const linkedPublication =
                                                                 await getEntry(
-                                                                    'publications',
-                                                                    entry._id
+                                                                    'works',
+                                                                    entry._id,
                                                                 );
                                                             if (
                                                                 linkedPublication
@@ -142,7 +142,7 @@ const { person } = Astro.props;
                                                                     />
                                                                 );
                                                             }
-                                                        }
+                                                        },
                                                     )}
                                                 </div>
                                             )

@@ -7,7 +7,7 @@ import SanityImage from '@components/SanityImage.astro';
 
 export async function getStaticPaths() {
     const publications = await getCollection(
-        'publications',
+        'works',
         ({ data }) => data.options.createRoute == true
     );
 
@@ -23,7 +23,7 @@ export async function getStaticPaths() {
         const type = publication.data.type + 's';
         return {
             params: {
-                publication: `/publications/${type}/${slugParts.join('/')}`,
+                work: `/publications/${type}/${slugParts.join('/')}`,
             },
             props: { publication },
         };
