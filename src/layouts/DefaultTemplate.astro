@@ -31,7 +31,7 @@ const breadcrumbsStyle = getBreadcrumbsStyleFromSlug(page.data.slug);
 const pageChildren = await getEntries(
     page.data.children.map((item) => ({ collection: 'pages', id: item._id })),
 );
-console.log(pageChildren);
+// console.log(pageChildren);
 ---
 
 {
