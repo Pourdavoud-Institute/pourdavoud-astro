@@ -21,9 +21,11 @@ export type BreadcrumbsStyle =
     | 'primary'
     | 'darker'
     | 'darkest';
+
 export type BreadcrumbsCollection =
     | 'events'
     | 'eventCategories'
+    | 'organizations'
     | 'pages'
     | 'people'
     | 'posts'

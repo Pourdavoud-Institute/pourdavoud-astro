@@ -1,0 +1,58 @@
+---
+import OrganizationPreview from '@components/organizations/OrganizationPreview.astro';
+import type { OrganizationsList } from '@content/schemaFragments/pageModules';
+import { getEntry } from 'astro:content';
+import v from 'voca';
+
+interface Props {
+    module: OrganizationsList;
+}
+
+const { module } = Astro.props;
+---
+
+<section
+    class:list={[{ 'section-margin': module.options.sectionMargin }]}
+    data-module={module._type}
+>
+    <!-- make content wrapper variable -->
+    <div class="content-wrapper">
+        {
+            module.heading && (
+                <h2 class="heading" id={v.slugify(module.heading)}>
+                    {module.heading}
+                </h2>
+            )
+        }
+        <div class="entries | fluid-grid">
+            {
+                module.entries.map(async (entry) => {
+                    const linkedOrganization = await getEntry(
+                        'organizations',
+                        entry._id,
+                    );
+                    if (linkedOrganization) {
+                        return (
+                            <OrganizationPreview
+                                HeadingTag={module.heading ? 'h3' : 'h2'}
+                                organization={linkedOrganization}
+                            />
+                        );
+                    }
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .heading {
+        margin-block-end: var(--space-l);
+    }
+
+    .fluid-grid {
+        --grid-item-min-size: 32rem;
+        column-gap: var(--space-xl);
+        row-gap: var(--space-3xl);
+    }
+</style>

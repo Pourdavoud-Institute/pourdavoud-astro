@@ -3,20 +3,22 @@
  */
 import { events } from '@content/events';
 import { navigation } from '@content/navigation';
+import { organizations } from '@content/organizations';
 import { pages } from '@content/pages';
 import { people } from '@content/people';
 import { podcast } from '@content/podcast';
 import { posts } from '@content/posts';
-import { works } from '@content/works';
 import { settings } from '@content/settings';
 import { speakers } from '@content/people';
 import { videos } from '@content/videos';
+import { works } from '@content/works';
 import { eventCategories, postCategories } from '@content/taxonomies';
 
 export const collections = {
     events,
     eventCategories,
     navigation,
+    organizations,
     pages,
     people,
     podcast,

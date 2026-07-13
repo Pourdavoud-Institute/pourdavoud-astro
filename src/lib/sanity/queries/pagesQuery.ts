@@ -22,6 +22,7 @@ import {
     RELATED_LINKS_PROJECTION,
     RICH_TEXT_PROJECTION,
     TWO_COLUMN_TEXT_PROJECTION,
+    ORGANIZATIONS_LIST_PROJECTION,
 } from '@lib/sanity/groqFragments/moduleProjections';
 
 export const PAGES_QUERY = groq`*[_type == "page" && $workspaceID in workspaces[]._ref] {
@@ -57,6 +58,7 @@ export const PAGES_QUERY = groq`*[_type == "page" && $workspaceID in workspaces[
         ${GALLERY_PROJECTION},
         ${HERO_BANNER_PROJECTION},
         ${HERO_COVER_PROJECTION},
+        ${ORGANIZATIONS_LIST_PROJECTION},
         ${PEOPLE_LIST_PROJECTION},
         ${PODCAST_FEED_PROJECTION},
         ${POSTS_LIST_PROJECTION},

@@ -1,0 +1,70 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import RichTextBlocks from '@components/richText/RichTextBlocks.astro';
+import { urlForImage } from '@lib/sanity/urlForImage';
+
+interface Props {
+    HeadingTag?: 'h2' | 'h3';
+    organization: CollectionEntry<'organizations'>;
+}
+
+const { HeadingTag = 'h3', organization } = Astro.props;
+
+let image = '';
+const imageHeight = 200;
+let imageWidth = 0;
+if (organization.data.image) {
+    image = urlForImage(organization.data.image)
+        .height(200)
+        .auto('format')
+        .quality(95)
+        .url();
+    imageWidth = Math.floor(
+        imageHeight *
+            organization.data.image.asset.metadata.dimensions.aspectRatio,
+    );
+}
+---
+
+<article class="organization-preview | flow" data-tempo="allegro">
+    {
+        image && (
+            <Image
+                alt={
+                    organization.data.image?.alt ||
+                    organization.data.image?.asset.altText ||
+                    ''
+                }
+                class="organization-logo"
+                height={imageHeight}
+                src={image}
+                width={imageWidth}
+            />
+        )
+    }
+    <HeadingTag class="title">
+        <a class="title-link" href={organization.data.slug}>
+            {organization.data.title}
+        </a>
+    </HeadingTag>
+    {
+        organization.data.preview && organization.data.preview.length > 0 && (
+            <RichTextBlocks blocks={organization.data.preview} />
+        )
+    }
+</article>
+
+<style>
+    a:not(.button-link) {
+        font-size: var(--step-2);
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .organization-logo {
+        height: 8rem;
+        width: auto;
+        object-fit: contain;
+    }
+</style>

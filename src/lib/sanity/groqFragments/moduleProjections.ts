@@ -164,6 +164,22 @@ export const PUBLICATIONS_LIST_PROJECTION = groq`_type == "publicationsList" => 
     }
 }`;
 
+export const ORGANIZATIONS_LIST_PROJECTION = groq`_type == "organizationsList" => {
+    heading,
+    preview,
+    "entries": coalesce(
+        entries[]->{
+            _id,
+            _type,
+            "slug": slug.current
+        },
+        []
+    ),
+    "options": {
+        sectionMargin
+    }
+}`;
+
 export const EVENTS_PREVIEW_LIST_PROJECTION = groq`_type == "eventsPreviewList" => {
     showUpcoming,
     showPast,

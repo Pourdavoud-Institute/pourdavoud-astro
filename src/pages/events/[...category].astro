@@ -51,7 +51,7 @@ const events = await getCollection('events');
                             {category.data.title} Events
                         </h2>
                         <p>
-                            Showing {category.data.events.length}
+                            Showing {category.data.events.length}{' '}
                             {
                                 category.data.events.length == 1
                                     ? 'result'
@@ -67,8 +67,8 @@ const events = await getCollection('events');
                                     (associatedEvent) =>
                                         events.find(
                                             (event) =>
-                                                event.id == associatedEvent._id
-                                        )
+                                                event.id == associatedEvent._id,
+                                        ),
                                 )}
                             />
                         )

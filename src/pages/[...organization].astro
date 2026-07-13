@@ -1,0 +1,115 @@
+---
+import DefaultHeader from '@components/pageHeaders/DefaultHeader.astro';
+import { Image } from 'astro:assets';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import RichText from '@components/modules/RichText.astro';
+import { getCollection } from 'astro:content';
+import { urlForImage } from '@lib/sanity/urlForImage';
+
+export async function getStaticPaths() {
+    const organizations = await getCollection('organizations');
+
+    return organizations.map((organization) => ({
+        params: {
+            organization: organization.data.slug,
+        },
+        props: { organization },
+    }));
+}
+const { organization } = Astro.props;
+
+let image = '';
+const imageHeight = 300;
+let imageWidth = 0;
+if (organization.data.image) {
+    image = urlForImage(organization.data.image)
+        .height(200)
+        .auto('format')
+        .quality(95)
+        .url();
+    imageWidth = Math.floor(
+        imageHeight *
+            organization.data.image.asset.metadata.dimensions.aspectRatio,
+    );
+}
+---
+
+<PageWrapper
+    filterType="organization"
+    footerMargin={true}
+    id={organization.id}
+    template="organizationsShow"
+    title={organization.data.title}
+>
+    <DefaultHeader
+        breadcrumbsCollection="organizations"
+        title={organization.data.title}
+    />
+    <div class="content-wrapper">
+        <div class="with-sidebar">
+            <div class="sidebar-panel">
+                <a href="/about/institutional-memberships">
+                    Back to Institutional Memberships
+                </a>
+            </div>
+            <div class="main-panel">
+                {
+                    image && (
+                        <div class="image-wrapper | content-wrapper">
+                            <Image
+                                alt={
+                                    organization.data.image?.alt ||
+                                    organization.data.image?.asset.altText ||
+                                    ''
+                                }
+                                class="organization-logo"
+                                height={imageHeight}
+                                src={image}
+                                width={imageWidth}
+                            />
+                        </div>
+                    )
+                }
+                <div class="text-wrapper">
+                    {
+                        organization.data.richText && (
+                            <RichText module={organization.data.richText} />
+                        )
+                    }
+                    {
+                        organization.data.url && (
+                            <a
+                                class="button-link | cta"
+                                data-style="primary"
+                                href={organization.data.url}
+                                target="_blank"
+                            >
+                                View Website
+                            </a>
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .with-sidebar {
+        margin-block-start: var(--section-spacing);
+        --main-min-width: 65%;
+        --sidebar-min-width: 14rem;
+        --sidebar-gap: 3rem;
+    }
+
+    .organization-logo {
+        height: auto;
+        max-width: 20rem;
+        object-fit: contain;
+        margin-block-end: var(--space-l);
+    }
+
+    .cta {
+        margin-block-start: var(--space-l);
+    }
+</style>

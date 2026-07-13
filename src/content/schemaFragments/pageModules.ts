@@ -79,6 +79,25 @@ const ColumnsGroup = z.object({
 
 export type ColumnsGroup = z.infer<typeof ColumnsGroup>;
 
+/** ORGANIZATIONS LIST */
+const OrganizationsList = z.object({
+    _type: z.literal('organizationsList'),
+    heading: z.string().nullish(),
+    preview: z.nullable(z.array(z.any())),
+    entries: z.array(
+        z.object({
+            _id: z.string(),
+            _type: z.literal('externalOrganization'),
+            slug: z.string(),
+        }),
+    ),
+    options: z.object({
+        sectionMargin: z.boolean().nullish(),
+    }),
+});
+
+export type OrganizationsList = z.infer<typeof OrganizationsList>;
+
 /** PEOPLE LIST */
 const PeopleList = z.object({
     _type: z.literal('peopleList'),
@@ -281,6 +300,7 @@ export const PageModules = z.array(
         Gallery,
         HeroBanner,
         HeroCover,
+        OrganizationsList,
         PeopleList,
         PodcastFeed,
         PostsList,
