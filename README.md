@@ -6,7 +6,7 @@ Use this project to make changes to template files, add new site integrations, o
 
 ## Features
 
-- [Astro v6](https://astro.build/) TypeScript-based static site generator with various first- and third-party plugins and built-in [Vite](http://vite.dev/) server
+- [Astro v7](https://astro.build/) TypeScript-based static site generator with various first- and third-party plugins and built-in [Vite](http://vite.dev/) server
 - Astro's fully-typed [content collections](https://docs.astro.build/en/guides/content-collections/) loading headless data from the [Sanity](https://www.sanity.io/) content platform (accessed with Sanity client + [GROQ queries](https://www.sanity.io/docs/content-lake/how-queries-work))
 - [Lightning CSS](https://lightningcss.dev/) scripts to transpile, bundle, and minify CSS
 - [Alpine JS](https://alpinejs.dev/start-here) for lightweight page interactivity
