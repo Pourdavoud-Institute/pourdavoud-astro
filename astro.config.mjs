@@ -26,9 +26,6 @@ export default defineConfig({
                 targets: browserslistToTargets(browserslist('defaults')),
             },
         },
-        build: {
-            cssMinify: 'lightningcss',
-        },
     },
 
     redirects: {
