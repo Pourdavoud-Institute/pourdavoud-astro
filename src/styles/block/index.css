@@ -3,8 +3,13 @@
 
     &[data-index='events'] {
         --main-min-width: 70%;
-        --sidebar-min-width: 12rem;
-        --sidebar-gap: 4rem;
+        --sidebar-min-width: 14rem;
+        --sidebar-gap: 3rem;
+
+        & .sidebar-panel {
+            --flow-space: 1rem;
+            padding-block-start: 1rem;
+        }
     }
 
     &[data-index='posts'] {

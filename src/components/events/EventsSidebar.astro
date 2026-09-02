@@ -29,8 +29,20 @@ if (pathname.includes('archive')) {
 }
 ---
 
-<div class="event-date-filters" data-pagefind-ignore="all">
-    <div class="filter-title small-title">Filter by Date</div>
+<details class="event-category-filters" data-pagefind-ignore="all" open>
+    <summary class="filter-title small-title | with-icon">
+        Filter by Category
+        <svg
+            aria-hidden="true"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d="M18 9.41L16.59 8L12 12.58L7.41 8L6 9.41L12 15.41L18 9.41Z"
+            ></path>
+        </svg>
+    </summary>
     <ul class="filter-links">
         <li>
             <a
@@ -38,49 +50,61 @@ if (pathname.includes('archive')) {
                     ? 'page'
                     : 'false'}
                 class="filter-link"
-                href={dateFilters[0].href}>{dateFilters[0].title}</a
-            >
-        </li>
-        <li>
-            <a
-                aria-current={archive ? 'page' : 'false'}
-                class="filter-link"
-                href={dateFilters[1].href}>{dateFilters[1].title}</a
-            >
-        </li>
-    </ul>
-</div>
-<div class="event-category-filters" data-pagefind-ignore="all">
-    <div class="filter-title small-title">Filter by Category</div>
-    <ul class="filter-links">
-        <li>
-            <a
-                aria-current={`/events` == pathname
-                    ? 'page'
-                    : archive
-                      ? 'page'
-                      : 'false'}
-                class="filter-link"
-                href="/events">All Events</a
+                href="/events">Upcoming Events</a
             >
         </li>
         {
-            eventCategories.map((category) => (
-                <li>
-                    <a
-                        aria-current={
-                            `/events/categories${category.data.slug}` ==
-                            pathname
-                                ? 'page'
-                                : 'false'
-                        }
-                        class="filter-link"
-                        href={`/events/categories${category.data.slug}`}
-                    >
-                        {category.data.title}
-                    </a>
-                </li>
-            ))
+            eventCategories
+                .sort((a, b) => (a.data.title > b.data.title ? 1 : -1))
+                .map((category) => (
+                    <li>
+                        <a
+                            aria-current={
+                                `/events/categories${category.data.slug}` ==
+                                pathname
+                                    ? 'page'
+                                    : 'false'
+                            }
+                            class="filter-link"
+                            href={`/events/categories${category.data.slug}`}
+                        >
+                            {category.data.title}
+                        </a>
+                    </li>
+                ))
         }
     </ul>
-</div>
+</details>
+
+<style>
+    summary {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: space-between;
+
+        & svg {
+            fill: var(--svg-fill, inherit);
+        }
+
+        &:hover {
+            --svg-fill: var(--ucla-primary-blue);
+        }
+    }
+
+    details {
+        &[open] {
+            & svg {
+                rotate: -180deg;
+            }
+        }
+    }
+
+    :is(.event-date-filters, .event-category-filters) {
+        border-block-end: 1px solid var(--site-border);
+        padding-block-end: 1rem;
+    }
+
+    .filter-links {
+        margin-block-start: 0.5rem;
+    }
+</style>

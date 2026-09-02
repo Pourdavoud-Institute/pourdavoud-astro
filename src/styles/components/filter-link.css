@@ -1,14 +1,13 @@
 .filter-link {
     display: block;
-    padding-block: 0.35rem;
-    padding-inline: 4px;
+    padding: 0.25rem 0.5rem;
     font-size: 14px;
-    border-block-end: 1px solid var(--site-border);
     text-decoration-color: transparent;
 
     &:hover {
         color: var(--ucla-primary-blue);
         text-decoration-color: var(--ucla-primary-blue);
+        background-color: var(--ucla-gray-1);
     }
 
     &[aria-current='page'] {
