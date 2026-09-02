@@ -1,99 +1,81 @@
 ---
-// const navItems = [
-//     {
-//         title: 'Events',
-//         url: '/events',
-//     },
-//     {
-//         title: 'Research',
-//         url: '/research',
-//     },
-//     {
-//         title: 'Publications',
-//         url: '/publications',
-//     },
-//     {
-//         title: 'Media',
-//         url: '/media/video-library',
-//     },
-// ];
+import type { CollectionEntry } from 'astro:content';
+import { sanityLink } from '@lib/utils/sanityLink';
 
 interface Props {
-    featuredNavItems: {
-        title: string;
-        url: string;
-    }[];
+    navItems?: CollectionEntry<'navigation'>['data']['items'];
+    style?: 'default' | 'transparent';
 }
 
-const { featuredNavItems } = Astro.props;
+const { navItems, style } = Astro.props;
 ---
 
-<div class="nav-featured">
-    <ul class="cluster">
-        {
-            featuredNavItems.map((navItem, i) => (
-                <li>
-                    <a
-                        class="nav-link-featured"
-                        data-tint={(i + 1) * 100}
-                        href={navItem.url}
-                    >
-                        {navItem.title}
-                    </a>
-                </li>
-            ))
-        }
-    </ul>
-</div>
+<ul class="featured-nav-items cluster" data-style={style}>
+    {
+        navItems &&
+            navItems.map((navItem) => {
+                if (navItem.itemType !== 'linkList') {
+                    const linkParts = sanityLink(navItem);
+                    return (
+                        <li>
+                            <a
+                                class="nav-link-featured"
+                                href={linkParts.url}
+                                target={linkParts.target}
+                            >
+                                {linkParts.label}
+                            </a>
+                        </li>
+                    );
+                }
+            })
+    }
+</ul>
 
 <style>
-    .nav-featured {
+    .featured-nav-items {
         --cluster-justify: flex-end;
-        --cluster-space: 0px;
+        --cluster-space: 1.75rem;
+
+        &[data-style='transparent'] {
+            --nav-link-color: var(--ucla-white);
+        }
+
+        &[data-style='default'] {
+            --nav-link-color-hover: var(--ucla-darker-blue);
+        }
     }
 
     .nav-link-featured {
         position: relative;
         display: block;
-        font-size: 16px;
-        font-weight: 700;
+        font-family: var(--font-heading);
+        font-size: var(--step-1);
+        font-weight: var(--font-heading-weight);
+        line-height: 1.15;
         text-decoration: none;
-        padding-inline: 0.5rem;
+        /* padding-inline: 0.5rem;
         padding-block: 1.15rem;
         text-align: center;
         min-width: 160px;
-        background-color: var(--nav-link-tint, var(--ucla-gray-7));
-        color: var(--nav-link-color, white);
-        transition: background-color 0.2s;
+        background-color: var(--nav-link-tint, var(--ucla-gray-7)); */
+        color: var(--nav-link-color, inherit);
+        transition: color 0.2s;
 
         &:hover {
-            background-color: color-mix(
-                in srgb,
-                var(--nav-link-tint),
-                black 10%
+            color: var(
+                --nav-link-color-hover,
+                color-mix(
+                    in srgb,
+                    var(--nav-link-color, inherit),
+                    transparent 25%
+                )
             );
-        }
-
-        &[data-tint='100'] {
-            --nav-link-tint: var(--ucla-lighter-blue);
-            --nav-link-color: var(--ucla-darkest-blue);
-        }
-
-        &[data-tint='200'] {
-            --nav-link-tint: var(--ucla-primary-blue);
-        }
-
-        &[data-tint='300'] {
-            --nav-link-tint: var(--ucla-darker-blue);
-        }
-
-        &[data-tint='400'] {
-            --nav-link-tint: var(--ucla-darkest-blue);
         }
     }
 
-    @media screen and (max-width: 1024px) {
-        .nav-featured {
+    @media screen and (max-width: 999px) {
+        .featured-nav-items {
             display: none;
         }
     }

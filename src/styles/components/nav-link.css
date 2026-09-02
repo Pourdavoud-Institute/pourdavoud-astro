@@ -1,14 +1,20 @@
 .nav-link {
     display: flex;
     align-items: center;
-    gap: var(--nav-link-gap, 0.25em);
+    gap: var(--nav-link-gap, 1px);
     text-decoration: none;
     padding-block: 0.5rem;
     padding-inline: 0.5rem;
+    color: var(--nav-link-color, inherit);
+    font-size: 14px;
     font-weight: 700;
     transition: all 0.2s;
 
     &:hover {
-        color: var(--ucla-primary-blue);
+        color: color-mix(
+            in srgb,
+            var(--nav-link-color, inherit),
+            transparent 20%
+        );
     }
 }

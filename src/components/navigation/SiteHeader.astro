@@ -4,79 +4,82 @@ import MainNavigation from '@components/navigation/MainNavigation.astro';
 import MobileNavigation from '@components/navigation/MobileNavigation.astro';
 import { getEntry } from 'astro:content';
 
+interface Props {
+    style?: 'default' | 'transparent';
+}
+
+const { style = 'default' } = Astro.props;
+
 // get main nav by id
-const navigation = await getEntry(
+const mainNavigation = await getEntry(
     'navigation',
     'b2b3beb7-b8b4-44bb-9e5d-45c46f45a0b9',
 );
-
-const featuredNavItems = [
-    {
-        title: 'Events',
-        url: '/events',
-    },
-    {
-        title: 'Research',
-        url: '/research',
-    },
-    {
-        title: 'Publications',
-        url: '/publications',
-    },
-    {
-        title: 'Media',
-        url: '/media/video-library',
-    },
-];
+const featuredNavigation = await getEntry(
+    'navigation',
+    '61ff2539-4de8-49d0-8c3d-0591314b1d21',
+);
 ---
 
-<header class:list={['site-header', Astro.url.pathname == '/' && 'home']}>
+<header class="site-header" data-style={style}>
     <!-- Skip to Content Link -->
     <a class="skip-link | small-title text-step--1" href="#main-content">
         Skip to Content
     </a>
-    <div class="nav-wrapper">
+    <MainNavigation navItems={mainNavigation?.data.items} />
+    <nav aria-label="Featured" class="nav-featured">
         <div class="logos | cluster">
             <a class="logo-link" href="/">
                 <img
                     alt="UCLA Pourdavoud Institute logo"
                     decoding="auto"
                     loading="eager"
-                    src="/images/logos/pourdavoud-logo-UCLA.svg"
+                    src={style === 'transparent'
+                        ? '/images/logos/pourdavoud-logo-UCLA-white.svg'
+                        : '/images/logos/pourdavoud-logo-UCLA.svg'}
                     width="325"
                 />
             </a>
         </div>
-        <div class="relative">
-            <MainNavigation navItems={navigation?.data.items} />
-            <FeaturedNavigation featuredNavItems={featuredNavItems} />
-            <MobileNavigation
-                featuredNavItems={featuredNavItems}
-                navItems={navigation?.data.items}
-            />
-        </div>
-    </div>
+        <FeaturedNavigation
+            navItems={featuredNavigation?.data.items}
+            style={style}
+        />
+        <MobileNavigation
+            featuredNavItems={featuredNavigation?.data.items}
+            mainNavItems={mainNavigation?.data.items}
+            style={style}
+        />
+    </nav>
 </header>
 
 <style>
     .site-header {
         position: relative;
-        border-block-start: 3px solid var(--ucla-primary-blue);
-        box-shadow: var(--shadow-base);
+        /* box-shadow: var(--shadow-base); */
         z-index: 50;
+        background-color: var(--ucla-white);
 
         &.home {
             position: absolute;
             width: 100%;
             background-color: var(--ucla-white);
         }
+
+        &[data-style='transparent'] {
+            position: absolute;
+            width: 100%;
+            background-color: transparent;
+        }
     }
 
-    .nav-wrapper {
+    .nav-featured {
         position: relative;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        align-items: center;
+        padding-inline: 2rem;
 
         & > :last-child {
             flex-grow: 1;
@@ -85,7 +88,6 @@ const featuredNavItems = [
 
     .logos {
         padding-block: 1rem;
-        padding-inline-start: var(--gutter-spacing);
 
         & img {
             width: 30rem;
@@ -98,24 +100,15 @@ const featuredNavItems = [
         }
     }
 
-    @media screen and (max-width: 1024px) {
-        .nav-wrapper {
-            align-items: center;
-            padding-inline-end: var(--gutter-spacing);
-        }
-    }
-
     @media screen and (max-width: 640px) {
-        .nav-wrapper {
-            padding-inline-end: 1rem;
-        }
-
         .logos {
-            padding-inline-start: 1rem;
-
             & img {
                 max-width: 20rem;
             }
+        }
+
+        .nav-featured {
+            padding-inline: 1rem;
         }
     }
 
