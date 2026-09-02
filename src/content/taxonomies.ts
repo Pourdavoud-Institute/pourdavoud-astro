@@ -1,12 +1,11 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
 import {
     EVENT_CATEGORIES_QUERY,
     POST_CATEGORIES_QUERY,
 } from '@lib/sanity/queries/taxonomyQueries';
-import type { SanityDocument } from '@sanity/client';
 import { workspaces } from '@lib/sanity/workspaces';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 export const EventCategory = z.object({
     _id: z.string(),
@@ -23,19 +22,13 @@ export const EventCategory = z.object({
 export type EventCategory = z.infer<typeof EventCategory>;
 
 export const eventCategories = defineCollection({
-    loader: async () => {
-        const eventCategories = await sanityClient.fetch<SanityDocument[]>(
-            EVENT_CATEGORIES_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
-
-        return eventCategories.map((category) => ({
-            id: category._id,
-            ...category,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'Event Categories',
+        query: EVENT_CATEGORIES_QUERY,
+        params: {
+            workspaceID: workspaces.pourdavoud.id,
+        },
+    }),
 
     schema: EventCategory,
 });
@@ -53,19 +46,13 @@ export const PostCategory = z.object({
 });
 
 export const postCategories = defineCollection({
-    loader: async () => {
-        const postCategories = await sanityClient.fetch<SanityDocument[]>(
-            POST_CATEGORIES_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
-
-        return postCategories.map((category) => ({
-            id: category._id,
-            ...category,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'Post Categories',
+        query: POST_CATEGORIES_QUERY,
+        params: {
+            workspaceID: workspaces.pourdavoud.id,
+        },
+    }),
 
     schema: PostCategory,
 });

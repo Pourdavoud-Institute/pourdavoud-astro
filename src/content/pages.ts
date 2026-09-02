@@ -1,8 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
 import { PAGES_QUERY } from '@lib/sanity/queries/pagesQuery';
-import type { SanityDocument } from '@sanity/client';
 import { workspaces } from '@lib/sanity/workspaces';
 import { PageModules } from '@content/schemaFragments/pageModules';
 import {
@@ -11,6 +9,7 @@ import {
     SEOBlock,
     OGBlock,
 } from '@content/schemaFragments/sanityComponents';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 const PageHeader = z.object({
     preview: z.nullable(z.array(z.any())),
@@ -22,16 +21,13 @@ export type PageHeader = z.infer<typeof PageHeader>;
 
 /** Fetches page data from Sanity and creates typed schema */
 export const pages = defineCollection({
-    loader: async () => {
-        const pages = await sanityClient.fetch<SanityDocument[]>(PAGES_QUERY, {
+    loader: customSanityLoader({
+        name: 'Pages',
+        query: PAGES_QUERY,
+        params: {
             workspaceID: workspaces.pourdavoud.id,
-        });
-
-        return pages.map((page) => ({
-            id: page._id,
-            ...page,
-        }));
-    },
+        },
+    }),
 
     schema: z.object({
         _id: z.string(),

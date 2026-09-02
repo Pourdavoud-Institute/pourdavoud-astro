@@ -1,29 +1,22 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
 import { PEOPLE_QUERY } from '@lib/sanity/queries/peopleQuery';
 import { SPEAKERS_QUERY } from '@lib/sanity/queries/speakersQuery';
-import type { SanityDocument } from '@sanity/client';
 import { workspaces } from '@lib/sanity/workspaces';
 import {
     FeaturedImage,
     RichTextBlocks,
 } from '@content/schemaFragments/sanityComponents';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 export const people = defineCollection({
-    loader: async () => {
-        const people = await sanityClient.fetch<SanityDocument[]>(
-            PEOPLE_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
-
-        return people.map((person) => ({
-            id: person._id,
-            ...person,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'People',
+        query: PEOPLE_QUERY,
+        params: {
+            workspaceID: workspaces.pourdavoud.id,
+        },
+    }),
 
     schema: z.object({
         _id: z.string(),
@@ -93,19 +86,13 @@ export const people = defineCollection({
 });
 
 export const speakers = defineCollection({
-    loader: async () => {
-        const speakers = await sanityClient.fetch<SanityDocument[]>(
-            SPEAKERS_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
-
-        return speakers.map((speaker) => ({
-            id: speaker._id,
-            ...speaker,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'Speakers',
+        query: SPEAKERS_QUERY,
+        params: {
+            workspaceID: workspaces.pourdavoud.id,
+        },
+    }),
 
     schema: z.object({
         _id: z.string(),

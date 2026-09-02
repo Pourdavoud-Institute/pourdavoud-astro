@@ -1,26 +1,19 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
 import { NAVIGATION_QUERY } from '@lib/sanity/queries/navigationQuery';
 import { Link } from '@content/schemaFragments/sanityComponents';
-import type { SanityDocument } from '@sanity/client';
 import { workspaces } from '@lib/sanity/workspaces';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 /** Fetches navigation data from Sanity and creates typed schema */
 export const navigation = defineCollection({
-    loader: async () => {
-        const navigation = await sanityClient.fetch<SanityDocument[]>(
-            NAVIGATION_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
-
-        return navigation.map((entry) => ({
-            id: entry._id,
-            ...entry,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'Navigation',
+        query: NAVIGATION_QUERY,
+        params: {
+            workspaceID: workspaces.pourdavoud.id,
+        },
+    }),
 
     schema: z.object({
         _id: z.string(),

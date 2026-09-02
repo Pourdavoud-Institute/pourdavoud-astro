@@ -1,20 +1,14 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
 import { SITE_SETTINGS_QUERY } from '@lib/sanity/queries/siteSettingsQuery';
-import type { SanityDocument } from '@sanity/client';
 import { SEOBlock, OGBlock } from '@content/schemaFragments/sanityComponents';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 export const settings = defineCollection({
-    loader: async () => {
-        const settings =
-            await sanityClient.fetch<SanityDocument[]>(SITE_SETTINGS_QUERY);
-
-        return settings.map((item) => ({
-            id: item._id,
-            ...item,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'Site Settings',
+        query: SITE_SETTINGS_QUERY,
+    }),
 
     schema: z.object({
         _id: z.string(),

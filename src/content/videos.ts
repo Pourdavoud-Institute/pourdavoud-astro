@@ -1,11 +1,10 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
-import type { SanityDocument } from '@sanity/client';
 import { workspaces } from '@lib/sanity/workspaces';
 import { VIDEOS_QUERY } from '@lib/sanity/queries/videosQuery';
 import { PersonSpeaker } from '@content/schemaFragments/sanityComponents';
 import { RichText } from '@content/schemaFragments/pageModules';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 const VideoEventFilter = z.object({
     _id: z.string(),
@@ -18,19 +17,13 @@ const VideoEventFilter = z.object({
 export type VideoEventFilter = z.infer<typeof VideoEventFilter>;
 
 export const videos = defineCollection({
-    loader: async () => {
-        const videos = await sanityClient.fetch<SanityDocument[]>(
-            VIDEOS_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
-
-        return videos.map((video) => ({
-            id: video._id,
-            ...video,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'Videos',
+        query: VIDEOS_QUERY,
+        params: {
+            workspaceID: workspaces.pourdavoud.id,
+        },
+    }),
 
     schema: z.object({
         _id: z.string(),

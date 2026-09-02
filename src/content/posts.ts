@@ -1,23 +1,19 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
 import { POSTS_QUERY } from '@lib/sanity/queries/postsQuery';
-import type { SanityDocument } from '@sanity/client';
 import { RichText } from '@content/schemaFragments/pageModules';
 import { FeaturedImage } from '@content/schemaFragments/sanityComponents';
 import { workspaces } from '@lib/sanity/workspaces';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 export const posts = defineCollection({
-    loader: async () => {
-        const posts = await sanityClient.fetch<SanityDocument[]>(POSTS_QUERY, {
+    loader: customSanityLoader({
+        name: 'Posts',
+        query: POSTS_QUERY,
+        params: {
             workspaceID: workspaces.pourdavoud.id,
-        });
-
-        return posts.map((post) => ({
-            id: post._id,
-            ...post,
-        }));
-    },
+        },
+    }),
 
     schema: z.object({
         _id: z.string(),

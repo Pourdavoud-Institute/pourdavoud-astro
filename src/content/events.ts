@@ -1,26 +1,19 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { sanityClient } from '@lib/sanity/client';
 import { EVENTS_QUERY } from '@lib/sanity/queries/eventsQuery';
 import { FeaturedImage } from '@content/schemaFragments/sanityComponents';
 import { RichText } from '@content/schemaFragments/pageModules';
-import type { SanityDocument } from '@sanity/client';
 import { workspaces } from '@lib/sanity/workspaces';
+import { customSanityLoader } from '@lib/sanity/customSanityLoader';
 
 export const events = defineCollection({
-    loader: async () => {
-        const events = await sanityClient.fetch<SanityDocument[]>(
-            EVENTS_QUERY,
-            {
-                workspaceID: workspaces.pourdavoud.id,
-            },
-        );
-
-        return events.map((event) => ({
-            id: event._id,
-            ...event,
-        }));
-    },
+    loader: customSanityLoader({
+        name: 'Events',
+        query: EVENTS_QUERY,
+        params: {
+            workspaceID: workspaces.pourdavoud.id,
+        },
+    }),
 
     schema: z.object({
         _id: z.string(),
