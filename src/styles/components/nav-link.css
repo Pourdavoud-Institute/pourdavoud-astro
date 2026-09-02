@@ -10,11 +10,11 @@
     font-weight: 700;
     transition: all 0.2s;
 
-    &:hover {
+    /* &:hover {
         color: color-mix(
             in srgb,
             var(--nav-link-color, inherit),
             transparent 20%
         );
-    }
+    } */
 }
