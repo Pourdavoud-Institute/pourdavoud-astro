@@ -63,17 +63,25 @@ const { navItems } = Astro.props;
     .nav-main {
         --cluster-justify: flex-end;
         --cluster-space: 2px;
-        padding-block: 0.25rem;
-        margin-inline-end: var(--space-s);
+        /* padding-block: 0.25rem; */
+        background-color: var(--ucla-darker-blue);
 
-        & :global(.nav-link) {
+        /* & :global(.nav-link) {
             --nav-link-gap: 1px;
             font-size: 14px;
+        } */
+
+        & > .cluster {
+            padding-inline: 1rem;
         }
     }
 
+    .nav-link {
+        --nav-link-color: var(--ucla-white);
+    }
+
     .search-link {
-        --button-text: var(--ucla-primary-blue);
+        --button-text: var(--ucla-lighter-blue);
         --button-bg: transparent;
         --button-bg--hover: transparent;
         --button-border: transparent;

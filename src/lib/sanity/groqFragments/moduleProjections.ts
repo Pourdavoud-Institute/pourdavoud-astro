@@ -23,7 +23,19 @@ export const HERO_COVER_PROJECTION = groq`_type == "heroCover" => {
     "cta": coalesce(
         cta[] ${LINK_PROJECTION},
         []
-    )
+    ),
+    "footerList": coalesce(footerList[] {
+        _type == "footerListItem" => {
+            _type,
+            heading,
+            summary,
+            link ${LINK_PROJECTION}
+        },
+        _type == "reference" => @-> {
+            _id,
+            _type
+        }
+    }, [])
 }`;
 
 export const FEATURED_ELEMENT_PROJECTION = groq`_type == "featuredElement" => {

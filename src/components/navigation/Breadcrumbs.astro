@@ -128,7 +128,7 @@ for (let i = 0; i < urlParts.length; i++) {
 }
 ---
 
-<ul class="breadcrumbs | cluster" data-pagefind-ignore="all" data-style={style}>
+<ul class="breadcrumbs | cluster" data-pagefind-ignore="all">
     {
         breadcrumbs.map((breadcrumb, i) => (
             <li>
@@ -150,13 +150,12 @@ for (let i = 0; i < urlParts.length; i++) {
 <style>
     .breadcrumbs {
         --cluster-space: var(--space-2xs);
-        --breadcrumbs-color: var(--ucla-primary-blue);
         font-size: 14px;
         font-weight: 700;
-        padding-block-start: 0.65rem;
-        padding-block-end: 0.75rem;
+        padding-block-start: 0.45rem;
+        padding-block-end: 0.5rem;
         padding-inline: var(--gutter-spacing);
-        background-color: var(--breadcrumbs-bg, var(--ucla-gray-1));
+        background-color: var(--ucla-gray-2);
 
         & li {
             display: inline-flex;
@@ -171,7 +170,7 @@ for (let i = 0; i < urlParts.length; i++) {
         }
 
         & a {
-            color: var(--breadcrumbs-color, inherit);
+            color: var(--ucla-primary-blue);
 
             &:hover {
                 background-color: unset;

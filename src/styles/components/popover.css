@@ -3,7 +3,11 @@
 
     & .popover-button {
         &[aria-expanded='true'] {
-            color: var(--ucla-primary-blue);
+            color: color-mix(
+                in srgb,
+                var(--nav-link-color, inherit),
+                transparent 20%
+            );
         }
     }
 
@@ -11,7 +15,7 @@
         position: absolute;
         left: calc(50% - 0.5rem);
         transform: translateX(-50%);
-        margin-block-start: 4px;
+        /* margin-block-start: 4px; */
         background-color: var(--ucla-white);
         padding: var(--space-3xs);
         box-shadow: var(--shadow-base);

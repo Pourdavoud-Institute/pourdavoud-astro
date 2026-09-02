@@ -11,17 +11,15 @@ import type { CollectionEntry } from 'astro:content';
 import { sanityLink } from '@lib/utils/sanityLink';
 
 interface Props {
-    navItems?: CollectionEntry<'navigation'>['data']['items'];
-    featuredNavItems: {
-        title: string;
-        url: string;
-    }[];
+    mainNavItems?: CollectionEntry<'navigation'>['data']['items'];
+    featuredNavItems?: CollectionEntry<'navigation'>['data']['items'];
+    style?: 'default' | 'transparent';
 }
 
-const { navItems, featuredNavItems } = Astro.props;
+const { mainNavItems, featuredNavItems, style = 'default' } = Astro.props;
 ---
 
-<div class="nav-mobile" x-data x-popover>
+<div class="nav-mobile" data-style={style} x-data x-popover>
     <button class="menu-open with-icon" type="button" x-popover:button>
         <span class="visually-hidden">Open Menu</span>
         <svg
@@ -86,16 +84,22 @@ const { navItems, featuredNavItems } = Astro.props;
                     <div class="small-title">Featured</div>
                     <ul class="items | flow" data-tempo="allegro">
                         {
-                            featuredNavItems.map((navItem) => (
-                                <li>
-                                    <a
-                                        class="popover-nav-link featured"
-                                        href={navItem.url}
-                                    >
-                                        {navItem.title}
-                                    </a>
-                                </li>
-                            ))
+                            featuredNavItems?.map((navItem) => {
+                                if (navItem.itemType !== 'linkList') {
+                                    const linkParts = sanityLink(navItem);
+                                    return (
+                                        <li>
+                                            <a
+                                                class="popover-nav-link featured"
+                                                href={linkParts.url}
+                                                target={linkParts.target}
+                                            >
+                                                {linkParts.label}
+                                            </a>
+                                        </li>
+                                    );
+                                }
+                            })
                         }
                         <li>
                             <a
@@ -124,7 +128,7 @@ const { navItems, featuredNavItems } = Astro.props;
                     <div class="small-title">Site Navigation</div>
                     <ul class="items">
                         {
-                            navItems?.map((navItem) => {
+                            mainNavItems?.map((navItem) => {
                                 if (navItem.itemType == 'linkList') {
                                     return (
                                         <li data-type="link-list">
@@ -211,8 +215,10 @@ const { navItems, featuredNavItems } = Astro.props;
 <style>
     .nav-mobile {
         display: none;
-        justify-content: flex-end;
-        place-self: flex-end;
+
+        &[data-style='transparent'] {
+            --menu-open-color: var(--ucla-white);
+        }
     }
 
     :is(.menu-open, .menu-close) {
@@ -222,7 +228,7 @@ const { navItems, featuredNavItems } = Astro.props;
     }
 
     .menu-open {
-        color: var(--ucla-primary-blue);
+        color: var(--menu-open-color, var(--ucla-primary-blue));
     }
 
     .menu-close {
@@ -340,7 +346,7 @@ const { navItems, featuredNavItems } = Astro.props;
         margin-block-start: 0.5rem;
     }
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 999px) {
         .nav-mobile {
             display: flex;
         }
