@@ -247,6 +247,20 @@ const HeroCover = z.object({
     heading: z.string(),
     image: FeaturedImage,
     cta: z.array(Link.optional()),
+    footerList: z.array(
+        z.union([
+            z.object({
+                _type: z.literal('footerListItem'),
+                heading: z.string(),
+                summary: z.array(z.any()),
+                link: Link.optional(),
+            }),
+            z.object({
+                _id: z.string(),
+                _type: z.enum(['event', 'post']),
+            }),
+        ]),
+    ),
 });
 
 export type HeroCover = z.infer<typeof HeroCover>;
