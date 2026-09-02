@@ -52,12 +52,17 @@ const { label, links } = Astro.props;
 <style>
     .popover-panel {
         & .nav-link {
+            --nav-link-color: var(--ucla-white);
             /* font-weight: 700; */
             justify-content: center;
             text-align: center;
 
             &:hover {
-                background-color: var(--ucla-gray-2);
+                background-color: color-mix(
+                    in srgb,
+                    var(--ucla-darker-blue),
+                    black 15%
+                );
             }
         }
     }

@@ -16,10 +16,15 @@
         left: calc(50% - 0.5rem);
         transform: translateX(-50%);
         /* margin-block-start: 4px; */
-        background-color: var(--ucla-white);
+        background-color: color-mix(
+            in srgb,
+            var(--ucla-darker-blue),
+            transparent 10%
+        );
         padding: var(--space-3xs);
         box-shadow: var(--shadow-base);
-        border-block-start: 1px solid var(--site-border);
+        border-block-start: 1px solid var(--ucla-primary-blue);
+        backdrop-filter: blur(4px);
         width: 14rem; /* 12 rem */
         transform-origin: top left;
         z-index: 60;
