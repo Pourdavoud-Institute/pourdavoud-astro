@@ -14,11 +14,15 @@ interface Props {
 }
 
 const { node } = Astro.props;
-// console.log(node);
+console.log(node);
 ---
 
 <figure class="image-wrapper" style={`--image-width: ${node.imageWidth}`}>
-    <SanityImage alt={node.alt} classes="rich-text-image" source={node} />
+    <SanityImage
+        alt={node.asset?.altText ?? ''}
+        classes="rich-text-image"
+        source={node}
+    />
     {node.caption && <figcaption>{node.caption}</figcaption>}
 </figure>
 
