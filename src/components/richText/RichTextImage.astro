@@ -19,7 +19,7 @@ const { node } = Astro.props;
 
 <figure class="image-wrapper" style={`--image-width: ${node.imageWidth}`}>
     <SanityImage
-        alt={node.asset?.altText ?? ''}
+        alt={node.asset?.altText ?? node.alt ?? ''}
         classes="rich-text-image"
         source={node}
     />
