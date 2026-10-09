@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 
 const eventCategories = await getCollection('eventCategories');
 
-const dateFilters = [
+const typeFilters = [
     {
         title: 'Upcoming Events',
         href: '/events',
@@ -31,7 +31,7 @@ if (pathname.includes('archive')) {
 
 <details class="event-category-filters" data-pagefind-ignore="all" open>
     <summary class="filter-title small-title | with-icon">
-        Filter by Category
+        Filter by Type
         <svg
             aria-hidden="true"
             height="24"
@@ -46,13 +46,35 @@ if (pathname.includes('archive')) {
     <ul class="filter-links">
         <li>
             <a
-                aria-current={dateFilters[0].href == pathname
-                    ? 'page'
-                    : 'false'}
+                aria-current={pathname === '/events' ? 'page' : 'false'}
                 class="filter-link"
                 href="/events">Upcoming Events</a
             >
         </li>
+        <li>
+            <a
+                aria-current={archive ? 'page' : 'false'}
+                class="filter-link"
+                href="/events/archive/1">Events Archive</a
+            >
+        </li>
+    </ul>
+</details>
+<details class="event-category-filters" data-pagefind-ignore="all" open>
+    <summary class="filter-title small-title | with-icon">
+        Filter by Category
+        <svg
+            aria-hidden="true"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d="M18 9.41L16.59 8L12 12.58L7.41 8L6 9.41L12 15.41L18 9.41Z"
+            ></path>
+        </svg>
+    </summary>
+    <ul class="filter-links">
         {
             eventCategories
                 .sort((a, b) => (a.data.title > b.data.title ? 1 : -1))
