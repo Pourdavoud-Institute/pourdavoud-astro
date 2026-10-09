@@ -3,17 +3,6 @@ import { getCollection } from 'astro:content';
 
 const eventCategories = await getCollection('eventCategories');
 
-const typeFilters = [
-    {
-        title: 'Upcoming Events',
-        href: '/events',
-    },
-    {
-        title: 'Events Archive',
-        href: '/events/archive/1',
-    },
-];
-
 const url = Astro.url;
 let pathname = url.pathname;
 
