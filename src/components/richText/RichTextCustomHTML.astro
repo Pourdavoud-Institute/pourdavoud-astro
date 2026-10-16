@@ -1,0 +1,14 @@
+---
+/** WARNING: html is passed as unsafe/unescaped raw code, so make sure editors know what they're doing when adding in Sanity. */
+interface Props {
+    node: {
+        html?: {
+            code?: string;
+        };
+    };
+}
+
+const { node } = Astro.props;
+---
+
+{node.html?.code && <Fragment set:html={node.html.code} />}
