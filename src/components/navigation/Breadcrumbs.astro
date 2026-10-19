@@ -16,14 +16,15 @@ interface Props {
 
 const { style = 'default', collection = 'pages' } = Astro.props;
 
-const pages = await getCollection('pages');
 const events = await getCollection('events');
 const eventCategories = await getCollection('eventCategories');
 const organizations = await getCollection('organizations');
+const pages = await getCollection('pages');
 const people = await getCollection('people');
-const publications = await getCollection('works');
+const podcastFeed = await getCollection('podcast');
 const posts = await getCollection('posts');
 const postCategories = await getCollection('postCategories');
+const publications = await getCollection('works');
 const videos = await getCollection('videos');
 
 const urlParts = Astro.url.pathname.split('/').filter(Boolean);
@@ -95,6 +96,13 @@ for (let i = 0; i < urlParts.length; i++) {
                         currentHref
                     );
                 })?.data.title;
+                break;
+            case 'podcast':
+                breadcrumb.title = podcastFeed.find(
+                    ({ data }) =>
+                        `/media/podcast/${v.slugify(data.title)}` ==
+                        currentHref,
+                )?.data.title;
                 break;
             case 'posts':
                 breadcrumb.title = posts.find(

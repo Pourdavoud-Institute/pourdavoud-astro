@@ -28,6 +28,7 @@ export type BreadcrumbsCollection =
     | 'organizations'
     | 'pages'
     | 'people'
+    | 'podcast'
     | 'posts'
     | 'postCategories'
     | 'publications'

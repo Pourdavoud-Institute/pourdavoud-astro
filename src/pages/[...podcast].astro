@@ -1,0 +1,276 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import { format, isBefore } from '@formkit/tempo';
+import Breadcrumbs from '@components/navigation/Breadcrumbs.astro';
+import PageWrapper from '@components/document/PageWrapper.astro';
+import { formatSeconds } from '@lib/utils/formatSeconds';
+import { splitPodcastTitle } from '@lib/utils/formatPodcast';
+import v from 'voca';
+
+export async function getStaticPaths() {
+    const podcastFeed = await getCollection('podcast');
+    const sortedEntries = podcastFeed
+        .sort((a, b) => {
+            if (isBefore(a.data.pubDate, b.data.pubDate)) {
+                return 1;
+            }
+            if (isBefore(b.data.pubDate, a.data.pubDate)) {
+                return -1;
+            }
+            return 0;
+        })
+        .toReversed();
+
+    return podcastFeed.map((entry) => ({
+        params: {
+            podcast: `/media/podcast/${v.slugify(entry.data.title)}`,
+        },
+        props: { entry, sortedEntries },
+    }));
+}
+
+const { entry, sortedEntries } = Astro.props;
+
+const splitTitle = splitPodcastTitle(entry);
+
+let currentEntry = sortedEntries.findIndex((item) => item.id === entry.id);
+let nextEntry: CollectionEntry<'podcast'> | undefined = undefined;
+let prevEntry: CollectionEntry<'podcast'> | undefined = undefined;
+if (currentEntry !== -1 && currentEntry !== sortedEntries.length - 1) {
+    nextEntry = sortedEntries[currentEntry + 1];
+}
+if (currentEntry !== -1 && currentEntry !== 0) {
+    prevEntry = sortedEntries[currentEntry - 1];
+}
+---
+
+<PageWrapper
+    filterType="podcast"
+    id={entry.id}
+    template="podcastsShow"
+    title={entry.data.title}
+>
+    <Breadcrumbs collection="podcast" />
+    <div class="content-wrapper">
+        <div class="podcast | with-sidebar">
+            <div class="main-panel">
+                <header>
+                    <div>
+                        <p class="tag">
+                            <strong>Season {entry.data.season}</strong>{' '}
+                            {splitTitle.episode}
+                        </p>
+                        <h1>{splitTitle.title}</h1>
+                    </div>
+                    <div class="details">
+                        <time
+                            datetime={format(entry.data.pubDate, 'YYYY-MM-DD')}
+                            >{format(entry.data.pubDate)}</time
+                        >
+                        {
+                            entry.data.duration && (
+                                <span class="duration">
+                                    {formatSeconds(entry.data.duration)}
+                                </span>
+                            )
+                        }
+                    </div>
+                </header>
+                <div class="text-wrapper">
+                    <p>{entry.data.description}</p>
+                </div>
+            </div>
+            <div class="sidebar-panel">
+                {
+                    entry.data.media['@_url'] && (
+                        <Fragment>
+                            <div class="small-title">Listen to Episode</div>
+                            <div class="player">
+                                <audio controls preload="metadata">
+                                    <source
+                                        src={entry.data.media['@_url']}
+                                        type={entry.data.media['@_type']}
+                                    />
+                                    <a
+                                        download={entry.data.media['@_url']}
+                                        href={entry.data.media['@_url']}
+                                    >
+                                        Download audio
+                                    </a>
+                                </audio>
+                                <a href={entry.data.link} target="_blank">
+                                    Episode Permalink
+                                </a>
+                            </div>
+                        </Fragment>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+    <div class="related-content">
+        <div class="content-wrapper">
+            <h2>More Episodes</h2>
+            <div class="grid">
+                {
+                    prevEntry ? (
+                        <div class="prev-episode">
+                            <div class="small-title">Previous Episode</div>
+                            <h3>
+                                <a
+                                    class="title-link"
+                                    href={`/media/podcast/${v.slugify(prevEntry.data.title)}`}
+                                    rel="prev"
+                                >
+                                    {prevEntry.data.title}
+                                </a>
+                            </h3>
+                        </div>
+                    ) : (
+                        <div class="prev-episode" />
+                    )
+                }
+                <div class="all-episodes">
+                    <a
+                        class="button-link"
+                        data-style="primary"
+                        href="/media/podcast#podcast-feed-listen"
+                        >All Episodes</a
+                    >
+                </div>
+                {
+                    nextEntry && (
+                        <div class="next-episode">
+                            <div class="small-title">Next Episode</div>
+                            <h3>
+                                <a
+                                    class="title-link"
+                                    href={`/media/podcast/${v.slugify(nextEntry.data.title)}`}
+                                    rel="next"
+                                >
+                                    {nextEntry.data.title}
+                                </a>
+                            </h3>
+                        </div>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .podcast {
+        margin-block-start: var(--space-2xl);
+    }
+
+    .with-sidebar {
+        --main-min-width: 57%;
+        --sidebar-gap: 5rem;
+        --sidebar-min-width: 20rem;
+    }
+
+    h1 {
+        margin-block-start: var(--space-s);
+    }
+
+    .details {
+        font-size: var(--step-1);
+        margin-block-start: var(--space-m);
+
+        & time {
+            font-weight: 700;
+        }
+    }
+
+    .duration {
+        position: relative;
+
+        &::before {
+            content: '•';
+            color: var(--ucla-primary-blue);
+            padding-inline: var(--space-2xs);
+        }
+    }
+
+    .text-wrapper {
+        margin-block-start: var(--space-l);
+        padding-block-start: var(--space-l);
+        border-block-start: 1px solid var(--site-border);
+        font-size: var(--step-1);
+    }
+
+    .sidebar-panel {
+        & .small-title {
+            font-size: var(--step--1);
+            color: var(--ucla-primary-blue);
+            border-block-end: 1px solid var(--site-border);
+            margin-block-end: var(--space-2xs);
+            padding-block-end: var(--space-3xs);
+        }
+    }
+
+    .player {
+        & audio {
+            margin-block-start: var(--space-s);
+            width: 100%;
+        }
+
+        & a {
+            display: block;
+            margin-block-start: 0.5rem;
+            font-size: var(--step--1);
+        }
+    }
+
+    .related-content {
+        margin-block-start: var(--space-3xl);
+        padding-block: var(--space-2xl);
+        background-color: var(--ucla-lightest-blue);
+
+        & .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-l);
+            margin-block-start: var(--space-l);
+
+            & .all-episodes {
+                text-align: center;
+                justify-content: center;
+                align-items: center;
+            }
+
+            & .next-episode {
+                text-align: right;
+            }
+        }
+
+        & .small-title {
+            font-size: var(--step--1);
+        }
+
+        & h3 {
+            font-size: var(--step-2);
+            margin-block-start: var(--space-2xs);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .related-content {
+            & .grid {
+                grid-template-columns: 1fr;
+
+                & .all-episodes {
+                    text-align: left;
+                    justify-content: start;
+                    align-items: start;
+                    order: 99;
+                }
+
+                & .next-episode {
+                    text-align: left;
+                }
+            }
+        }
+    }
+</style>
