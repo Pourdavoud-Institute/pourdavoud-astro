@@ -244,11 +244,7 @@ function clearFilters() {
     </div>
     <div class="main-panel">
         <div class="podcast-list-wrapper">
-            <ul
-                id="podcast-list"
-                class="podcast-list | flow"
-                data-tempo="moderato"
-            >
+            <ul id="podcast-list" class="podcast-list">
                 <li v-for="item in sortedList" :key="item.id">
                     <podcast-preview-list :item="item" />
                 </li>

@@ -10,13 +10,21 @@
 }
 
 .podcast-list {
-    & > * + * {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-m);
+
+    /* & > * + * {
         padding-block-start: var(--flow-space);
         border-block-start: 1px solid var(--site-border);
-    }
+    } */
 }
 
 .podcast-preview__list {
+    padding: var(--space-m);
+    box-shadow: var(--shadow-base);
+    height: 100%;
+
     & .title {
         --flow-space: 0px;
         font-size: var(--step-2);

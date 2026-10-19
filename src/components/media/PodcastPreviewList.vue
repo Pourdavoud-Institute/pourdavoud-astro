@@ -3,6 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 import { format } from '@formkit/tempo';
 import { computed } from 'vue';
 import { formatSeconds } from '@lib/utils/formatSeconds';
+import { splitPodcastTitle } from '@lib/utils/formatPodcast';
+import v from 'voca';
 
 interface Props {
     item: CollectionEntry<'podcast'>;
@@ -10,19 +12,7 @@ interface Props {
 
 const { item } = defineProps<Props>();
 
-const splitTitle = computed(() => {
-    let title = item.data.title;
-    let episode = '';
-    const parts = title.split(':');
-    if (parts.length > 1) {
-        episode = parts[0];
-        title = parts[1];
-    }
-    return {
-        title,
-        episode,
-    };
-});
+const splitTitle = computed(() => splitPodcastTitle(item));
 
 const isoDate = computed(() => format(item.data.pubDate, 'YYYY-MM-DD'));
 </script>
@@ -39,7 +29,11 @@ const isoDate = computed(() => format(item.data.pubDate, 'YYYY-MM-DD'));
                 >
                 <span>{{ splitTitle.episode }}</span>
             </p>
-            <h3>{{ splitTitle.title }}</h3>
+            <h3 class="title">
+                <a :href="`/media/podcast/${v.slugify(item.data.title)}`">{{
+                    splitTitle.title
+                }}</a>
+            </h3>
         </header>
         <div class="info">
             <time :datetime="isoDate">{{ format(item.data.pubDate) }}</time>
@@ -47,28 +41,11 @@ const isoDate = computed(() => format(item.data.pubDate, 'YYYY-MM-DD'));
                 formatSeconds(item.data.duration)
             }}</span>
         </div>
-        <p class="description">
-            {{ item.data.description }}
-        </p>
-        <div v-if="item.data.media['@_url']" class="player">
-            <audio controls preload="metadata">
-                <source
-                    :src="item.data.media['@_url']"
-                    :type="item.data.media['@_type']"
-                />
-                <a
-                    :href="item.data.media['@_url']"
-                    :download="item.data.media['@_url']"
-                    >Download audio</a
-                >
-            </audio>
-            <a
-                v-if="item.data.media['@_url']"
-                :href="item.data.link"
-                target="_blank"
-                >Episode Permalink</a
-            >
-        </div>
-        <div></div>
+        <!-- <a
+            v-if="item.data.media['@_url']"
+            :href="item.data.link"
+            target="_blank"
+            >Episode Permalink</a
+        > -->
     </article>
 </template>
